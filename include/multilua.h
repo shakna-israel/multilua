@@ -21,5 +21,6 @@ static int multilua_error(lua_State* L);
 static int multilua_gc(lua_State* L);
 static int multilua_getfield(lua_State* L);
 static int multilua_luaversion(lua_State* L);
+static int multilua_xmove(lua_State* L);
 
 #endif

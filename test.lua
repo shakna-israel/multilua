@@ -129,6 +129,9 @@ do
 	obj:close()
 end
 
+-- TODO: Test: xmove
+-- TODO: Test: xmove meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
