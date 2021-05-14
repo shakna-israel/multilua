@@ -93,6 +93,9 @@ end
 -- TODO: Test: copy
 -- TODO: Test: copy meta
 
+-- TODO: Test: createtable
+-- TODO: Test: createtable meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
