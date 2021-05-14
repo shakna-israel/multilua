@@ -87,6 +87,9 @@ end
 -- TODO: Test: compare
 -- TODO: Test: compare meta
 
+-- TODO: Test: concat
+-- TODO: Test: concat meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()

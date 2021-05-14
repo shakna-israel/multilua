@@ -32,6 +32,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_compare);
 	lua_setfield(L, -2, "compare");
+
+	lua_pushcfunction(L, multilua_concat);
+	lua_setfield(L, -2, "concat");
 }
 
 static int multilua_current(lua_State* L) {
@@ -341,7 +344,30 @@ static int multilua_compare(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_concat (lua_State *L, int n);
+static int multilua_concat(lua_State* L) {
+	int n_bool = false;
+	int n = lua_tointegerx(L, 2, &n_bool);
+
+	if(!n_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_concat(current_state, n);
+
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_copy (lua_State *L, int fromidx, int toidx);
 // TODO: void lua_createtable (lua_State *L, int narr, int nrec);
 // TODO: int lua_error (lua_State *L);
@@ -361,6 +387,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"call", multilua_call},
 		{"checkstack", multilua_checkstack},
 		{"compare", multilua_compare},
+		{"concat", multilua_concat},
 		{NULL, NULL},
 	};
 
