@@ -1,4 +1,7 @@
+#include <stdbool.h>
 #include <multilua.h>
+
+#define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
 
 void util_installfuncs(lua_State* L) {
 	// Create the automatic closer:
@@ -20,20 +23,26 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_current);
 	lua_setfield(L, -2, "current");
+
+	lua_pushcfunction(L, multilua_call);
+	lua_setfield(L, -2, "call");
+
+	lua_pushcfunction(L, multilua_checkstack);
+	lua_setfield(L, -2, "checkstack");
 }
 
 static int multilua_current(lua_State* L) {
 	// Otherwise, create our table:
 	lua_newtable(L);
 
-	// TODO: Create the metatable...
-	if (luaL_newmetatable(L, "multilua_meta")) {
+	// Create the metatable...
+	if(luaL_newmetatable(L, "multilua_meta")) {
 		util_installfuncs(L);
-
-		// Push our actual value:
-		lua_pushlightuserdata(L, L);
-		lua_setfield(L, -2, "self");
 	}
+	// Push our actual value:
+	lua_pushlightuserdata(L, L);
+	lua_setfield(L, -2, "self");
+	// Set the metatable
 	lua_setmetatable(L, -2);
 
 	// Set the object's index to it's own metatable:
@@ -56,14 +65,14 @@ static int multilua_new(lua_State* L) {
 	// Otherwise, create our table:
 	lua_newtable(L);
 
-	// TODO: Create the metatable...
-	if (luaL_newmetatable(L, "multilua_meta")) {
+	// Create the metatable...
+	if(luaL_newmetatable(L, "multilua_meta")) {
 		util_installfuncs(L);
-
-		// Push our actual value:
-		lua_pushlightuserdata(L, new_state);
-		lua_setfield(L, -2, "self");
 	}
+	// Push our actual value:
+	lua_pushlightuserdata(L, new_state);
+	lua_setfield(L, -2, "self");
+	// Set the metatable
 	lua_setmetatable(L, -2);
 
 	// Set the object's index to it's own metatable:
@@ -209,8 +218,61 @@ static int multilua_arith(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_call (lua_State *L, int nargs, int nresults);
+static int multilua_call(lua_State* L) {
+	int nargs_bool = false;
+	int nargs = lua_tointegerx(L, 2, &nargs_bool);
+
+	if(!nargs_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int nresults_bool = false;
+	int nresults = lua_tointegerx(L, 3, &nresults_bool);
+
+	if(!nresults_bool) {
+		nresults = LUA_MULTRET;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_call(current_state, nargs, nresults);
+
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_checkstack (lua_State *L, int n);
+static int multilua_checkstack(lua_State* L) {
+	int n_bool = false;
+	int n = lua_tointegerx(L, 2, &n_bool);
+
+	if(!n_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = lua_checkstack(current_state, n);
+
+		lua_pushboolean(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_compare (lua_State *L, int index1, int index2, int op);
 // TODO: void lua_concat (lua_State *L, int n);
 // TODO: void lua_copy (lua_State *L, int fromidx, int toidx);
@@ -221,7 +283,6 @@ static int multilua_arith(lua_State* L) {
 // TODO: void *lua_getextraspace (lua_State *L);
 // TODO: lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf); (?)
 
-
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	static const struct luaL_Reg multilua [] = {
 		{"new", multilua_new},
@@ -230,6 +291,8 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"openlibs", multilua_openlibs},
 		{"absindex", multilua_absindex},
 		{"arith", multilua_arith},
+		{"call", multilua_call},
+		{"checkstack", multilua_checkstack},
 		{NULL, NULL},
 	};
 
