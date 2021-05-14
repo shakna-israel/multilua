@@ -49,6 +49,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_gc);
 	lua_setfield(L, -2, "gc");
+
+	lua_pushcfunction(L, multilua_getfield);
+	lua_setfield(L, -2, "getfield");
 }
 
 static int multilua_current(lua_State* L) {
@@ -543,7 +546,40 @@ static int multilua_gc(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_getfield (lua_State *L, int index, const char *k);
+static int multilua_getfield(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - k
+
+	int index_bool = false;
+	int index = lua_tointegerx(L, 2, &index_bool);
+
+	if(!index_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* k = lua_tostring(L, 3);
+	if(k == NULL) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int type = lua_getfield(current_state, index, k);
+
+		lua_pushstring(L, lua_typename(L, type));
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void *lua_getextraspace (lua_State *L);
 // TODO: lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf); (?)
 
@@ -563,6 +599,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"createtable", multilua_createtable},
 		{"error", multilua_error},
 		{"gc", multilua_gc},
+		{"getfield", multilua_getfield},
 		{NULL, NULL},
 	};
 

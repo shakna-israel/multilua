@@ -104,6 +104,9 @@ end
 -- TODO: Test: gc
 -- TODO: Test: gc meta
 
+-- TODO: Test: getfield
+-- TODO: Test: getfield meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
