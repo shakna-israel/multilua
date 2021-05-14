@@ -17,5 +17,6 @@ static int multilua_compare(lua_State* L);
 static int multilua_concat(lua_State* L);
 static int multilua_copy(lua_State* L);
 static int multilua_createtable(lua_State* L);
+static int multilua_error(lua_State* L);
 
 #endif

@@ -96,6 +96,10 @@ end
 -- TODO: Test: createtable
 -- TODO: Test: createtable meta
 
+-- Can we even test `error`??
+-- TODO: Test: error
+-- TODO: Test: error meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
