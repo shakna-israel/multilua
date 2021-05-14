@@ -29,6 +29,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_checkstack);
 	lua_setfield(L, -2, "checkstack");
+
+	lua_pushcfunction(L, multilua_compare);
+	lua_setfield(L, -2, "compare");
 }
 
 static int multilua_current(lua_State* L) {
@@ -273,6 +276,71 @@ static int multilua_checkstack(lua_State* L) {
 }
 
 // TODO: int lua_compare (lua_State *L, int index1, int index2, int op);
+static int multilua_compare(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index1
+	// 3 - index2
+	// 4 - op
+	// "=="
+	// "<"
+	// "<="
+
+	int index1_bool = false;
+	int index1 = lua_tointegerx(L, 2, &index1_bool);
+
+	if(!index1_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int index2_bool = false;
+	int index2 = lua_tointegerx(L, 3, &index2_bool);
+
+	if(!index2_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	size_t length = 0;
+	const char* op = lua_tolstring(L, 4, &length);
+
+	if(length == 0 || op == NULL) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = false;
+
+		switch(op[0]) {
+			case '=':
+				r = lua_compare(current_state, index1, index2, LUA_OPEQ);
+				lua_pushboolean(L, r);
+				break;
+			case '<':
+				if(length == 2 && op[1] == '=') {
+					r = lua_compare(current_state, index1, index2, LUA_OPLE);
+				} else {
+					r = lua_compare(current_state, index1, index2, LUA_OPLT);
+				}
+				lua_pushboolean(L, r);
+				break;
+			default:
+				lua_pushnil(L);
+				break;
+		}
+
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_concat (lua_State *L, int n);
 // TODO: void lua_copy (lua_State *L, int fromidx, int toidx);
 // TODO: void lua_createtable (lua_State *L, int narr, int nrec);
@@ -292,6 +360,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"arith", multilua_arith},
 		{"call", multilua_call},
 		{"checkstack", multilua_checkstack},
+		{"compare", multilua_compare},
 		{NULL, NULL},
 	};
 

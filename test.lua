@@ -84,6 +84,8 @@ do
 	obj:close()
 end
 
+-- TODO: Test: compare
+-- TODO: Test: compare meta
 
 -- TODO: Test self-library manipulation...
 do

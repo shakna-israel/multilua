@@ -13,5 +13,6 @@ static int multilua_current(lua_State* L);
 static int multilua_arith(lua_State* L);
 static int multilua_call(lua_State* L);
 static int multilua_checkstack(lua_State* L);
+static int multilua_compare(lua_State* L);
 
 #endif
