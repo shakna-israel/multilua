@@ -29,6 +29,19 @@ do
 	assert(obj.self == nil)
 end
 
+-- Test: Multiple closes
+-- If this fails, you'll get a double-free!
+do
+	local obj = multilua.new()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
+
+	assert(type(multilua.close(obj)) == 'nil')
+	assert(obj.self == nil)
+	assert(type(multilua.close(obj)) == 'nil')
+	assert(obj.self == nil)
+end
+
 -- Test: metaclosing
 do
 	local obj = multilua.new()
