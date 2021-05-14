@@ -248,7 +248,6 @@ static int multilua_call(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_checkstack (lua_State *L, int n);
 static int multilua_checkstack(lua_State* L) {
 	int n_bool = false;
 	int n = lua_tointegerx(L, 2, &n_bool);

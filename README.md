@@ -27,6 +27,10 @@ Caveat: Some parts of the exposed API are missing, as Lua would struggle to make
 
 Unuseable. Literally.
 
+Not only is this unuseable in its current state, it is completely undocumented and doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
+
+Which makes this unuseable _and_ dangerous.
+
 ---
 
 ## License
