@@ -1,4 +1,6 @@
 #include <stdbool.h>
+#include <string.h>
+
 #include <multilua.h>
 
 #define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
@@ -44,6 +46,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_error);
 	lua_setfield(L, -2, "error");
+
+	lua_pushcfunction(L, multilua_gc);
+	lua_setfield(L, -2, "gc");
 }
 
 static int multilua_current(lua_State* L) {
@@ -460,7 +465,84 @@ static int multilua_error(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_gc (lua_State *L, int what, int data);
+static int multilua_gc(lua_State* L) {
+	// 1 - multilua state
+	// 2 - what
+	// 3 - data
+
+	int data_bool = false;
+	int data = lua_tointegerx(L, 3, &data_bool);
+
+	size_t what_length = 0;
+	const char* what = lua_tolstring(L, 2, &what_length);
+
+	// Default mode - collect
+	if(what == NULL || what_length == 0) {
+		what_length = 8;
+		what = "collect";
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		if(strncmp(what, "collect", what_length) == 0) {
+			lua_gc(current_state, LUA_GCCOLLECT, data);
+			lua_pushboolean(L, true);
+			return 1;
+		} else
+		if(strncmp(what, "stop", what_length) == 0) {
+			lua_gc(current_state, LUA_GCSTOP, data);
+			lua_pushboolean(L, true);
+			return 1;
+		} else
+		if(strncmp(what, "restart", what_length) == 0) {
+			lua_gc(current_state, LUA_GCRESTART, data);
+			lua_pushboolean(L, true);
+			return 1;
+		} else
+		if(strncmp(what, "count", what_length) == 0) {
+			int kb = lua_gc(current_state, LUA_GCCOUNT, data);
+			int bt = lua_gc(current_state, LUA_GCCOUNTB, data);
+
+			lua_pushinteger(L, kb);
+			lua_pushinteger(L, bt);
+			return 2;
+		} else
+		if(strncmp(what, "step", what_length) == 0) {
+			lua_gc(current_state, LUA_GCSTEP, data);
+
+			lua_pushboolean(L, true);
+			return 1;
+		} else
+		if(strncmp(what, "setpause", what_length) == 0) {
+			int prev_pause = lua_gc(current_state, LUA_GCSETPAUSE, data);
+
+			lua_pushinteger(L, prev_pause);
+			return 1;
+		} else
+		if(strncmp(what, "setstepmul", what_length) == 0) {
+			int prev_stepmul = lua_gc(current_state, LUA_GCSETSTEPMUL, data);
+
+			lua_pushinteger(L, prev_stepmul);
+			return 1;
+		} else
+		if(strncmp(what, "isrunning", what_length) == 0) {
+			int running = lua_gc(current_state, LUA_GCISRUNNING, data);
+
+			lua_pushboolean(L, running);
+			return 1;
+		} else {
+			lua_pushnil(L);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_getfield (lua_State *L, int index, const char *k);
 // TODO: void *lua_getextraspace (lua_State *L);
 // TODO: lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf); (?)
@@ -480,6 +562,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"copy", multilua_copy},
 		{"createtable", multilua_createtable},
 		{"error", multilua_error},
+		{"gc", multilua_gc},
 		{NULL, NULL},
 	};
 

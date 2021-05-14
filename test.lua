@@ -100,6 +100,10 @@ end
 -- TODO: Test: error
 -- TODO: Test: error meta
 
+-- Can we even test `gc`??
+-- TODO: Test: gc
+-- TODO: Test: gc meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
