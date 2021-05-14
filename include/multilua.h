@@ -20,5 +20,6 @@ static int multilua_createtable(lua_State* L);
 static int multilua_error(lua_State* L);
 static int multilua_gc(lua_State* L);
 static int multilua_getfield(lua_State* L);
+static int multilua_luaversion(lua_State* L);
 
 #endif

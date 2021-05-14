@@ -52,6 +52,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_getfield);
 	lua_setfield(L, -2, "getfield");
+
+	lua_pushcfunction(L, multilua_luaversion);
+	lua_setfield(L, -2, "luaversion");
 }
 
 static int multilua_current(lua_State* L) {
@@ -295,7 +298,6 @@ static int multilua_checkstack(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_compare (lua_State *L, int index1, int index2, int op);
 static int multilua_compare(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index1
@@ -580,7 +582,23 @@ static int multilua_getfield(lua_State* L) {
 	return 1;
 }
 
-// TODO: const lua_Number *lua_version (lua_State *L);
+static int multilua_luaversion(lua_State* L) {
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		const lua_Number* ver = lua_version(current_state);
+
+		lua_pushnumber(L, *ver);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+
 // TODO: void lua_xmove (lua_State *from, lua_State *to, int n);
 // TODO: int lua_yield (lua_State *L, int nresults);
 // TODO: int lua_getglobal (lua_State *L, const char *name);
@@ -739,7 +757,6 @@ static int multilua_getfield(lua_State* L) {
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
 // TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
 // TODO: const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n);
-// TODO: 
 
 // TODO: const char *lua_pushfstring (lua_State *L, const char *fmt, ...);
 // TODO: const char *lua_pushvfstring (lua_State *L, const char *fmt, va_list argp);
@@ -761,6 +778,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"error", multilua_error},
 		{"gc", multilua_gc},
 		{"getfield", multilua_getfield},
+		{"luaversion", multilua_luaversion},
 		{NULL, NULL},
 	};
 

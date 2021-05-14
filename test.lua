@@ -107,6 +107,28 @@ end
 -- TODO: Test: getfield
 -- TODO: Test: getfield meta
 
+-- Test: luaversion
+do
+	local obj = multilua.new()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
+
+	assert(multilua.luaversion(obj) == 503.0)
+
+	obj:close()
+end
+
+-- Test: luaversion meta
+do
+	local obj = multilua.new()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
+
+	assert(obj:luaversion() == 503.0)
+
+	obj:close()
+end
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
