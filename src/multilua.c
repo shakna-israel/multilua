@@ -10,6 +10,10 @@ void util_installfuncs(lua_State* L) {
 	lua_pushcfunction(L, multilua_close);
 	lua_setfield(L, -2, "__gc");
 
+	// Create the comparator:
+	lua_pushcfunction(L, multilua_equal);
+	lua_setfield(L, -2, "__eq");
+
 	// Add the index methods:
 	lua_pushcfunction(L, multilua_close);
 	lua_setfield(L, -2, "close");
@@ -130,6 +134,35 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_newtable);
 	lua_setfield(L, -2, "newtable");
+}
+
+static int multilua_equal(lua_State* L) {
+	// 1 - multilua stateA
+	// 2 - multilua stateB
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* first_state = lua_touserdata(L, -1);
+
+		lua_getfield(L, 2, "self");
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* second_state = lua_touserdata(L, -1);
+
+			if(first_state == second_state) {
+				lua_pushboolean(L, true);
+			} else {
+				lua_pushboolean(L, false);
+			}
+			return 1;
+		}
+
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
 }
 
 static int multilua_current(lua_State* L) {

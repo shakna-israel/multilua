@@ -64,6 +64,24 @@ do
 	obj2:close()
 end
 
+-- Test equivalents
+do
+	-- BUG: This causes a double-free
+
+	--[[
+	
+	local obj1 = multilua.new()
+	local obj2 = multilua.new()
+
+	assert(obj1 == obj1)
+	assert(obj1 ~= obj2)
+
+	obj1:close()
+	obj2:close()
+
+	]]
+end
+
 
 -- TODO: Test: openlibs
 do
@@ -487,6 +505,11 @@ do
 	-- Closing the current state is ignored:
 	-- (This will segfault if it fails...)
 	assert(multilua.close(obj) == nil)
+
+	-- Closing the current state is ignored:
+	obj = multilua.current()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
 	assert(obj:close() == nil)
 
 	-- TODO: Lotta tests.

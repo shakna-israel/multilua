@@ -46,5 +46,6 @@ static int multilua_isuserdata(lua_State* L);
 static int multilua_isyieldable(lua_State* L);
 static int multilua_len(lua_State* L);
 static int multilua_newtable(lua_State* L);
+static int multilua_equal(lua_State* L);
 
 #endif
