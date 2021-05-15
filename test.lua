@@ -202,6 +202,9 @@ end
 -- TODO: Test: istable
 -- TODO: Test: istable meta
 
+-- TODO: Test: isthread
+-- TODO: Test: isthread meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
