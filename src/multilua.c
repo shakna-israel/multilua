@@ -97,6 +97,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_islightuserdata);
 	lua_setfield(L, -2, "islightuserdata");
+
+	lua_pushcfunction(L, multilua_isnil);
+	lua_setfield(L, -2, "isnil");
 }
 
 static int multilua_current(lua_State* L) {
@@ -1029,7 +1032,35 @@ static int multilua_islightuserdata(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_isnil (lua_State *L, int index);
+static int multilua_isnil(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int index_bool = false;
+	int index = lua_tointegerx(L, 2, &index_bool);
+	if(!index_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = lua_isnil(current_state, index);
+		if(r == 1) {
+			lua_pushboolean(L, true);
+		} else {
+			lua_pushboolean(L, false);
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_isnone (lua_State *L, int index);
 // TODO: int lua_isnoneornil (lua_State *L, int index);
 // TODO: int lua_isnumber (lua_State *L, int index);
@@ -1209,6 +1240,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"isfunction", multilua_isfunction},
 		{"isinteger", multilua_isinteger},
 		{"islightuserdata", multilua_islightuserdata},
+		{"isnil", multilua_isnil},
 		{NULL, NULL},
 	};
 
