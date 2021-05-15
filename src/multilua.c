@@ -196,6 +196,12 @@ static int multilua_new(lua_State* L) {
 		return 1;
 	}
 
+	// TODO: We need to be able to iterate all states,
+	// to prevent the gc doing a double-free if multiple
+	// references to the same state exist...
+	// OR
+	// Require explicit closing...
+
 	// Otherwise, create our table:
 	lua_newtable(L);
 
