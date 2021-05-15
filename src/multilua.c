@@ -76,6 +76,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_gettop);
 	lua_setfield(L, -2, "gettop");
+
+	lua_pushcfunction(L, multilua_getuservalue);
+	lua_setfield(L, -2, "getuservalue");
 }
 
 static int multilua_current(lua_State* L) {
@@ -812,7 +815,31 @@ static int multilua_gettop(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_getuservalue (lua_State *L, int index);
+static int multilua_getuservalue(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int index_bool = false;
+	int index = lua_tointegerx(L, 2, &index_bool);
+	if(!index_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int type = lua_getuservalue(L, index);
+		lua_pushstring(L, lua_typename(L, type));
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_insert (lua_State *L, int index);
 // TODO: int lua_isboolean (lua_State *L, int index);
 // TODO: int lua_iscfunction (lua_State *L, int index);
@@ -992,6 +1019,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"getmetatable", multilua_getmetatable},
 		{"gettable", multilua_gettable},
 		{"gettop", multilua_gettop},
+		{"getuservalue", multilua_getuservalue},
 		{NULL, NULL},
 	};
 
