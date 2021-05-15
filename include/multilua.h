@@ -42,5 +42,6 @@ static int multilua_isnumber(lua_State* L);
 static int multilua_isstring(lua_State* L);
 static int multilua_istable(lua_State* L);
 static int multilua_isthread(lua_State* L);
+static int multilua_isuserdata(lua_State* L);
 
 #endif
