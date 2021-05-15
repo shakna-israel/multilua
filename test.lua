@@ -148,6 +148,9 @@ end
 -- TODO: Test: yield
 -- TODO: Test: yield meta
 
+-- TODO: Test: getglobal
+-- TODO: Test: getglobal meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
