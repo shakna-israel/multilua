@@ -124,6 +124,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_isyieldable);
 	lua_setfield(L, -2, "isyieldable");
+
+	lua_pushcfunction(L, multilua_len);
+	lua_setfield(L, -2, "len");
 }
 
 static int multilua_current(lua_State* L) {
@@ -1309,7 +1312,32 @@ static int multilua_isyieldable(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_len (lua_State *L, int index);
+static int multilua_len(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int index_bool = false;
+	int index = lua_tointegerx(L, 2, &index_bool);
+
+	if(!index_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_len(current_state, index);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_newtable (lua_State *L);
 // TODO: lua_State *lua_newthread (lua_State *L);
 // TODO: void *lua_newuserdata (lua_State *L, size_t size);
@@ -1489,6 +1517,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"isthread", multilua_isthread},
 		{"isuserdata", multilua_isuserdata},
 		{"isyieldable", multilua_isyieldable},
+		{"len", multilua_len},
 		{NULL, NULL},
 	};
 

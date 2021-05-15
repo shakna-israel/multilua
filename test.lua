@@ -211,6 +211,9 @@ end
 -- TODO: Test: isyieldable
 -- TODO: Test: isyieldable meta
 
+-- TODO: Test: len
+-- TODO: Test: len meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
