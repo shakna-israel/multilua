@@ -37,5 +37,6 @@ static int multilua_isinteger(lua_State* L);
 static int multilua_islightuserdata(lua_State* L);
 static int multilua_isnil(lua_State* L);
 static int multilua_isnone(lua_State* L);
+static int multilua_isnoneornil(lua_State* L);
 
 #endif

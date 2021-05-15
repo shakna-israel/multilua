@@ -190,6 +190,9 @@ end
 -- TODO: Test: isnone
 -- TODO: Test: isnone meta
 
+-- TODO: Test: isnoneornil
+-- TODO: Test: isnoneornil meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
