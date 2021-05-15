@@ -33,5 +33,6 @@ static int multilua_insert(lua_State* L);
 static int multilua_isboolean(lua_State* L);
 static int multilua_iscfunction(lua_State* L);
 static int multilua_isfunction(lua_State* L);
+static int multilua_isinteger(lua_State* L);
 
 #endif
