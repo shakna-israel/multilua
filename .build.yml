@@ -1,0 +1,12 @@
+image: alpine/edge
+packages:
+  - lua5.3
+  - lua5.3-dev
+  - make
+sources:
+  - https://git.sr.ht/~shakna/multilua
+tasks:
+  - test_lua53: |
+     cd multilua
+     lua5.3 -v
+     make test
