@@ -169,6 +169,9 @@ end
 -- TODO: Test: insert
 -- TODO: Test: insert meta
 
+-- TODO: Test: isboolean
+-- TODO: Test: isboolean meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()

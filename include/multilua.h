@@ -30,5 +30,6 @@ static int multilua_gettable(lua_State* L);
 static int multilua_gettop(lua_State* L);
 static int multilua_getuservalue(lua_State* L);
 static int multilua_insert(lua_State* L);
+static int multilua_isboolean(lua_State* L);
 
 #endif
