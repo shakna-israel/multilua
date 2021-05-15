@@ -58,6 +58,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_xmove);
 	lua_setfield(L, -2, "xmove");
+
+	lua_pushcfunction(L, multilua_yield);
+	lua_setfield(L, -2, "yield");
 }
 
 static int multilua_current(lua_State* L) {
@@ -65,12 +68,8 @@ static int multilua_current(lua_State* L) {
 	lua_newtable(L);
 
 	// Create the metatable...
-	if(luaL_newmetatable(L, "multilua_meta")) {
-		util_installfuncs(L);
-	}
-	// Push our actual value:
-	lua_pushlightuserdata(L, L);
-	lua_setfield(L, -2, "self");
+	lua_newtable(L);
+	util_installfuncs(L);
 	// Set the metatable
 	lua_setmetatable(L, -2);
 
@@ -78,6 +77,10 @@ static int multilua_current(lua_State* L) {
 	lua_getmetatable(L, -1);
 	lua_getmetatable(L, -2);
 	lua_setfield(L, -2, "__index");
+
+	// Push our actual value:
+	lua_pushlightuserdata(L, L);
+	lua_setfield(L, -2, "self");
 
 	return 1;
 }
@@ -95,12 +98,8 @@ static int multilua_new(lua_State* L) {
 	lua_newtable(L);
 
 	// Create the metatable...
-	if(luaL_newmetatable(L, "multilua_meta")) {
-		util_installfuncs(L);
-	}
-	// Push our actual value:
-	lua_pushlightuserdata(L, new_state);
-	lua_setfield(L, -2, "self");
+	lua_newtable(L);
+	util_installfuncs(L);
 	// Set the metatable
 	lua_setmetatable(L, -2);
 
@@ -108,6 +107,10 @@ static int multilua_new(lua_State* L) {
 	lua_getmetatable(L, -1);
 	lua_getmetatable(L, -2);
 	lua_setfield(L, -2, "__index");
+
+	// Push our actual value:
+	lua_pushlightuserdata(L, new_state);
+	lua_setfield(L, -2, "self");
 
 	return 1;
 }
@@ -635,7 +638,32 @@ static int multilua_xmove(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_yield (lua_State *L, int nresults);
+static int multilua_yield(lua_State* L) {
+	// 1 - multilua state
+	// 2 - nresults
+
+	int nresults_bool = false;
+	int nresults = lua_tointegerx(L, 2, &nresults_bool);
+
+	if(!nresults_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_yield(current_state, nresults);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_getglobal (lua_State *L, const char *name);
 // TODO: int lua_geti (lua_State *L, int index, lua_Integer i);
 // TODO: int lua_getmetatable (lua_State *L, int index);
@@ -815,6 +843,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"getfield", multilua_getfield},
 		{"luaversion", multilua_luaversion},
 		{"xmove", multilua_xmove},
+		{"yield", multilua_yield},
 		{NULL, NULL},
 	};
 

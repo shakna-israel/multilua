@@ -50,6 +50,19 @@ do
 	assert(obj:close() == nil)
 end
 
+-- Test multiple states can exist
+-- simultaneously
+do
+	local obj1 = multilua.new()
+	local obj2 = multilua.new()
+
+	assert(obj1.self ~= obj2.self)
+
+	obj1:close()
+	obj2:close()
+end
+
+
 -- TODO: Test: openlibs
 -- TODO: Test: openlibs meta
 
@@ -131,6 +144,9 @@ end
 
 -- TODO: Test: xmove
 -- TODO: Test: xmove meta
+
+-- TODO: Test: yield
+-- TODO: Test: yield meta
 
 -- TODO: Test self-library manipulation...
 do
