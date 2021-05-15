@@ -175,6 +175,9 @@ end
 -- TODO: Test: iscfunction
 -- TODO: Test: iscfunction meta
 
+-- TODO: Test: isfunction
+-- TODO: Test: isfunction meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
