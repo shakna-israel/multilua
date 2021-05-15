@@ -40,5 +40,6 @@ static int multilua_isnone(lua_State* L);
 static int multilua_isnoneornil(lua_State* L);
 static int multilua_isnumber(lua_State* L);
 static int multilua_isstring(lua_State* L);
+static int multilua_istable(lua_State* L);
 
 #endif
