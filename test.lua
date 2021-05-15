@@ -166,6 +166,9 @@ end
 -- TODO: Test: getuservalue
 -- TODO: Test: getuservalue meta
 
+-- TODO: Test: insert
+-- TODO: Test: insert meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
