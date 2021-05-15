@@ -214,6 +214,9 @@ end
 -- TODO: Test: len
 -- TODO: Test: len meta
 
+-- TODO: Test: newtable
+-- TODO: Test: newtable meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()
