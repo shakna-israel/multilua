@@ -64,6 +64,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_getglobal);
 	lua_setfield(L, -2, "getglobal");
+
+	lua_pushcfunction(L, multilua_geti);
+	lua_setfield(L, -2, "geti");
 }
 
 static int multilua_current(lua_State* L) {
@@ -691,7 +694,42 @@ static int multilua_getglobal(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_geti (lua_State *L, int index, lua_Integer i);
+static int multilua_geti(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - i
+
+	int index_bool = false;
+	int index = lua_tointegerx(L, 2, &index_bool);
+
+	if(!index_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int i_bool = false;
+	lua_Integer i = lua_tointegerx(L, 3, &i_bool);
+
+	if(!i_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int type = lua_geti(current_state, index, i);
+
+		lua_pushstring(L, lua_typename(L, type));
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_getmetatable (lua_State *L, int index);
 // TODO: int lua_gettable (lua_State *L, int index);
 // TODO: int lua_gettop (lua_State *L);
@@ -871,6 +909,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"xmove", multilua_xmove},
 		{"yield", multilua_yield},
 		{"getglobal", multilua_getglobal},
+		{"geti", multilua_geti},
 		{NULL, NULL},
 	};
 
