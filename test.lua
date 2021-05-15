@@ -157,6 +157,9 @@ end
 -- TODO: Test: getmetatable
 -- TODO: Test: getmetatable meta
 
+-- TODO: Test: gettable
+-- TODO: Test: gettable meta
+
 -- TODO: Test self-library manipulation...
 do
 	--local obj = multilua.current()

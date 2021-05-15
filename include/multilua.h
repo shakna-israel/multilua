@@ -26,5 +26,6 @@ static int multilua_yield(lua_State* L);
 static int multilua_getglobal(lua_State* L);
 static int multilua_geti(lua_State* L);
 static int multilua_getmetatable(lua_State* L);
+static int multilua_gettable(lua_State* L);
 
 #endif
