@@ -15,6 +15,7 @@ print("---")
 
 -- Test: creation
 do
+	assert(type(multilua.new) == 'function')
 	local obj = multilua.new()
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
@@ -25,6 +26,7 @@ do
 	end
 
 	-- Test: closing
+	assert(type(multilua.close) == 'function')
 	assert(type(multilua.close(obj)) == 'nil')
 	assert(obj.self == nil)
 end
@@ -64,16 +66,44 @@ end
 
 
 -- TODO: Test: openlibs
+do
+	assert(type(multilua.openlibs) == 'function')
+end
+
 -- TODO: Test: openlibs meta
+do
+	assert(type(multilua.openlibs) == 'function')
+end
 
 -- TODO: Test: absindex
+do
+	assert(type(multilua.absindex) == 'function')
+end
+
 -- TODO: Test: absindex meta
+do
+	assert(type(multilua.absindex) == 'function')
+end
 
 -- TODO: Test: arith
+do
+	assert(type(multilua.arith) == 'function')
+end
+
 -- TODO: Test: arith meta
+do
+	assert(type(multilua.arith) == 'function')
+end
 
 -- TODO: Test: call
+do
+	assert(type(multilua.call) == 'function')
+end
+
 -- TODO: Test: call meta
+do
+	assert(type(multilua.call) == 'function')
+end
 
 -- Test: checkstack
 do
@@ -81,6 +111,7 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
+	assert(type(multilua.checkstack) == 'function')
 	assert(multilua.checkstack(obj, 2) == true)
 
 	obj:close()
@@ -92,33 +123,85 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
+	assert(type(multilua.checkstack) == 'function')
 	assert(obj:checkstack(2) == true)
 
 	obj:close()
 end
 
 -- TODO: Test: compare
+do
+	assert(type(multilua.compare) == 'function')
+end
+
 -- TODO: Test: compare meta
+do
+	assert(type(multilua.compare) == 'function')
+end
 
 -- TODO: Test: concat
+do
+	assert(type(multilua.concat) == 'function')
+end
+
 -- TODO: Test: concat meta
+do
+	assert(type(multilua.concat) == 'function')
+end
 
 -- TODO: Test: copy
+do
+	assert(type(multilua.copy) == 'function')
+end
+
 -- TODO: Test: copy meta
+do
+	assert(type(multilua.copy) == 'function')
+end
 
 -- TODO: Test: createtable
+do
+	assert(type(multilua.createtable) == 'function')
+end
+
 -- TODO: Test: createtable meta
+do
+	assert(type(multilua.createtable) == 'function')
+end
 
 -- Can we even test `error`??
 -- TODO: Test: error
+do
+	assert(type(multilua.error) == 'function')
+end
+
+-- Can we even test `error`??
 -- TODO: Test: error meta
+do
+	assert(type(multilua.error) == 'function')
+end
 
 -- Can we even test `gc`??
 -- TODO: Test: gc
+do
+	assert(type(multilua.gc) == 'function')
+end
+
+-- Can we even test `gc`??
 -- TODO: Test: gc meta
+do
+	assert(type(multilua.gc) == 'function')
+end
 
 -- TODO: Test: getfield
+do
+	assert(type(multilua.getfield) == 'function')
+end
+
 -- TODO: Test: getfield meta
+do
+	assert(type(multilua.getfield) == 'function')
+end
 
 -- Test: luaversion
 do
@@ -126,6 +209,7 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
+	assert(type(multilua.luaversion) == 'function')
 	assert(multilua.luaversion(obj) == 503.0)
 
 	obj:close()
@@ -137,89 +221,273 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
+	assert(type(multilua.luaversion) == 'function')
 	assert(obj:luaversion() == 503.0)
 
 	obj:close()
 end
 
 -- TODO: Test: xmove
+do
+	assert(type(multilua.xmove) == 'function')
+end
+
 -- TODO: Test: xmove meta
+do
+	assert(type(multilua.xmove) == 'function')
+end
 
 -- TODO: Test: yield
+do
+	assert(type(multilua.yield) == 'function')
+end
+
 -- TODO: Test: yield meta
+do
+	assert(type(multilua.yield) == 'function')
+end
 
 -- TODO: Test: getglobal
+do
+	assert(type(multilua.getglobal) == 'function')
+end
+
 -- TODO: Test: getglobal meta
+do
+	assert(type(multilua.getglobal) == 'function')
+end
 
 -- TODO: Test: geti
+do
+	assert(type(multilua.geti) == 'function')
+end
+
 -- TODO: Test: geti meta
+do
+	assert(type(multilua.geti) == 'function')
+end
 
 -- TODO: Test: getmetatable
+do
+	assert(type(multilua.getmetatable) == 'function')
+end
+
 -- TODO: Test: getmetatable meta
+do
+	assert(type(multilua.getmetatable) == 'function')
+end
 
 -- TODO: Test: gettable
+do
+	assert(type(multilua.gettable) == 'function')
+end
+
 -- TODO: Test: gettable meta
+do
+	assert(type(multilua.gettable) == 'function')
+end
 
 -- TODO: Test: gettop
+do
+	assert(type(multilua.gettop) == 'function')
+end
+
 -- TODO: Test: gettop meta
+do
+	assert(type(multilua.gettop) == 'function')
+end
 
 -- TODO: Test: getuservalue
+do
+	assert(type(multilua.getuservalue) == 'function')
+end
+
 -- TODO: Test: getuservalue meta
+do
+	assert(type(multilua.getuservalue) == 'function')
+end
 
 -- TODO: Test: insert
+do
+	assert(type(multilua.insert) == 'function')
+end
+
 -- TODO: Test: insert meta
+do
+	assert(type(multilua.insert) == 'function')
+end
 
 -- TODO: Test: isboolean
+do
+	assert(type(multilua.isboolean) == 'function')
+end
+
 -- TODO: Test: isboolean meta
+do
+	assert(type(multilua.isboolean) == 'function')
+end
 
 -- TODO: Test: iscfunction
+do
+	assert(type(multilua.iscfunction) == 'function')
+end
+
 -- TODO: Test: iscfunction meta
+do
+	assert(type(multilua.iscfunction) == 'function')
+end
 
 -- TODO: Test: isfunction
+do
+	assert(type(multilua.isfunction) == 'function')
+end
+
 -- TODO: Test: isfunction meta
+do
+	assert(type(multilua.isfunction) == 'function')
+end
 
 -- TODO: Test: isinteger
+do
+	assert(type(multilua.isinteger) == 'function')
+end
+
 -- TODO: Test: isinteger meta
+do
+	assert(type(multilua.isinteger) == 'function')
+end
 
 -- TODO: Test: islightuserdata
+do
+	assert(type(multilua.islightuserdata) == 'function')
+end
+
 -- TODO: Test: islightuserdata meta
+do
+	assert(type(multilua.islightuserdata) == 'function')
+end
 
 -- TODO: Test: isnil
+do
+	assert(type(multilua.isnil) == 'function')
+end
+
 -- TODO: Test: isnil meta
+do
+	assert(type(multilua.isnil) == 'function')
+end
 
 -- TODO: Test: isnone
+do
+	assert(type(multilua.isnone) == 'function')
+end
+
 -- TODO: Test: isnone meta
+do
+	assert(type(multilua.isnone) == 'function')
+end
 
 -- TODO: Test: isnoneornil
+do
+	assert(type(multilua.isnoneornil) == 'function')
+end
+
 -- TODO: Test: isnoneornil meta
+do
+	assert(type(multilua.isnoneornil) == 'function')
+end
 
 -- TODO: Test: isnumber
+do
+	assert(type(multilua.isnumber) == 'function')
+end
+
 -- TODO: Test: isnumber meta
+do
+	assert(type(multilua.isnumber) == 'function')
+end
 
 -- TODO: Test: isstring
+do
+	assert(type(multilua.isstring) == 'function')
+end
+
 -- TODO: Test: isstring meta
+do
+	assert(type(multilua.isstring) == 'function')
+end
 
 -- TODO: Test: istable
+do
+	assert(type(multilua.istable) == 'function')
+end
+
 -- TODO: Test: istable meta
+do
+	assert(type(multilua.istable) == 'function')
+end
 
 -- TODO: Test: isthread
+do
+	assert(type(multilua.isthread) == 'function')
+end
+
 -- TODO: Test: isthread meta
+do
+	assert(type(multilua.isthread) == 'function')
+end
 
 -- TODO: Test: isuserdata
+do
+	assert(type(multilua.isuserdata) == 'function')
+end
+
 -- TODO: Test: isuserdata meta
+do
+	assert(type(multilua.isuserdata) == 'function')
+end
 
 -- TODO: Test: isyieldable
+do
+	assert(type(multilua.isyieldable) == 'function')
+end
+
 -- TODO: Test: isyieldable meta
+do
+	assert(type(multilua.isyieldable) == 'function')
+end
 
 -- TODO: Test: len
+do
+	assert(type(multilua.len) == 'function')
+end
+
 -- TODO: Test: len meta
+do
+	assert(type(multilua.len) == 'function')
+end
 
 -- TODO: Test: newtable
+do
+	assert(type(multilua.newtable) == 'function')
+end
+
 -- TODO: Test: newtable meta
+do
+	assert(type(multilua.newtable) == 'function')
+end
 
 -- TODO: Test self-library manipulation...
 do
-	--local obj = multilua.current()
+	-- Test: Creation
+	local obj = multilua.current()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
+
+	-- Closing the current state is ignored:
+	-- (This will segfault if it fails...)
+	assert(multilua.close(obj) == nil)
+	assert(obj:close() == nil)
+
 	-- TODO: Lotta tests.
-	--assert(obj:close() == nil)
 end

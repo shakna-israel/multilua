@@ -190,7 +190,11 @@ static int multilua_close(lua_State* L) {
 	// Allow it to be closed multiple times (safely):
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
-		lua_close(current_state);
+
+		// Don't close the host Lua pointer!
+		if(current_state != L) {
+			lua_close(current_state);
+		}
 	}
 	// Don't need obj.self anymore:
 	lua_pop(L, 1);
