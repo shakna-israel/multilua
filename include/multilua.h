@@ -49,5 +49,6 @@ static int multilua_newtable(lua_State* L);
 static int multilua_equal(lua_State* L);
 static int multilua_newthread(lua_State* L);
 static int multilua_newuserdata(lua_State* L);
+static int multilua_next(lua_State* L);
 
 #endif

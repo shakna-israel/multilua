@@ -509,6 +509,16 @@ do
 	assert(type(multilua.newuserdata) == 'function')
 end
 
+-- TODO: Test: next
+do
+	assert(type(multilua.next) == 'function')
+end
+
+-- TODO: Test: next meta
+do
+	assert(type(multilua.next) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
