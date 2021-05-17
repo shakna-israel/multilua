@@ -62,5 +62,6 @@ static int multilua_pushnumber(lua_State* L);
 static int multilua_pushvalue(lua_State* L);
 static int multilua_pushlightuserdata(lua_State* L);
 static int multilua_rawequal(lua_State* L);
+static int multilua_rawget(lua_State* L);
 
 #endif
