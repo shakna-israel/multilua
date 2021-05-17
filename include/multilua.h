@@ -47,5 +47,6 @@ static int multilua_isyieldable(lua_State* L);
 static int multilua_len(lua_State* L);
 static int multilua_newtable(lua_State* L);
 static int multilua_equal(lua_State* L);
+static int multilua_newthread(lua_State* L);
 
 #endif

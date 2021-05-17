@@ -489,6 +489,16 @@ do
 	assert(type(multilua.newtable) == 'function')
 end
 
+-- TODO: Test: newthread
+do
+	assert(type(multilua.newthread) == 'function')
+end
+
+-- TODO: Test: newthread meta
+do
+	assert(type(multilua.newthread) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
