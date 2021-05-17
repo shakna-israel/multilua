@@ -177,6 +177,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_rawgeti);
 	lua_setfield(L, -2, "rawgeti");
+
+	lua_pushcfunction(L, multilua_rawlen);
+	lua_setfield(L, -2, "rawlen");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1933,8 +1936,30 @@ static int multilua_rawgeti(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_rawgetp (lua_State *L, int index, const void *p);
-// TODO: size_t lua_rawlen (lua_State *L, int index);
+static int multilua_rawlen(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, -2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		size_t len = lua_rawlen(current_state, index);
+		lua_pushinteger(L, len);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_rawset (lua_State *L, int index);
 // TODO: void lua_rawseti (lua_State *L, int index, lua_Integer i);
 // TODO: void lua_rawsetp (lua_State *L, int index, const void *p);
@@ -2011,6 +2036,7 @@ static int multilua_rawgeti(lua_State* L) {
 // TODO: void luaL_where (lua_State *L, int lvl);
 
 // These are slightly harder to wrap:
+// TODO: int lua_rawgetp (lua_State *L, int index, const void *p);
 // TODO: int lua_pushthread (lua_State *L);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 // TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
@@ -2111,6 +2137,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"rawequal", multilua_rawequal},
 		{"rawget", multilua_rawget},
 		{"rawgeti", multilua_rawgeti},
+		{"rawlen", multilua_rawlen},
 		{NULL, NULL},
 	};
 
