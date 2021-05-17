@@ -54,5 +54,6 @@ static int multilua_pcall(lua_State* L);
 static int multilua_pop(lua_State* L);
 static int multilua_pushboolean(lua_State* L);
 static int multilua_pushglobaltable(lua_State* L);
+static int multilua_pushinteger(lua_State* L);
 
 #endif

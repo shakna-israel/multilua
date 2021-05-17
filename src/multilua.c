@@ -147,6 +147,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pushglobaltable);
 	lua_setfield(L, -2, "pushglobaltable");
+
+	lua_pushcfunction(L, multilua_pushinteger);
+	lua_setfield(L, -2, "pushinteger");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1632,7 +1635,31 @@ static int multilua_pushglobaltable(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_pushinteger (lua_State *L, lua_Integer n);
+static int multilua_pushinteger(lua_State* L) {
+	// 1 - multilua state
+	// 2 - n
+
+	int n_bool = false;
+	lua_Integer n = lua_tointegerx(L, 2, &n_bool);
+	if(!n_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushinteger(current_state, n);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_pushlightuserdata (lua_State *L, void *p);
 // TODO: const char *lua_pushliteral (lua_State *L, const char *s);
 // TODO: const char *lua_pushlstring (lua_State *L, const char *s, size_t len);
@@ -1813,6 +1840,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"pop", multilua_pop},
 		{"pushboolean", multilua_pushboolean},
 		{"pushglobaltable", multilua_pushglobaltable},
+		{"pushinteger", multilua_pushinteger},
 		{NULL, NULL},
 	};
 

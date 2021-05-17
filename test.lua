@@ -559,6 +559,16 @@ do
 	assert(type(multilua.pushglobaltable) == 'function')
 end
 
+-- TODO: Test: pushinteger
+do
+	assert(type(multilua.pushinteger) == 'function')
+end
+
+-- TODO: Test: pushinteger meta
+do
+	assert(type(multilua.pushinteger) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
