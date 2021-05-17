@@ -6,14 +6,6 @@
 #define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
 
 void util_installfuncs(lua_State* L) {
-	// Create the automatic closer:
-	lua_pushcfunction(L, multilua_close);
-	lua_setfield(L, -2, "__gc");
-
-	// Create the comparator:
-	lua_pushcfunction(L, multilua_equal);
-	lua_setfield(L, -2, "__eq");
-
 	// Add the index methods:
 	lua_pushcfunction(L, multilua_close);
 	lua_setfield(L, -2, "close");
@@ -136,6 +128,18 @@ void util_installfuncs(lua_State* L) {
 	lua_setfield(L, -2, "newtable");
 }
 
+void util_installmeta(lua_State* L) {
+	// Create the comparator:
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, multilua_equal);
+	lua_setfield(L, -2, "__eq");
+
+	// Create the automatic closer:
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, multilua_close);
+	lua_setfield(L, -2, "__gc");
+}
+
 static int multilua_equal(lua_State* L) {
 	// 1 - multilua stateA
 	// 2 - multilua stateB
@@ -180,6 +184,8 @@ static int multilua_current(lua_State* L) {
 	lua_getmetatable(L, -2);
 	lua_setfield(L, -2, "__index");
 
+	util_installmeta(L);
+
 	// Push our actual value:
 	lua_pushlightuserdata(L, L);
 	lua_setfield(L, -2, "self");
@@ -215,6 +221,8 @@ static int multilua_new(lua_State* L) {
 	lua_getmetatable(L, -1);
 	lua_getmetatable(L, -2);
 	lua_setfield(L, -2, "__index");
+
+	util_installmeta(L);
 
 	// Push our actual value:
 	lua_pushlightuserdata(L, new_state);

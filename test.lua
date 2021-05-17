@@ -66,10 +66,6 @@ end
 
 -- Test equivalents
 do
-	-- BUG: This causes a double-free
-
-	--[[
-	
 	local obj1 = multilua.new()
 	local obj2 = multilua.new()
 
@@ -78,8 +74,6 @@ do
 
 	obj1:close()
 	obj2:close()
-
-	]]
 end
 
 
