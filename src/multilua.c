@@ -144,6 +144,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pushboolean);
 	lua_setfield(L, -2, "pushboolean");
+
+	lua_pushcfunction(L, multilua_pushglobaltable);
+	lua_setfield(L, -2, "pushglobaltable");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1612,9 +1615,23 @@ static int multilua_pushboolean(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
-// TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
-// TODO: void lua_pushglobaltable (lua_State *L);
+static int multilua_pushglobaltable(lua_State* L) {
+	// 1 - multilua state
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushglobaltable(current_state);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_pushinteger (lua_State *L, lua_Integer n);
 // TODO: void lua_pushlightuserdata (lua_State *L, void *p);
 // TODO: const char *lua_pushliteral (lua_State *L, const char *s);
@@ -1705,6 +1722,8 @@ static int multilua_pushboolean(lua_State* L) {
 // TODO: void luaL_where (lua_State *L, int lvl);
 
 // These are slightly harder to wrap:
+// TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
+// TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
 // TODO: void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup);
 // TODO: void luaL_requiref (lua_State *L, const char *modname, lua_CFunction openf, int glb);
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
@@ -1793,6 +1812,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"pcall", multilua_pcall},
 		{"pop", multilua_pop},
 		{"pushboolean", multilua_pushboolean},
+		{"pushglobaltable", multilua_pushglobaltable},
 		{NULL, NULL},
 	};
 

@@ -549,6 +549,16 @@ do
 	assert(type(multilua.pushboolean) == 'function')
 end
 
+-- TODO: Test: pushglobaltable
+do
+	assert(type(multilua.pushglobaltable) == 'function')
+end
+
+-- TODO: Test: pushglobaltable meta
+do
+	assert(type(multilua.pushglobaltable) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
