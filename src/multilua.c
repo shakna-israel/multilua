@@ -165,6 +165,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pushvalue);
 	lua_setfield(L, -2, "pushvalue");
+
+	lua_pushcfunction(L, multilua_pushlightuserdata);
+	lua_setfield(L, -2, "pushlightuserdata");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1766,6 +1769,8 @@ static int multilua_pushnumber(lua_State* L) {
 		return 1;
 	}
 
+	lua_getfield(L, 1, "self");
+
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 
@@ -1789,6 +1794,8 @@ static int multilua_pushvalue(lua_State* L) {
 		return 1;
 	}
 
+	lua_getfield(L, 1, "self");
+
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 
@@ -1801,8 +1808,31 @@ static int multilua_pushvalue(lua_State* L) {
 	return 1;
 }
 
+static int multilua_pushlightuserdata(lua_State* L) {
+	// 1 - multilua state
+	// 2 - lightuserdata
+
+	if(!lua_islightuserdata(L, 2)) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	void* ptr = lua_touserdata(L, 2);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushlightuserdata(current_state, ptr);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_pushthread (lua_State *L);
-// TODO: void lua_pushlightuserdata (lua_State *L, void *p);
 // TODO: int lua_rawequal (lua_State *L, int index1, int index2);
 // TODO: int lua_rawget (lua_State *L, int index);
 // TODO: int lua_rawgeti (lua_State *L, int index, lua_Integer n);
@@ -1981,6 +2011,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"pushnil", multilua_pushnil},
 		{"pushnumber", multilua_pushnumber},
 		{"pushvalue", multilua_pushvalue},
+		{"pushlightuserdata", multilua_pushlightuserdata},
 		{NULL, NULL},
 	};
 

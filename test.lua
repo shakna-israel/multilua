@@ -619,6 +619,16 @@ do
 	assert(type(multilua.pushvalue) == 'function')
 end
 
+-- TODO: Test: pushlightuserdata
+do
+	assert(type(multilua.pushlightuserdata) == 'function')
+end
+
+-- TODO: Test: pushlightuserdata meta
+do
+	assert(type(multilua.pushlightuserdata) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
