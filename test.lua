@@ -599,6 +599,16 @@ do
 	assert(type(multilua.pushnil) == 'function')
 end
 
+-- TODO: Test: pushnumber
+do
+	assert(type(multilua.pushnumber) == 'function')
+end
+
+-- TODO: Test: pushnumber meta
+do
+	assert(type(multilua.pushnumber) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

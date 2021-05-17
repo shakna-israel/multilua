@@ -58,5 +58,6 @@ static int multilua_pushinteger(lua_State* L);
 static int multilua_pushnstring(lua_State* L);
 static int multilua_pushstring(lua_State* L);
 static int multilua_pushnil(lua_State* L);
+static int multilua_pushnumber(lua_State* L);
 
 #endif
