@@ -168,6 +168,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pushlightuserdata);
 	lua_setfield(L, -2, "pushlightuserdata");
+
+	lua_pushcfunction(L, multilua_rawequal);
+	lua_setfield(L, -2, "rawequal");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1832,8 +1835,42 @@ static int multilua_pushlightuserdata(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_pushthread (lua_State *L);
-// TODO: int lua_rawequal (lua_State *L, int index1, int index2);
+static int multilua_rawequal(lua_State* L) {
+	// 1 - multilua state
+	// 2 - indexA
+	// 3 - indexB
+
+	int bool_indexA = false;
+	int indexA = lua_tointegerx(L, 2, &bool_indexA);
+	if(!bool_indexA) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_indexB = false;
+	int indexB = lua_tointegerx(L, 3, &bool_indexB);
+	if(!bool_indexB) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = lua_rawequal(current_state, indexA, indexB);
+		if(r == 1) {
+			lua_pushboolean(L, true);
+		} else {
+			lua_pushboolean(L, false);
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_rawget (lua_State *L, int index);
 // TODO: int lua_rawgeti (lua_State *L, int index, lua_Integer n);
 // TODO: int lua_rawgetp (lua_State *L, int index, const void *p);
@@ -1914,6 +1951,7 @@ static int multilua_pushlightuserdata(lua_State* L) {
 // TODO: void luaL_where (lua_State *L, int lvl);
 
 // These are slightly harder to wrap:
+// TODO: int lua_pushthread (lua_State *L);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 // TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
 // TODO: void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup);
@@ -1952,8 +1990,6 @@ static int multilua_pushlightuserdata(lua_State* L) {
 
 // TODO: const char *lua_pushfstring (lua_State *L, const char *fmt, ...);
 // TODO: const char *lua_pushvfstring (lua_State *L, const char *fmt, va_list argp);
-
-// TODO: int lua_numbertointeger (lua_Number n, lua_Integer *p);
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	static const struct luaL_Reg multilua [] = {
@@ -2012,6 +2048,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"pushnumber", multilua_pushnumber},
 		{"pushvalue", multilua_pushvalue},
 		{"pushlightuserdata", multilua_pushlightuserdata},
+		{"rawequal", multilua_rawequal},
 		{NULL, NULL},
 	};
 

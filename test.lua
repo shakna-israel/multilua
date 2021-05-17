@@ -629,6 +629,16 @@ do
 	assert(type(multilua.pushlightuserdata) == 'function')
 end
 
+-- TODO: Test: rawequal
+do
+	assert(type(multilua.rawequal) == 'function')
+end
+
+-- TODO: Test: rawequal meta
+do
+	assert(type(multilua.rawequal) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
