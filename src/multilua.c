@@ -138,6 +138,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pcall);
 	lua_setfield(L, -2, "pcall");
+
+	lua_pushcfunction(L, multilua_pop);
+	lua_setfield(L, -2, "pop");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1556,7 +1559,31 @@ static int multilua_pcall(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_pop (lua_State *L, int n);
+static int multilua_pop(lua_State* L) {
+	// 1 - multilua state
+	// 2 - n
+
+	int bool_n = false;
+	int n = lua_tointegerx(L, 2, &bool_n);
+	if(!n) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pop(current_state, n);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_pushboolean (lua_State *L, int b);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 // TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
@@ -1737,6 +1764,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"newuserdata", multilua_newuserdata},
 		{"next", multilua_next},
 		{"pcall", multilua_pcall},
+		{"pop", multilua_pop},
 		{NULL, NULL},
 	};
 

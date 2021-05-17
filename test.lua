@@ -529,6 +529,16 @@ do
 	assert(type(multilua.pcall) == 'function')
 end
 
+-- TODO: Test: pop
+do
+	assert(type(multilua.pop) == 'function')
+end
+
+-- TODO: Test: pop meta
+do
+	assert(type(multilua.pop) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
