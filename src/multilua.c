@@ -135,6 +135,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_next);
 	lua_setfield(L, -2, "next");
+
+	lua_pushcfunction(L, multilua_pcall);
+	lua_setfield(L, -2, "pcall");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1487,8 +1490,72 @@ static int multilua_next(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_numbertointeger (lua_Number n, lua_Integer *p);
-// TODO: int lua_pcall (lua_State *L, int nargs, int nresults, int msgh);
+static int multilua_pcall(lua_State* L) {
+	// 1 - multilua state
+	// 2 - nargs
+	// 3 - nresults
+	// 4 - msgh
+
+	int nargs_bool = false;
+	int nargs = lua_tointegerx(L, 2, &nargs_bool);
+	if(!nargs_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int nresults_bool = false;
+	int nresults = lua_tointegerx(L, 3, &nresults_bool);
+	if(!nresults_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_msgh = false;
+	int msgh = lua_tointegerx(L, 4, &bool_msgh);
+	if(!bool_msgh) {
+		msgh = 0;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = lua_pcall(current_state, nargs, nresults, msgh);
+
+		switch(r) {
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRRUN:
+				lua_pushnil(L);
+				lua_pushstring(L, "runtime");
+				break;
+			case LUA_ERRMEM:
+				lua_pushnil(L);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRERR:
+				lua_pushnil(L);
+				lua_pushstring(L, "error");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushnil(L);
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushnil(L);
+				lua_pushstring(L, "other");
+				break;
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_pop (lua_State *L, int n);
 // TODO: void lua_pushboolean (lua_State *L, int b);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
@@ -1621,6 +1688,8 @@ static int multilua_next(lua_State* L) {
 // TODO: const char *lua_pushfstring (lua_State *L, const char *fmt, ...);
 // TODO: const char *lua_pushvfstring (lua_State *L, const char *fmt, va_list argp);
 
+// TODO: int lua_numbertointeger (lua_Number n, lua_Integer *p);
+
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	static const struct luaL_Reg multilua [] = {
 		{"new", multilua_new},
@@ -1667,6 +1736,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"newthread", multilua_newthread},
 		{"newuserdata", multilua_newuserdata},
 		{"next", multilua_next},
+		{"pcall", multilua_pcall},
 		{NULL, NULL},
 	};
 
