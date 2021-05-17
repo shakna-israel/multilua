@@ -129,6 +129,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_newthread);
 	lua_setfield(L, -2, "newthread");
+
+	lua_pushcfunction(L, multilua_newuserdata);
+	lua_setfield(L, -2, "newuserdata");
 }
 
 void util_installmeta(lua_State* L) {
@@ -204,12 +207,6 @@ static int multilua_new(lua_State* L) {
 		lua_pushnil(L);
 		return 1;
 	}
-
-	// TODO: We need to be able to iterate all states,
-	// to prevent the gc doing a double-free if multiple
-	// references to the same state exist...
-	// OR
-	// Require explicit closing...
 
 	// Otherwise, create our table:
 	lua_newtable(L);
@@ -1435,7 +1432,32 @@ static int multilua_newthread(lua_State* L) {
 	return 1;
 }
 
-// TODO: void *lua_newuserdata (lua_State *L, size_t size);
+static int multilua_newuserdata(lua_State* L) {
+	// 1 - multilua state
+	// 2 - size
+
+	int bool_size = false;
+	size_t size = lua_tointegerx(L, 2, &bool_size);
+	if(!bool_size) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		void* ptr = lua_newuserdata(current_state, size);
+
+		lua_pushlightuserdata(L, ptr);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_next (lua_State *L, int index);
 // TODO: int lua_numbertointeger (lua_Number n, lua_Integer *p);
 // TODO: int lua_pcall (lua_State *L, int nargs, int nresults, int msgh);
@@ -1615,6 +1637,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"len", multilua_len},
 		{"newtable", multilua_newtable},
 		{"newthread", multilua_newthread},
+		{"newuserdata", multilua_newuserdata},
 		{NULL, NULL},
 	};
 
