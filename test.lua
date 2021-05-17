@@ -539,6 +539,16 @@ do
 	assert(type(multilua.pop) == 'function')
 end
 
+-- TODO: Test: pushboolean
+do
+	assert(type(multilua.pushboolean) == 'function')
+end
+
+-- TODO: Test: pushboolean meta
+do
+	assert(type(multilua.pushboolean) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
