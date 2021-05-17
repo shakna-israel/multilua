@@ -569,6 +569,26 @@ do
 	assert(type(multilua.pushinteger) == 'function')
 end
 
+-- TODO: Test: pushstring
+do
+	assert(type(multilua.pushstring) == 'function')
+end
+
+-- TODO: Test: pushstring meta
+do
+	assert(type(multilua.pushstring) == 'function')
+end
+
+-- TODO: Test: pushnstring
+do
+	assert(type(multilua.pushnstring) == 'function')
+end
+
+-- TODO: Test: pushnstring meta
+do
+	assert(type(multilua.pushnstring) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

@@ -150,6 +150,12 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_pushinteger);
 	lua_setfield(L, -2, "pushinteger");
+
+	lua_pushcfunction(L, multilua_pushstring);
+	lua_setfield(L, -2, "pushstring");
+
+	lua_pushcfunction(L, multilua_pushnstring);
+	lua_setfield(L, -2, "pushnstring");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1660,12 +1666,72 @@ static int multilua_pushinteger(lua_State* L) {
 	return 1;
 }
 
+static int multilua_pushstring(lua_State* L) {
+	// 1 - multilua state
+	// 2 - s
+
+	size_t length = 0;
+	const char* s = lua_tolstring(L, 2, &length);
+	if(!s) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushlstring(current_state, s, length);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_pushnstring(lua_State* L) {
+	// 1 - multilua state
+	// 2 - s
+	// 3 - maxlength
+
+	int maxlength_bool = false;
+	lua_Integer maxlength = lua_tointegerx(L, 3, &maxlength_bool);
+
+	if(!maxlength_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	size_t length = 0;
+	const char* s = lua_tolstring(L, 2, &length);
+	if(!s) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	if(length > maxlength) {
+		length = maxlength;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushlstring(current_state, s, length);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_pushlightuserdata (lua_State *L, void *p);
-// TODO: const char *lua_pushliteral (lua_State *L, const char *s);
-// TODO: const char *lua_pushlstring (lua_State *L, const char *s, size_t len);
 // TODO: void lua_pushnil (lua_State *L);
 // TODO: void lua_pushnumber (lua_State *L, lua_Number n);
-// TODO: const char *lua_pushstring (lua_State *L, const char *s);
 // TODO: int lua_pushthread (lua_State *L);
 // TODO: void lua_pushvalue (lua_State *L, int index);
 // TODO: int lua_rawequal (lua_State *L, int index1, int index2);
@@ -1841,6 +1907,8 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"pushboolean", multilua_pushboolean},
 		{"pushglobaltable", multilua_pushglobaltable},
 		{"pushinteger", multilua_pushinteger},
+		{"pushstring", multilua_pushstring},
+		{"pushnstring", multilua_pushnstring},
 		{NULL, NULL},
 	};
 
