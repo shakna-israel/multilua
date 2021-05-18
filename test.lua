@@ -999,6 +999,16 @@ do
 	assert(type(multilua.callmeta) == 'function')
 end
 
+-- TODO: Test: checkany
+do
+	assert(type(multilua.checkany) == 'function')
+end
+
+-- TODO: Test: checkany meta
+do
+	assert(type(multilua.checkany) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
