@@ -267,6 +267,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_upvalueid);
 	lua_setfield(L, -2, "upvalueid");
+
+	lua_pushcfunction(L, multilua_upvaluejoin);
+	lua_setfield(L, -2, "upvaluejoin");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2854,7 +2857,54 @@ static int multilua_upvalueid(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_upvaluejoin (lua_State *L, int funcindex1, int n1, int funcindex2, int n2);
+static int multilua_upvaluejoin(lua_State* L) {
+	// 1 - multilua state
+	// 2 - funcindexA
+	// 3 - nA
+	// 4 - funcindexB
+	// 5 - nB
+
+	int bool_funcindexA = false;
+	int funcindexA = lua_tointegerx(L, 2, &bool_funcindexA);
+	if(!bool_funcindexA) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_nA = false;
+	int nA = lua_tointegerx(L, 3, &bool_nA);
+	if(!bool_nA) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_funcindexB = false;
+	int funcindexB = lua_tointegerx(L, 4, &bool_funcindexB);
+	if(!bool_funcindexB) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_nB = false;
+	int nB = lua_tointegerx(L, 5, &bool_nB);
+	if(!bool_nB) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_upvaluejoin(current_state, funcindexA, nA, funcindexB, nB);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void luaL_argcheck (lua_State *L, int cond, int arg, const char *extramsg);
 // TODO: int luaL_argerror (lua_State *L, int arg, const char *extramsg);
 // TODO: int luaL_callmeta (lua_State *L, int obj, const char *e);
@@ -3028,6 +3078,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"getupvalue", multilua_getupvalue},
 		{"setupvalue", multilua_setupvalue},
 		{"upvalueid", multilua_upvalueid},
+		{"upvaluejoin", multilua_upvaluejoin},
 		{NULL, NULL},
 	};
 
