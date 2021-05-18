@@ -859,6 +859,16 @@ do
 	assert(type(multilua.tonumber) == 'function')
 end
 
+-- TODO: Test: tonumberx
+do
+	assert(type(multilua.tonumberx) == 'function')
+end
+
+-- TODO: Test: tonumberx meta
+do
+	assert(type(multilua.tonumberx) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

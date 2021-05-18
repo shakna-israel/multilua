@@ -84,5 +84,6 @@ static int multilua_tointeger(lua_State* L);
 static int multilua_tointegerx(lua_State* L);
 static int multilua_tostring(lua_State* L);
 static int multilua_tonumber(lua_State* L);
+static int multilua_tonumberx(lua_State* L);
 
 #endif
