@@ -95,5 +95,6 @@ static int multilua_getupvalue(lua_State* L);
 static int multilua_setupvalue(lua_State* L);
 static int multilua_upvalueid(lua_State* L);
 static int multilua_upvaluejoin(lua_State* L);
+static int multilua_argcheck(lua_State* L);
 
 #endif
