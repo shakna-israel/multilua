@@ -219,6 +219,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_setuservalue);
 	lua_setfield(L, -2, "setuservalue");
+
+	lua_pushcfunction(L, multilua_status);
+	lua_setfield(L, -2, "status");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2348,7 +2351,44 @@ static int multilua_setuservalue(lua_State* L) {
 	return 1;
 }
 
-// TODO: int lua_status (lua_State *L);
+static int multilua_status(lua_State* L) {
+	// 1 - multilua state
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = lua_status(current_state);
+		switch(r) {
+			case LUA_OK:
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_YIELD:
+				lua_pushstring(L, "yield");
+				break;
+			case LUA_ERRRUN:
+				lua_pushstring(L, "runtime");
+				break;
+			case LUA_ERRMEM:
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRERR:
+				lua_pushstring(L, "error");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushstring(L, "other");
+				break;
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: size_t lua_stringtonumber (lua_State *L, const char *s);
 // TODO: int lua_toboolean (lua_State *L, int index);
 // TODO: lua_Integer lua_tointeger (lua_State *L, int index);
@@ -2526,6 +2566,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"settable", multilua_settable},
 		{"settop", multilua_settop},
 		{"setuservalue", multilua_setuservalue},
+		{"status", multilua_status},
 		{NULL, NULL},
 	};
 

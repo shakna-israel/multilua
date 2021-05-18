@@ -78,5 +78,6 @@ static int multilua_setmetatable(lua_State* L);
 static int multilua_settable(lua_State* L);
 static int multilua_settop(lua_State* L);
 static int multilua_setuservalue(lua_State* L);
+static int multilua_status(lua_State* L);
 
 #endif
