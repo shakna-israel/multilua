@@ -879,6 +879,16 @@ do
 	assert(type(multilua.topointer) == 'function')
 end
 
+-- TODO: Test: tothread
+do
+	assert(type(multilua.tothread) == 'function')
+end
+
+-- TODO: Test: tothread meta
+do
+	assert(type(multilua.tothread) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
