@@ -869,6 +869,16 @@ do
 	assert(type(multilua.tonumberx) == 'function')
 end
 
+-- TODO: Test: topointer
+do
+	assert(type(multilua.topointer) == 'function')
+end
+
+-- TODO: Test: topointer meta
+do
+	assert(type(multilua.topointer) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
