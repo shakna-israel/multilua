@@ -739,6 +739,16 @@ do
 	assert(type(multilua.setfield) == 'function')
 end
 
+-- TODO: Test: setglobal
+do
+	assert(type(multilua.setglobal) == 'function')
+end
+
+-- TODO: Test: setglobal meta
+do
+	assert(type(multilua.setglobal) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
