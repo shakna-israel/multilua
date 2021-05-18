@@ -729,6 +729,16 @@ do
 	assert(type(multilua.rotate) == 'function')
 end
 
+-- TODO: Test: setfield
+do
+	assert(type(multilua.setfield) == 'function')
+end
+
+-- TODO: Test: setfield meta
+do
+	assert(type(multilua.setfield) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

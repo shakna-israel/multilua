@@ -71,5 +71,6 @@ static int multilua_rawsetp(lua_State* L);
 static int multilua_remove(lua_State* L);
 static int multilua_replace(lua_State* L);
 static int multilua_rotate(lua_State* L);
+static int multilua_setfield(lua_State* L);
 
 #endif

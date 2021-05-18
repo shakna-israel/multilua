@@ -198,6 +198,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_rotate);
 	lua_setfield(L, -2, "rotate");
+
+	lua_pushcfunction(L, multilua_setfield);
+	lua_setfield(L, -2, "setfield");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2144,7 +2147,38 @@ static int multilua_rotate(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_setfield (lua_State *L, int index, const char *k);
+static int multilua_setfield(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - key
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	size_t length = 0;
+	const char* key = lua_tolstring(L, 3, &length);
+	if(!key) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_setfield(current_state, index, key);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_setglobal (lua_State *L, const char *name);
 // TODO: void lua_seti (lua_State *L, int index, lua_Integer n);
 // TODO: void lua_setmetatable (lua_State *L, int index);
@@ -2322,6 +2356,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"remove", multilua_remove},
 		{"replace", multilua_replace},
 		{"rotate", multilua_rotate},
+		{"setfield", multilua_setfield},
 		{NULL, NULL},
 	};
 
