@@ -939,6 +939,16 @@ do
 	assert(type(multilua.getupvalue) == 'function')
 end
 
+-- TODO: Test: setupvalue
+do
+	assert(type(multilua.setupvalue) == 'function')
+end
+
+-- TODO: Test: setupvalue meta
+do
+	assert(type(multilua.setupvalue) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
