@@ -67,5 +67,6 @@ static int multilua_rawgeti(lua_State* L);
 static int multilua_rawlen(lua_State* L);
 static int multilua_rawset(lua_State* L);
 static int multilua_rawseti(lua_State* L);
+static int multilua_rawsetp(lua_State* L);
 
 #endif

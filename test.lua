@@ -689,6 +689,16 @@ do
 	assert(type(multilua.rawseti) == 'function')
 end
 
+-- TODO: Test: rawsetp
+do
+	assert(type(multilua.rawsetp) == 'function')
+end
+
+-- TODO: Test: rawsetp meta
+do
+	assert(type(multilua.rawsetp) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
