@@ -929,6 +929,16 @@ do
 	assert(type(multilua.gethookmask) == 'function')
 end
 
+-- TODO: Test: getupvalue
+do
+	assert(type(multilua.getupvalue) == 'function')
+end
+
+-- TODO: Test: getupvalue meta
+do
+	assert(type(multilua.getupvalue) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

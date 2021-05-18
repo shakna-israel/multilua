@@ -91,6 +91,7 @@ static int multilua_touserdata(lua_State* L);
 static int multilua_type(lua_State* L);
 static int multilua_gethookcount(lua_State* L);
 static int multilua_gethookmask(lua_State* L);
+static int multilua_getupvalue(lua_State* L);
 
 
 #endif

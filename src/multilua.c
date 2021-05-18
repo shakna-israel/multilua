@@ -258,6 +258,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_gethookmask);
 	lua_setfield(L, -2, "gethookmask");
+
+	lua_pushcfunction(L, multilua_getupvalue);
+	lua_setfield(L, -2, "getupvalue");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2730,7 +2733,47 @@ static int multilua_gethookmask(lua_State* L) {
 	return 1;
 }
 
-// TODO: const char *lua_getupvalue (lua_State *L, int funcindex, int n);
+static int multilua_getupvalue(lua_State* L) {
+	// 1 - multilua state
+	// 2 - funcindex
+	// 3 - n
+
+	int bool_funcindex = false;
+	int funcindex = lua_tointegerx(L, 2, &bool_funcindex);
+	if(!bool_funcindex) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_n = false;
+	int n = lua_tointegerx(L, 3, &bool_n);
+	if(!bool_n) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		const char* r = lua_getupvalue(current_state, funcindex, n);
+		if(r == NULL) {
+			lua_pushnil(L);
+			return 1;
+		} else
+		if(r[0] == '\0') {
+			lua_pushboolean(L, true);
+			return 1;
+		} else {
+			lua_pushstring(L, r);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: const char *lua_setupvalue (lua_State *L, int funcindex, int n);
 // TODO: void *lua_upvalueid (lua_State *L, int funcindex, int n);
 // TODO: void lua_upvaluejoin (lua_State *L, int funcindex1, int n1, int funcindex2, int n2);
@@ -2904,6 +2947,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"type", multilua_type},
 		{"gethookcount", multilua_gethookcount},
 		{"gethookmask", multilua_gethookmask},
+		{"getupvalue", multilua_getupvalue},
 		{NULL, NULL},
 	};
 
