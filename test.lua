@@ -899,6 +899,16 @@ do
 	assert(type(multilua.touserdata) == 'function')
 end
 
+-- TODO: Test: type
+do
+	assert(type(multilua.type) == 'function')
+end
+
+-- TODO: Test: type meta
+do
+	assert(type(multilua.type) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
