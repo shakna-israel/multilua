@@ -989,6 +989,16 @@ do
 	assert(type(multilua.argerror) == 'function')
 end
 
+-- TODO: Test: callmeta
+do
+	assert(type(multilua.callmeta) == 'function')
+end
+
+-- TODO: Test: callmeta meta
+do
+	assert(type(multilua.callmeta) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

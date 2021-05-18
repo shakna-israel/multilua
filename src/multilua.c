@@ -276,6 +276,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_argerror);
 	lua_setfield(L, -2, "argerror");
+
+	lua_pushcfunction(L, multilua_callmeta);
+	lua_setfield(L, -2, "callmeta");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2968,7 +2971,37 @@ static int multilua_argerror(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_callmeta (lua_State *L, int obj, const char *e);
+static int multilua_callmeta(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - field
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* field = lua_tostring(L, 3);
+	if(!field) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_callmeta(current_state, index, field);
+		lua_pushboolean(L, r);
+		return 1;
+	}	
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void luaL_checkany (lua_State *L, int arg);
 // TODO: lua_Integer luaL_checkinteger (lua_State *L, int arg);
 // TODO: const char *luaL_checklstring (lua_State *L, int arg, size_t *l);
@@ -3142,6 +3175,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"upvaluejoin", multilua_upvaluejoin},
 		{"argcheck", multilua_argcheck},
 		{"argerror", multilua_argerror},
+		{"callmeta", multilua_callmeta},
 		{NULL, NULL},
 	};
 

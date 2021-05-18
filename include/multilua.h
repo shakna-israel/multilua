@@ -97,5 +97,6 @@ static int multilua_upvalueid(lua_State* L);
 static int multilua_upvaluejoin(lua_State* L);
 static int multilua_argcheck(lua_State* L);
 static int multilua_argerror(lua_State* L);
+static int multilua_callmeta(lua_State* L);
 
 #endif
