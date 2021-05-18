@@ -225,6 +225,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_toboolean);
 	lua_setfield(L, -2, "toboolean");
+
+	lua_pushcfunction(L, multilua_tointeger);
+	lua_setfield(L, -2, "tointeger");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2416,7 +2419,30 @@ static int multilua_toboolean(lua_State* L) {
 	return 1;
 }
 
-// TODO: lua_Integer lua_tointeger (lua_State *L, int index);
+static int multilua_tointeger(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_Integer r = lua_tointeger(current_state, index);
+		lua_pushinteger(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: lua_Integer lua_tointegerx (lua_State *L, int index, int *isnum);
 // TODO: const char *lua_tolstring (lua_State *L, int index, size_t *len);
 // TODO: lua_Number lua_tonumber (lua_State *L, int index);
@@ -2593,6 +2619,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"setuservalue", multilua_setuservalue},
 		{"status", multilua_status},
 		{"toboolean", multilua_toboolean},
+		{"tointeger", multilua_tointeger},
 		{NULL, NULL},
 	};
 
