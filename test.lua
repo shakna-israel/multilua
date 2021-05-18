@@ -829,6 +829,16 @@ do
 	assert(type(multilua.tointeger) == 'function')
 end
 
+-- TODO: Test: tointegerx
+do
+	assert(type(multilua.tointegerx) == 'function')
+end
+
+-- TODO: Test: tointegerx meta
+do
+	assert(type(multilua.tointegerx) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

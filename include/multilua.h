@@ -81,5 +81,6 @@ static int multilua_setuservalue(lua_State* L);
 static int multilua_status(lua_State* L);
 static int multilua_toboolean(lua_State* L);
 static int multilua_tointeger(lua_State* L);
+static int multilua_tointegerx(lua_State* L);
 
 #endif
