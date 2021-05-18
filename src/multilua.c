@@ -183,6 +183,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_rawset);
 	lua_setfield(L, -2, "rawset");
+
+	lua_pushcfunction(L, multilua_rawseti);
+	lua_setfield(L, -2, "rawseti");
 }
 
 void util_installmeta(lua_State* L) {
@@ -1987,7 +1990,38 @@ static int multilua_rawset(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_rawseti (lua_State *L, int index, lua_Integer i);
+static int multilua_rawseti(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - i
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_i = false;
+	lua_Integer i = lua_tointegerx(L, 3, &bool_i);
+	if(!bool_i) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_rawseti(current_state, index, i);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void lua_rawsetp (lua_State *L, int index, const void *p);
 // TODO: void lua_remove (lua_State *L, int index);
 // TODO: void lua_replace (lua_State *L, int index);
@@ -2165,6 +2199,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"rawgeti", multilua_rawgeti},
 		{"rawlen", multilua_rawlen},
 		{"rawset", multilua_rawset},
+		{"rawseti", multilua_rawseti},
 		{NULL, NULL},
 	};
 
