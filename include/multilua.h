@@ -74,5 +74,6 @@ static int multilua_rotate(lua_State* L);
 static int multilua_setfield(lua_State* L);
 static int multilua_setglobal(lua_State* L);
 static int multilua_seti(lua_State* L);
+static int multilua_setmetatable(lua_State* L);
 
 #endif

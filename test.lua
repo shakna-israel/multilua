@@ -759,6 +759,16 @@ do
 	assert(type(multilua.seti) == 'function')
 end
 
+-- TODO: Test: setmetatable
+do
+	assert(type(multilua.setmetatable) == 'function')
+end
+
+-- TODO: Test: setmetatable meta
+do
+	assert(type(multilua.setmetatable) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
