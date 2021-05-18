@@ -809,6 +809,16 @@ do
 	assert(type(multilua.status) == 'function')
 end
 
+-- TODO: Test: toboolean
+do
+	assert(type(multilua.toboolean) == 'function')
+end
+
+-- TODO: Test: toboolean meta
+do
+	assert(type(multilua.toboolean) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
