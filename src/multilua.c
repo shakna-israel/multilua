@@ -246,6 +246,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_tothread);
 	lua_setfield(L, -2, "tothread");
+
+	lua_pushcfunction(L, multilua_touserdata);
+	lua_setfield(L, -2, "touserdata");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2634,7 +2637,35 @@ static int multilua_tothread(lua_State* L) {
 	return 1;
 }
 
-// TODO: void *lua_touserdata (lua_State *L, int index);
+static int multilua_touserdata(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		void* ptr = (void*)lua_touserdata(current_state, index);
+		if(ptr == NULL) {
+			lua_pushnil(L);
+			return 1;
+		} else {
+			lua_pushlightuserdata(L, ptr);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_type (lua_State *L, int index);
 // TODO: const char *lua_typename (lua_State *L, int tp);
 // TODO: int lua_upvalueindex (int i);
@@ -2810,6 +2841,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"tonumberx", multilua_tonumberx},
 		{"topointer", multilua_topointer},
 		{"tothread", multilua_tothread},
+		{"touserdata", multilua_touserdata},
 		{NULL, NULL},
 	};
 

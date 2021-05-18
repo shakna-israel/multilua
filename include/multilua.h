@@ -87,6 +87,7 @@ static int multilua_tonumber(lua_State* L);
 static int multilua_tonumberx(lua_State* L);
 static int multilua_topointer(lua_State* L);
 static int multilua_tothread(lua_State* L);
+static int multilua_touserdata(lua_State* L);
 
 
 #endif
