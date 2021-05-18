@@ -89,6 +89,7 @@ static int multilua_topointer(lua_State* L);
 static int multilua_tothread(lua_State* L);
 static int multilua_touserdata(lua_State* L);
 static int multilua_type(lua_State* L);
+static int multilua_gethookcount(lua_State* L);
 
 
 #endif

@@ -909,6 +909,16 @@ do
 	assert(type(multilua.type) == 'function')
 end
 
+-- TODO: Test: gethookcount
+do
+	assert(type(multilua.gethookcount) == 'function')
+end
+
+-- TODO: Test: gethookcount meta
+do
+	assert(type(multilua.gethookcount) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
