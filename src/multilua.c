@@ -192,6 +192,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_remove);
 	lua_setfield(L, -2, "remove");
+
+	lua_pushcfunction(L, multilua_replace);
+	lua_setfield(L, -2, "replace");
 }
 
 void util_installmeta(lua_State* L) {
@@ -2082,7 +2085,30 @@ static int multilua_remove(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_replace (lua_State *L, int index);
+static int multilua_replace(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_replace(current_state, index);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int lua_resume (lua_State *L, lua_State *from, int nargs);
 // TODO: void lua_rotate (lua_State *L, int idx, int n);
 // TODO: void lua_setfield (lua_State *L, int index, const char *k);
@@ -2260,6 +2286,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"rawseti", multilua_rawseti},
 		{"rawsetp", multilua_rawsetp},
 		{"remove", multilua_remove},
+		{"replace", multilua_replace},
 		{NULL, NULL},
 	};
 

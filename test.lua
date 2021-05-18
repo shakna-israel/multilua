@@ -709,6 +709,16 @@ do
 	assert(type(multilua.remove) == 'function')
 end
 
+-- TODO: Test: replace
+do
+	assert(type(multilua.replace) == 'function')
+end
+
+-- TODO: Test: replace meta
+do
+	assert(type(multilua.replace) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
