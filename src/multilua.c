@@ -143,6 +143,7 @@ static const struct luaL_Reg multilua [] = {
 	{"tabletoreg", multilua_tabletoreg},
 	{"setfuncs", multilua_setfuncs},
 	{"requiref", multilua_requiref},
+	{"buffinit", multilua_buffinit},
 	{NULL, NULL},
 };
 
@@ -4300,6 +4301,24 @@ static int multilua_requiref(lua_State* L) {
 	return 1;
 }
 
+static int multilua_buffinit(lua_State* L) {
+	// 1 - multilua state
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_Buffer* buff = lua_newuserdata(current_state, sizeof(luaL_Buffer));
+		luaL_buffinit(current_state, buff);
+		lua_pushlightuserdata(current_state, buff);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
 // TODO: void luaL_pushresult (luaL_Buffer *B);
@@ -4311,7 +4330,6 @@ static int multilua_requiref(lua_State* L) {
 // TODO: int luaL_error (lua_State *L, const char *fmt, ...);
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 // TODO: char *luaL_buffinitsize (lua_State *L, luaL_Buffer *B, size_t sz);
-// TODO: void luaL_buffinit (lua_State *L, luaL_Buffer *B);
 // TODO: void luaL_addchar (luaL_Buffer *B, char c);
 // TODO: void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l);
 // TODO: void luaL_addsize (luaL_Buffer *B, size_t n);

@@ -1459,6 +1459,16 @@ do
 	assert(type(multilua.requiref) == 'function')
 end
 
+-- TODO: Test: buffinit
+do
+	assert(type(multilua.buffinit) == 'function')
+end
+
+-- TODO: Test: buffinit meta
+do
+	assert(type(multilua.buffinit) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
