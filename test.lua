@@ -1089,6 +1089,16 @@ do
 	assert(type(multilua.dofile) == 'function')
 end
 
+-- TODO: Test: dostring
+do
+	assert(type(multilua.dostring) == 'function')
+end
+
+-- TODO: Test: dostring meta
+do
+	assert(type(multilua.dostring) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
