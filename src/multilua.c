@@ -140,6 +140,7 @@ static const struct luaL_Reg multilua [] = {
 	{"pushcclosure", multilua_pushcclosure},
 	{"pushcfunction", multilua_pushcfunction},
 	{"newreg", multilua_newreg},
+	{"tabletoreg", multilua_tabletoreg},
 	{NULL, NULL},
 };
 
@@ -4160,14 +4161,80 @@ static int multilua_newreg(lua_State* L) {
 	return 1;
 }
 
-// TODO: table->luaL_Reg
 static int multilua_tabletoreg(lua_State* L) {
 	// 1 - multilua state
-	// 2 - luaL_Reg pointer
 	// 3 - table
 
-	return 0;
+	int bool_tindex = false;
+	int table_index = lua_tointegerx(L, 2, &bool_tindex);
+	if(!bool_tindex) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		// Get table size:
+		size_t table_length = 0;
+
+		lua_pushnil(L);
+		while(lua_next(L, table_index) != 0) {
+			table_length++;
+
+			// Remove value, keep key for iterating...
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+
+		// Allocate structures
+		luaL_Reg** reg_array = lua_newuserdata(current_state, sizeof(luaL_Reg*) * (table_length + 2));
+		for(size_t i = 0; i < table_length; i++) {
+			reg_array[i] = lua_newuserdata(current_state, sizeof(luaL_Reg));
+		}
+
+		// Build array
+		size_t i = 0;
+		lua_pushnil(L);
+		while(lua_next(L, table_index) != 0) {
+			// -2 - key
+			// -1 - value
+
+			// Non-string keys will fuckup... But there should be no non-string keys...
+			size_t length = 0;
+			const char* key = lua_tolstring(L, -2, &length);
+
+			lua_CFunction* func = lua_touserdata(L, -1);
+
+			// Copy the key...
+			char* key_copy = lua_newuserdata(current_state, sizeof(char) * length + 1);
+			for(size_t idx = 0; idx < length; idx++) {
+				key_copy[idx] = key[idx];
+			}
+
+			reg_array[i]->name = key_copy;
+			reg_array[i]->func = *func;
+
+			// Remove value, keep key for iterating...
+			lua_pop(L, 1);
+			i++;
+		}
+
+		// Install the sentinal
+		reg_array[i]->name = NULL;
+		reg_array[i]->func = NULL;
+
+		// Return array
+		lua_pushlightuserdata(current_state, reg_array);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
 }
+
 
 
 // These are slightly harder to wrap:
