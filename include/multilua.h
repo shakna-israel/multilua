@@ -102,5 +102,6 @@ static int multilua_checkany(lua_State* L);
 static int multilua_checkinteger(lua_State* L);
 static int multilua_checkstring(lua_State* L);
 static int multilua_checknumber(lua_State* L);
+static int multilua_lcheckstack(lua_State* L);
 
 #endif
