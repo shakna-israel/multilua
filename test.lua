@@ -1009,6 +1009,16 @@ do
 	assert(type(multilua.checkany) == 'function')
 end
 
+-- TODO: Test: checkinteger
+do
+	assert(type(multilua.checkinteger) == 'function')
+end
+
+-- TODO: Test: checkinteger meta
+do
+	assert(type(multilua.checkinteger) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
