@@ -133,6 +133,7 @@ static const struct luaL_Reg multilua [] = {
 	{"traceback", multilua_traceback},
 	{"unref", multilua_unref},
 	{"where", multilua_where},
+	{"resume", multilua_resume},
 	{NULL, NULL},
 };
 
@@ -3951,8 +3952,62 @@ static int multilua_where(lua_State* L) {
 	return 1;
 }
 
+static int multilua_resume(lua_State* L) {
+	// 1 - multilua state
+	// 2 - thread
+	// 3 - nargs
+
+	int bool_nargs = false;
+	int nargs = lua_tointegerx(L, 3, &bool_nargs);
+	if(!bool_nargs) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_State* thread = lua_touserdata(L, 2);
+		int r = lua_resume(current_state, thread, nargs);
+		switch(r) {
+			case LUA_YIELD:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "yield");
+				break;
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRRUN:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "runtime");
+				break;
+			case LUA_ERRMEM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRERR:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "error");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "other");
+				break;
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
-// TODO: int lua_resume (lua_State *L, lua_State *from, int nargs);
 // TODO: int lua_rawgetp (lua_State *L, int index, const void *p);
 // TODO: int lua_pushthread (lua_State *L);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);

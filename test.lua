@@ -1359,6 +1359,16 @@ do
 	assert(type(multilua.where) == 'function')
 end
 
+-- TODO: Test: resume
+do
+	assert(type(multilua.resume) == 'function')
+end
+
+-- TODO: Test: resume meta
+do
+	assert(type(multilua.resume) == 'function')
+end
+
 
 -- TODO: Test self-library manipulation...
 do
