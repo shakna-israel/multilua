@@ -1129,6 +1129,16 @@ do
 	assert(type(multilua.getmetafield) == 'function')
 end
 
+-- TODO: Test: lgetmetatable
+do
+	assert(type(multilua.lgetmetatable) == 'function')
+end
+
+-- TODO: Test: lgetmetatable meta
+do
+	assert(type(multilua.lgetmetatable) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
