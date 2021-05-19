@@ -131,6 +131,7 @@ static const struct luaL_Reg multilua [] = {
 	{"testudata", multilua_testudata},
 	{"ltostring", multilua_ltostring},
 	{"traceback", multilua_traceback},
+	{"unref", multilua_unref},
 	{NULL, NULL},
 };
 
@@ -3893,8 +3894,38 @@ static int multilua_traceback(lua_State* L) {
 	return 1;
 }
 
-// TODO: const char *luaL_typename (lua_State *L, int index);
-// TODO: void luaL_unref (lua_State *L, int t, int ref);
+static int multilua_unref(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - reference
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_reference = false;
+	int reference = lua_tointegerx(L, 3, &bool_reference);
+	if(!bool_reference) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_unref(current_state, index, reference);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: void luaL_where (lua_State *L, int lvl);
 
 // These are slightly harder to wrap:

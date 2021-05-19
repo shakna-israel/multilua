@@ -1339,6 +1339,16 @@ do
 	assert(type(multilua.traceback) == 'function')
 end
 
+-- TODO: Test: unref
+do
+	assert(type(multilua.unref) == 'function')
+end
+
+-- TODO: Test: unref meta
+do
+	assert(type(multilua.unref) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
