@@ -124,6 +124,9 @@ static const struct luaL_Reg multilua [] = {
 	{"optinteger", multilua_optinteger},
 	{"optstring", multilua_optstring},
 	{"optnumber", multilua_optnumber},
+	{"ref", multilua_ref},
+	{"refnil", multilua_refnil},
+	{"noref", multilua_noref},
 	{NULL, NULL},
 };
 
@@ -3743,8 +3746,40 @@ static int multilua_optnumber(lua_State* L) {
 	return 1;
 }
 
-// TODO: const char *luaL_optstring (lua_State *L, int arg, const char *d);
-// TODO: int luaL_ref (lua_State *L, int t);
+static int multilua_ref(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_ref(current_state, index);
+		lua_pushinteger(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_refnil(lua_State* L) {
+	lua_pushinteger(L, LUA_REFNIL);
+	return 1;
+}
+
+static int multilua_noref(lua_State* L) {
+	lua_pushinteger(L, LUA_NOREF);
+	return 1;
+}
+
 // TODO: void luaL_setmetatable (lua_State *L, const char *tname);
 // TODO: void *luaL_testudata (lua_State *L, int arg, const char *tname);
 // TODO: const char *luaL_tolstring (lua_State *L, int idx, size_t *len);

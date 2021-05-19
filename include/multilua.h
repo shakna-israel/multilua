@@ -124,5 +124,8 @@ static int multilua_newmetatable(lua_State* L);
 static int multilua_optinteger(lua_State* L);
 static int multilua_optstring(lua_State* L);
 static int multilua_optnumber(lua_State* L);
+static int multilua_ref(lua_State* L);
+static int multilua_refnil(lua_State* L);
+static int multilua_noref(lua_State* L);
 
 #endif

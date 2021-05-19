@@ -1259,6 +1259,46 @@ do
 	assert(type(multilua.optnumber) == 'function')
 end
 
+-- TODO: Test: ref
+do
+	assert(type(multilua.ref) == 'function')
+end
+
+-- TODO: Test: ref meta
+do
+	assert(type(multilua.ref) == 'function')
+end
+
+-- Test: refnil
+do
+	assert(type(multilua.refnil) == 'function')
+	assert(type(multilua.refnil()) == 'number')
+end
+
+-- Test: refnil meta
+do
+	local obj = multilua.new()
+	assert(type(obj.refnil) == 'function')
+	assert(type(obj:refnil()) == 'number')
+
+	obj:close()
+end
+
+-- Test: noref
+do
+	assert(type(multilua.noref) == 'function')
+	assert(type(multilua.noref()) == 'number')
+end
+
+-- Test: noref meta
+do
+	local obj = multilua.new()
+	assert(type(obj.noref) == 'function')
+	assert(type(obj:noref()) == 'number')
+
+	obj:close()
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
