@@ -321,6 +321,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_lgetmetatable);
 	lua_setfield(L, -2, "lgetmetatable");
+
+	lua_pushcfunction(L, multilua_getsubtable);
+	lua_setfield(L, -2, "getsubtable");
 }
 
 void util_installmeta(lua_State* L) {
@@ -3451,7 +3454,37 @@ static int multilua_lgetmetatable(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_getsubtable (lua_State *L, int idx, const char *fname);
+static int multilua_getsubtable(lua_State* L) {
+	// 1 - multilua state
+	// 2 - idx
+	// 3 - fname
+
+	int bool_idx = false;
+	int idx = lua_tointegerx(L, 2, &bool_idx);
+	if(!bool_idx) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* fname = lua_tostring(L, 3);
+	if(!fname) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_getsubtable(current_state, idx, fname);
+		lua_pushboolean(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: const char *luaL_gsub (lua_State *L, const char *s, const char *p, const char *r);
 // TODO: lua_Integer luaL_len (lua_State *L, int index);
 // TODO: int luaL_loadbuffer (lua_State *L, const char *buff, size_t sz, const char *name);
@@ -3624,6 +3657,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"fileresult", multilua_fileresult},
 		{"getmetafield", multilua_getmetafield},
 		{"lgetmetatable", multilua_lgetmetatable},
+		{"getsubtable", multilua_getsubtable},
 		{NULL, NULL},
 	};
 
