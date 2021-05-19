@@ -1319,6 +1319,16 @@ do
 	assert(type(multilua.testudata) == 'function')
 end
 
+-- TODO: Test: ltostring
+do
+	assert(type(multilua.ltostring) == 'function')
+end
+
+-- TODO: Test: ltostring meta
+do
+	assert(type(multilua.ltostring) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
