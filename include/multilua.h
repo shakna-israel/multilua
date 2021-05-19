@@ -128,5 +128,6 @@ static int multilua_ref(lua_State* L);
 static int multilua_refnil(lua_State* L);
 static int multilua_noref(lua_State* L);
 static int multilua_lsetmetatable(lua_State* L);
+static int multilua_testudata(lua_State* L);
 
 #endif

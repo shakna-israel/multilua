@@ -128,6 +128,7 @@ static const struct luaL_Reg multilua [] = {
 	{"refnil", multilua_refnil},
 	{"noref", multilua_noref},
 	{"lsetmetatable", multilua_lsetmetatable},
+	{"testudata", multilua_testudata},
 	{NULL, NULL},
 };
 
@@ -3804,7 +3805,41 @@ static int multilua_lsetmetatable(lua_State* L) {
 	return 1;
 }
 
-// TODO: void *luaL_testudata (lua_State *L, int arg, const char *tname);
+static int multilua_testudata(lua_State* L) {
+	// 1 - multilua state
+	// 2 - arg
+	// 3 - table_name
+
+	int bool_arg = false;
+	int arg = lua_tointegerx(L, 2, &bool_arg);
+	if(!bool_arg) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* table_name = lua_tostring(L, 3);
+	if(!table_name) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		void* ptr = (void*)luaL_testudata(current_state, arg, table_name);
+		if(ptr == NULL) {
+			lua_pushnil(L);
+		} else {
+			lua_pushlightuserdata(L, ptr);
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: const char *luaL_tolstring (lua_State *L, int idx, size_t *len);
 // TODO: void luaL_traceback (lua_State *L, lua_State *L1, const char *msg, int level);
 // TODO: const char *luaL_typename (lua_State *L, int index);
