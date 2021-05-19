@@ -150,5 +150,6 @@ static int multilua_prepbuffer(lua_State* L);
 static int multilua_addchar(lua_State* L);
 static int multilua_addstring(lua_State* L);
 static int multilua_addsize(lua_State* L);
+static int multilua_addvalue(lua_State* L);
 
 #endif

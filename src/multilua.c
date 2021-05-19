@@ -150,6 +150,7 @@ static const struct luaL_Reg multilua [] = {
 	{"addchar", multilua_addchar},
 	{"addstring", multilua_addstring},
 	{"addsize", multilua_addsize},
+	{"addvalue", multilua_addvalue},
 	{NULL, NULL},
 };
 
@@ -4475,9 +4476,23 @@ static int multilua_addsize(lua_State* L) {
 	return 1;
 }
 
+static int multilua_addvalue(lua_State* L) {
+	// 1 - multilua state
+	// 2 - buffer
+
+	if(lua_islightuserdata(L, 2)) {
+		luaL_Buffer* buff = lua_touserdata(L, 2);
+
+		luaL_addvalue(buff);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // For buffers:
-// TODO: void luaL_addstring (luaL_Buffer *B, const char *s);
-// TODO: void luaL_addvalue (luaL_Buffer *B);
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
 // TODO: void luaL_pushresult (luaL_Buffer *B);
 
