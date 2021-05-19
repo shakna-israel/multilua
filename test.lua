@@ -1369,6 +1369,15 @@ do
 	assert(type(multilua.resume) == 'function')
 end
 
+-- TODO: Test: rawgetp
+do
+	assert(type(multilua.rawgetp) == 'function')
+end
+
+-- TODO: Test: rawgetp meta
+do
+	assert(type(multilua.rawgetp) == 'function')
+end
 
 -- TODO: Test self-library manipulation...
 do

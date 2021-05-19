@@ -134,6 +134,7 @@ static const struct luaL_Reg multilua [] = {
 	{"unref", multilua_unref},
 	{"where", multilua_where},
 	{"resume", multilua_resume},
+	{"rawgetp", multilua_rawgetp},
 	{NULL, NULL},
 };
 
@@ -4007,8 +4008,36 @@ static int multilua_resume(lua_State* L) {
 	return 1;
 }
 
+static int multilua_rawgetp(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	// 3 - pointer
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	if(lua_islightuserdata(L, 3)) {
+		void* ptr = (void*)lua_touserdata(L, 3);
+
+		lua_getfield(L, 1, "self");
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* current_state = lua_touserdata(L, -1);
+
+			int type = lua_rawgetp(current_state, index, ptr);
+			lua_pushstring(L, lua_typename(L, type));
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
-// TODO: int lua_rawgetp (lua_State *L, int index, const void *p);
 // TODO: int lua_pushthread (lua_State *L);
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 // TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
