@@ -1239,6 +1239,16 @@ do
 	assert(type(multilua.optinteger) == 'function')
 end
 
+-- TODO: Test: optstring
+do
+	assert(type(multilua.optstring) == 'function')
+end
+
+-- TODO: Test: optstring meta
+do
+	assert(type(multilua.optstring) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

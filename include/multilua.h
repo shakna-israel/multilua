@@ -122,5 +122,6 @@ static int multilua_loadfilex(lua_State* L);
 static int multilua_loadstring(lua_State* L);
 static int multilua_newmetatable(lua_State* L);
 static int multilua_optinteger(lua_State* L);
+static int multilua_optstring(lua_State* L);
 
 #endif
