@@ -132,5 +132,6 @@ static int multilua_testudata(lua_State* L);
 static int multilua_ltostring(lua_State* L);
 static int multilua_traceback(lua_State* L);
 static int multilua_unref(lua_State* L);
+static int multilua_where(lua_State* L);
 
 #endif

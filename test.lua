@@ -1349,6 +1349,17 @@ do
 	assert(type(multilua.unref) == 'function')
 end
 
+-- TODO: Test: where
+do
+	assert(type(multilua.where) == 'function')
+end
+
+-- TODO: Test: where meta
+do
+	assert(type(multilua.where) == 'function')
+end
+
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

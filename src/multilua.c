@@ -132,6 +132,7 @@ static const struct luaL_Reg multilua [] = {
 	{"ltostring", multilua_ltostring},
 	{"traceback", multilua_traceback},
 	{"unref", multilua_unref},
+	{"where", multilua_where},
 	{NULL, NULL},
 };
 
@@ -3926,7 +3927,29 @@ static int multilua_unref(lua_State* L) {
 	return 1;
 }
 
-// TODO: void luaL_where (lua_State *L, int lvl);
+static int multilua_where(lua_State* L) {
+	// 1 - multilua state
+	// 2 - level
+
+	int bool_level = false;
+	int level = lua_tointegerx(L, 2, &bool_level);
+	if(!bool_level) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_where(current_state, level);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
 
 // These are slightly harder to wrap:
 // TODO: int lua_resume (lua_State *L, lua_State *from, int nargs);
