@@ -146,5 +146,6 @@ static int multilua_requiref(lua_State* L);
 static int multilua_buffinit(lua_State* L);
 static int multilua_buffinitsize(lua_State* L);
 static int multilua_prepbuffsize(lua_State* L);
+static int multilua_prepbuffer(lua_State* L);
 
 #endif
