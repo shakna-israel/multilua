@@ -123,6 +123,7 @@ static const struct luaL_Reg multilua [] = {
 	{"newmetatable", multilua_newmetatable},
 	{"optinteger", multilua_optinteger},
 	{"optstring", multilua_optstring},
+	{"optnumber", multilua_optnumber},
 	{NULL, NULL},
 };
 
@@ -3710,7 +3711,38 @@ static int multilua_optstring(lua_State* L) {
 	return 1;
 }
 
-// TODO: lua_Number luaL_optnumber (lua_State *L, int arg, lua_Number d);
+static int multilua_optnumber(lua_State* L) {
+	// 1 - multilua state
+	// 2 - arg
+	// 3 - default
+
+	int bool_arg = false;
+	int arg = lua_tointegerx(L, 2, &bool_arg);
+	if(!bool_arg) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_default = false;
+	lua_Integer default_int = lua_tointegerx(L, 3, &bool_default);
+	if(!bool_default) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_Number r = luaL_optnumber(current_state, arg, default_int);
+		lua_pushnumber(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: const char *luaL_optstring (lua_State *L, int arg, const char *d);
 // TODO: int luaL_ref (lua_State *L, int t);
 // TODO: void luaL_setmetatable (lua_State *L, const char *tname);
