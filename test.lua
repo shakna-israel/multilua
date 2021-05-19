@@ -1389,6 +1389,16 @@ do
 	assert(type(multilua.pushthread) == 'function')
 end
 
+-- TODO: Test: tocfunction
+do
+	assert(type(multilua.tocfunction) == 'function')
+end
+
+-- TODO: Test: tocfunction meta
+do
+	assert(type(multilua.tocfunction) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

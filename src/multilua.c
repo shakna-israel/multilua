@@ -136,6 +136,7 @@ static const struct luaL_Reg multilua [] = {
 	{"resume", multilua_resume},
 	{"rawgetp", multilua_rawgetp},
 	{"pushthread", multilua_pushthread},
+	{"tocfunction", multilua_tocfunction},
 	{NULL, NULL},
 };
 
@@ -4054,6 +4055,34 @@ static int multilua_pushthread(lua_State* L) {
 	return 1;
 }
 
+static int multilua_tocfunction(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_CFunction r = lua_tocfunction(current_state, index);
+		if(r == NULL) {
+			lua_pushnil(L);
+		} else {
+			lua_pushlightuserdata(L, r);
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 // TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
@@ -4075,7 +4104,6 @@ static int multilua_pushthread(lua_State* L) {
 // TODO: void luaL_addsize (luaL_Buffer *B, size_t n);
 // TODO: void luaL_addstring (luaL_Buffer *B, const char *s);
 // TODO: void luaL_addvalue (luaL_Buffer *B);
-// TODO: lua_CFunction lua_tocfunction (lua_State *L, int index);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: void lua_register (lua_State *L, const char *name, lua_CFunction f);
 // TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
