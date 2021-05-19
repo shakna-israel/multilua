@@ -138,6 +138,7 @@ static const struct luaL_Reg multilua [] = {
 	{"pushthread", multilua_pushthread},
 	{"tocfunction", multilua_tocfunction},
 	{"pushcclosure", multilua_pushcclosure},
+	{"pushcfunction", multilua_pushcfunction},
 	{NULL, NULL},
 };
 
@@ -4117,8 +4118,32 @@ static int multilua_pushcclosure(lua_State* L) {
 	return 1;
 }
 
+static int multilua_pushcfunction(lua_State* L) {
+	// 1 - multilua state
+	// 2 - func
+
+	lua_CFunction func = NULL;
+	if(lua_islightuserdata(L, 2)) {
+		func = lua_touserdata(L, 2);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_pushcfunction(current_state, func);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
-// TODO: void lua_pushcfunction (lua_State *L, lua_CFunction f);
 // TODO: void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup);
 // TODO: void luaL_requiref (lua_State *L, const char *modname, lua_CFunction openf, int glb);
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);

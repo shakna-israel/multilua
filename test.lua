@@ -1409,6 +1409,16 @@ do
 	assert(type(multilua.pushcclosure) == 'function')
 end
 
+-- TODO: Test: pushcfunction
+do
+	assert(type(multilua.pushcfunction) == 'function')
+end
+
+-- TODO: Test: pushcfunction meta
+do
+	assert(type(multilua.pushcfunction) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
