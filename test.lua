@@ -1439,6 +1439,16 @@ do
 	assert(type(multilua.tabletoreg) == 'function')
 end
 
+-- TODO: Test: setfuncs
+do
+	assert(type(multilua.setfuncs) == 'function')
+end
+
+-- TODO: Test: setfuncs meta
+do
+	assert(type(multilua.setfuncs) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

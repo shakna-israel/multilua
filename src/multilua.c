@@ -141,6 +141,7 @@ static const struct luaL_Reg multilua [] = {
 	{"pushcfunction", multilua_pushcfunction},
 	{"newreg", multilua_newreg},
 	{"tabletoreg", multilua_tabletoreg},
+	{"setfuncs", multilua_setfuncs},
 	{NULL, NULL},
 };
 
@@ -4235,10 +4236,35 @@ static int multilua_tabletoreg(lua_State* L) {
 	return 1;
 }
 
+static int multilua_setfuncs(lua_State* L) {
+	// 1 - multilua state
+	// 2 - lreg
+	// 3 - nup
 
+	int bool_nup = false;
+	int nup = lua_tointegerx(L, 3, &bool_nup);
+	if(!bool_nup) {
+		nup = 0;
+	}
+
+	if(lua_islightuserdata(L, 2)) {
+		const luaL_Reg* lreg = lua_touserdata(L, 2);
+
+		lua_getfield(L, 1, "self");
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* current_state = lua_touserdata(L, -1);
+
+			luaL_setfuncs(current_state, lreg, nup);
+			lua_pushboolean(L, true);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
 
 // These are slightly harder to wrap:
-// TODO: void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup);
 // TODO: void luaL_requiref (lua_State *L, const char *modname, lua_CFunction openf, int glb);
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
 // TODO: void luaL_pushresult (luaL_Buffer *B);
