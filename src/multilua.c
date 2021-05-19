@@ -5,334 +5,135 @@
 
 #define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
 
+static const struct luaL_Reg multilua [] = {
+	{"new", multilua_new},
+	{"current", multilua_current},
+	{"close", multilua_close},
+	{"openlibs", multilua_openlibs},
+	{"absindex", multilua_absindex},
+	{"arith", multilua_arith},
+	{"call", multilua_call},
+	{"checkstack", multilua_checkstack},
+	{"compare", multilua_compare},
+	{"concat", multilua_concat},
+	{"copy", multilua_copy},
+	{"createtable", multilua_createtable},
+	{"error", multilua_error},
+	{"gc", multilua_gc},
+	{"getfield", multilua_getfield},
+	{"luaversion", multilua_luaversion},
+	{"xmove", multilua_xmove},
+	{"yield", multilua_yield},
+	{"getglobal", multilua_getglobal},
+	{"geti", multilua_geti},
+	{"getmetatable", multilua_getmetatable},
+	{"gettable", multilua_gettable},
+	{"gettop", multilua_gettop},
+	{"getuservalue", multilua_getuservalue},
+	{"insert", multilua_insert},
+	{"isboolean", multilua_isboolean},
+	{"iscfunction", multilua_iscfunction},
+	{"isfunction", multilua_isfunction},
+	{"isinteger", multilua_isinteger},
+	{"islightuserdata", multilua_islightuserdata},
+	{"isnil", multilua_isnil},
+	{"isnone", multilua_isnone},
+	{"isnoneornil", multilua_isnoneornil},
+	{"isnumber", multilua_isnumber},
+	{"isstring", multilua_isstring},
+	{"istable", multilua_istable},
+	{"isthread", multilua_isthread},
+	{"isuserdata", multilua_isuserdata},
+	{"isyieldable", multilua_isyieldable},
+	{"len", multilua_len},
+	{"newtable", multilua_newtable},
+	{"newthread", multilua_newthread},
+	{"newuserdata", multilua_newuserdata},
+	{"next", multilua_next},
+	{"pcall", multilua_pcall},
+	{"pop", multilua_pop},
+	{"pushboolean", multilua_pushboolean},
+	{"pushglobaltable", multilua_pushglobaltable},
+	{"pushinteger", multilua_pushinteger},
+	{"pushstring", multilua_pushstring},
+	{"pushnstring", multilua_pushnstring},
+	{"pushnil", multilua_pushnil},
+	{"pushnumber", multilua_pushnumber},
+	{"pushvalue", multilua_pushvalue},
+	{"pushlightuserdata", multilua_pushlightuserdata},
+	{"rawequal", multilua_rawequal},
+	{"rawget", multilua_rawget},
+	{"rawgeti", multilua_rawgeti},
+	{"rawlen", multilua_rawlen},
+	{"rawset", multilua_rawset},
+	{"rawseti", multilua_rawseti},
+	{"rawsetp", multilua_rawsetp},
+	{"remove", multilua_remove},
+	{"replace", multilua_replace},
+	{"rotate", multilua_rotate},
+	{"setfield", multilua_setfield},
+	{"setglobal", multilua_setglobal},
+	{"seti", multilua_seti},
+	{"setmetatable", multilua_setmetatable},
+	{"settable", multilua_settable},
+	{"settop", multilua_settop},
+	{"setuservalue", multilua_setuservalue},
+	{"status", multilua_status},
+	{"toboolean", multilua_toboolean},
+	{"tointeger", multilua_tointeger},
+	{"tointegerx", multilua_tointegerx},
+	{"tostring", multilua_tostring},
+	{"tonumber", multilua_tonumber},
+	{"tonumberx", multilua_tonumberx},
+	{"topointer", multilua_topointer},
+	{"tothread", multilua_tothread},
+	{"touserdata", multilua_touserdata},
+	{"type", multilua_type},
+	{"gethookcount", multilua_gethookcount},
+	{"gethookmask", multilua_gethookmask},
+	{"getupvalue", multilua_getupvalue},
+	{"setupvalue", multilua_setupvalue},
+	{"upvalueid", multilua_upvalueid},
+	{"upvaluejoin", multilua_upvaluejoin},
+	{"argcheck", multilua_argcheck},
+	{"argerror", multilua_argerror},
+	{"callmeta", multilua_callmeta},
+	{"checkany", multilua_checkany},
+	{"checkinteger", multilua_checkinteger},
+	{"checkstring", multilua_checkstring},
+	{"checknumber", multilua_checknumber},
+	{"lcheckstack", multilua_lcheckstack},
+	{"checktype", multilua_checktype},
+	{"checkudata", multilua_checkudata},
+	{"checkversion", multilua_checkversion},
+	{"dofile", multilua_dofile},
+	{"dostring", multilua_dostring},
+	{"execresult", multilua_execresult},
+	{"fileresult", multilua_fileresult},
+	{"getmetafield", multilua_getmetafield},
+	{"lgetmetatable", multilua_lgetmetatable},
+	{"getsubtable", multilua_getsubtable},
+	{"gsub", multilua_gsub},
+	{"llen", multilua_llen},
+	{"loadbuffer", multilua_loadbuffer},
+	{NULL, NULL},
+};
+
 void util_installfuncs(lua_State* L) {
-	// Add the index methods:
-	lua_pushcfunction(L, multilua_close);
-	lua_setfield(L, -2, "close");
-
-	lua_pushcfunction(L, multilua_openlibs);
-	lua_setfield(L, -2, "openlibs");
-
-	lua_pushcfunction(L, multilua_absindex);
-	lua_setfield(L, -2, "absindex");
-
-	lua_pushcfunction(L, multilua_arith);
-	lua_setfield(L, -2, "arith");
-
-	lua_pushcfunction(L, multilua_current);
-	lua_setfield(L, -2, "current");
-
-	lua_pushcfunction(L, multilua_call);
-	lua_setfield(L, -2, "call");
-
-	lua_pushcfunction(L, multilua_checkstack);
-	lua_setfield(L, -2, "checkstack");
-
-	lua_pushcfunction(L, multilua_compare);
-	lua_setfield(L, -2, "compare");
-
-	lua_pushcfunction(L, multilua_concat);
-	lua_setfield(L, -2, "concat");
-
-	lua_pushcfunction(L, multilua_copy);
-	lua_setfield(L, -2, "copy");
-
-	lua_pushcfunction(L, multilua_createtable);
-	lua_setfield(L, -2, "createtable");
-
-	lua_pushcfunction(L, multilua_error);
-	lua_setfield(L, -2, "error");
-
-	lua_pushcfunction(L, multilua_gc);
-	lua_setfield(L, -2, "gc");
-
-	lua_pushcfunction(L, multilua_getfield);
-	lua_setfield(L, -2, "getfield");
-
-	lua_pushcfunction(L, multilua_luaversion);
-	lua_setfield(L, -2, "luaversion");
-
-	lua_pushcfunction(L, multilua_xmove);
-	lua_setfield(L, -2, "xmove");
-
-	lua_pushcfunction(L, multilua_yield);
-	lua_setfield(L, -2, "yield");
-
-	lua_pushcfunction(L, multilua_getglobal);
-	lua_setfield(L, -2, "getglobal");
-
-	lua_pushcfunction(L, multilua_geti);
-	lua_setfield(L, -2, "geti");
-
-	lua_pushcfunction(L, multilua_getmetatable);
-	lua_setfield(L, -2, "getmetatable");
-
-	lua_pushcfunction(L, multilua_gettable);
-	lua_setfield(L, -2, "gettable");
-
-	lua_pushcfunction(L, multilua_gettop);
-	lua_setfield(L, -2, "gettop");
-
-	lua_pushcfunction(L, multilua_getuservalue);
-	lua_setfield(L, -2, "getuservalue");
-
-	lua_pushcfunction(L, multilua_insert);
-	lua_setfield(L, -2, "insert");
-
-	lua_pushcfunction(L, multilua_isboolean);
-	lua_setfield(L, -2, "isboolean");
-
-	lua_pushcfunction(L, multilua_iscfunction);
-	lua_setfield(L, -2, "iscfunction");
-
-	lua_pushcfunction(L, multilua_isfunction);
-	lua_setfield(L, -2, "isfunction");
-
-	lua_pushcfunction(L, multilua_isinteger);
-	lua_setfield(L, -2, "isinteger");
-
-	lua_pushcfunction(L, multilua_islightuserdata);
-	lua_setfield(L, -2, "islightuserdata");
-
-	lua_pushcfunction(L, multilua_isnil);
-	lua_setfield(L, -2, "isnil");
-
-	lua_pushcfunction(L, multilua_isnone);
-	lua_setfield(L, -2, "isnone");
-
-	lua_pushcfunction(L, multilua_isnoneornil);
-	lua_setfield(L, -2, "isnoneornil");
-
-	lua_pushcfunction(L, multilua_isnumber);
-	lua_setfield(L, -2, "isnumber");
-
-	lua_pushcfunction(L, multilua_isstring);
-	lua_setfield(L, -2, "isstring");
-
-	lua_pushcfunction(L, multilua_istable);
-	lua_setfield(L, -2, "istable");
-
-	lua_pushcfunction(L, multilua_isthread);
-	lua_setfield(L, -2, "isthread");
-
-	lua_pushcfunction(L, multilua_isuserdata);
-	lua_setfield(L, -2, "isuserdata");
-
-	lua_pushcfunction(L, multilua_isyieldable);
-	lua_setfield(L, -2, "isyieldable");
-
-	lua_pushcfunction(L, multilua_len);
-	lua_setfield(L, -2, "len");
-
-	lua_pushcfunction(L, multilua_newtable);
-	lua_setfield(L, -2, "newtable");
-
-	lua_pushcfunction(L, multilua_newthread);
-	lua_setfield(L, -2, "newthread");
-
-	lua_pushcfunction(L, multilua_newuserdata);
-	lua_setfield(L, -2, "newuserdata");
-
-	lua_pushcfunction(L, multilua_next);
-	lua_setfield(L, -2, "next");
-
-	lua_pushcfunction(L, multilua_pcall);
-	lua_setfield(L, -2, "pcall");
-
-	lua_pushcfunction(L, multilua_pop);
-	lua_setfield(L, -2, "pop");
-
-	lua_pushcfunction(L, multilua_pushboolean);
-	lua_setfield(L, -2, "pushboolean");
-
-	lua_pushcfunction(L, multilua_pushglobaltable);
-	lua_setfield(L, -2, "pushglobaltable");
-
-	lua_pushcfunction(L, multilua_pushinteger);
-	lua_setfield(L, -2, "pushinteger");
-
-	lua_pushcfunction(L, multilua_pushstring);
-	lua_setfield(L, -2, "pushstring");
-
-	lua_pushcfunction(L, multilua_pushnstring);
-	lua_setfield(L, -2, "pushnstring");
-
-	lua_pushcfunction(L, multilua_pushnil);
-	lua_setfield(L, -2, "pushnil");
-
-	lua_pushcfunction(L, multilua_pushnumber);
-	lua_setfield(L, -2, "pushnumber");
-
-	lua_pushcfunction(L, multilua_pushvalue);
-	lua_setfield(L, -2, "pushvalue");
-
-	lua_pushcfunction(L, multilua_pushlightuserdata);
-	lua_setfield(L, -2, "pushlightuserdata");
-
-	lua_pushcfunction(L, multilua_rawequal);
-	lua_setfield(L, -2, "rawequal");
-
-	lua_pushcfunction(L, multilua_rawget);
-	lua_setfield(L, -2, "rawget");
-
-	lua_pushcfunction(L, multilua_rawgeti);
-	lua_setfield(L, -2, "rawgeti");
-
-	lua_pushcfunction(L, multilua_rawlen);
-	lua_setfield(L, -2, "rawlen");
-
-	lua_pushcfunction(L, multilua_rawset);
-	lua_setfield(L, -2, "rawset");
-
-	lua_pushcfunction(L, multilua_rawseti);
-	lua_setfield(L, -2, "rawseti");
-
-	lua_pushcfunction(L, multilua_rawsetp);
-	lua_setfield(L, -2, "rawsetp");
-
-	lua_pushcfunction(L, multilua_remove);
-	lua_setfield(L, -2, "remove");
-
-	lua_pushcfunction(L, multilua_replace);
-	lua_setfield(L, -2, "replace");
-
-	lua_pushcfunction(L, multilua_rotate);
-	lua_setfield(L, -2, "rotate");
-
-	lua_pushcfunction(L, multilua_setfield);
-	lua_setfield(L, -2, "setfield");
-
-	lua_pushcfunction(L, multilua_setglobal);
-	lua_setfield(L, -2, "setglobal");
-
-	lua_pushcfunction(L, multilua_seti);
-	lua_setfield(L, -2, "seti");
-
-	lua_pushcfunction(L, multilua_setmetatable);
-	lua_setfield(L, -2, "setmetatable");
-
-	lua_pushcfunction(L, multilua_settable);
-	lua_setfield(L, -2, "settable");
-
-	lua_pushcfunction(L, multilua_settop);
-	lua_setfield(L, -2, "settop");
-
-	lua_pushcfunction(L, multilua_setuservalue);
-	lua_setfield(L, -2, "setuservalue");
-
-	lua_pushcfunction(L, multilua_status);
-	lua_setfield(L, -2, "status");
-
-	lua_pushcfunction(L, multilua_toboolean);
-	lua_setfield(L, -2, "toboolean");
-
-	lua_pushcfunction(L, multilua_tointeger);
-	lua_setfield(L, -2, "tointeger");
-
-	lua_pushcfunction(L, multilua_tointegerx);
-	lua_setfield(L, -2, "tointegerx");
-
-	lua_pushcfunction(L, multilua_tostring);
-	lua_setfield(L, -2, "tostring");
-
-	lua_pushcfunction(L, multilua_tonumber);
-	lua_setfield(L, -2, "tonumber");
-
-	lua_pushcfunction(L, multilua_tonumberx);
-	lua_setfield(L, -2, "tonumberx");
-
-	lua_pushcfunction(L, multilua_topointer);
-	lua_setfield(L, -2, "topointer");
-
-	lua_pushcfunction(L, multilua_tothread);
-	lua_setfield(L, -2, "tothread");
-
-	lua_pushcfunction(L, multilua_touserdata);
-	lua_setfield(L, -2, "touserdata");
-
-	lua_pushcfunction(L, multilua_type);
-	lua_setfield(L, -2, "type");
-
-	lua_pushcfunction(L, multilua_gethookcount);
-	lua_setfield(L, -2, "gethookcount");
-
-	lua_pushcfunction(L, multilua_gethookmask);
-	lua_setfield(L, -2, "gethookmask");
-
-	lua_pushcfunction(L, multilua_getupvalue);
-	lua_setfield(L, -2, "getupvalue");
-
-	lua_pushcfunction(L, multilua_setupvalue);
-	lua_setfield(L, -2, "setupvalue");
-
-	lua_pushcfunction(L, multilua_upvalueid);
-	lua_setfield(L, -2, "upvalueid");
-
-	lua_pushcfunction(L, multilua_upvaluejoin);
-	lua_setfield(L, -2, "upvaluejoin");
-
-	lua_pushcfunction(L, multilua_argcheck);
-	lua_setfield(L, -2, "argcheck");
-
-	lua_pushcfunction(L, multilua_argerror);
-	lua_setfield(L, -2, "argerror");
-
-	lua_pushcfunction(L, multilua_callmeta);
-	lua_setfield(L, -2, "callmeta");
-
-	lua_pushcfunction(L, multilua_checkany);
-	lua_setfield(L, -2, "checkany");
-
-	lua_pushcfunction(L, multilua_checkinteger);
-	lua_setfield(L, -2, "checkinteger");
-
-	lua_pushcfunction(L, multilua_checkstring);
-	lua_setfield(L, -2, "checkstring");
-
-	lua_pushcfunction(L, multilua_checknumber);
-	lua_setfield(L, -2, "checknumber");
-
-	lua_pushcfunction(L, multilua_lcheckstack);
-	lua_setfield(L, -2, "lcheckstack");
-
-	lua_pushcfunction(L, multilua_checktype);
-	lua_setfield(L, -2, "checktype");
-
-	lua_pushcfunction(L, multilua_checkudata);
-	lua_setfield(L, -2, "checkudata");
-
-	lua_pushcfunction(L, multilua_checkversion);
-	lua_setfield(L, -2, "checkversion");
-
-	lua_pushcfunction(L, multilua_dofile);
-	lua_setfield(L, -2, "dofile");
-
-	lua_pushcfunction(L, multilua_dostring);
-	lua_setfield(L, -2, "dostring");
-
-	lua_pushcfunction(L, multilua_execresult);
-	lua_setfield(L, -2, "execresult");
-
-	lua_pushcfunction(L, multilua_fileresult);
-	lua_setfield(L, -2, "fileresult");
-
-	lua_pushcfunction(L, multilua_getmetafield);
-	lua_setfield(L, -2, "getmetafield");
-
-	lua_pushcfunction(L, multilua_lgetmetatable);
-	lua_setfield(L, -2, "lgetmetatable");
-
-	lua_pushcfunction(L, multilua_getsubtable);
-	lua_setfield(L, -2, "getsubtable");
-
-	lua_pushcfunction(L, multilua_gsub);
-	lua_setfield(L, -2, "gsub");
-
-	lua_pushcfunction(L, multilua_llen);
-	lua_setfield(L, -2, "llen");
-
-	lua_pushcfunction(L, multilua_loadbuffer);
-	lua_setfield(L, -2, "loadbuffer");
+	size_t position = 0;
+	while(true) {
+		if(multilua[position].name == NULL) {
+			break;
+		} else
+		if(multilua[position].func == NULL) {
+			break;
+		} else {
+			lua_pushcfunction(L, multilua[position].func);
+			lua_setfield(L, -2, multilua[position].name);
+		}
+
+		position++;
+	}
 }
 
 void util_installmeta(lua_State* L) {
@@ -3668,119 +3469,7 @@ static int multilua_loadbuffer(lua_State* L) {
 // TODO: const char *lua_pushvfstring (lua_State *L, const char *fmt, va_list argp);
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
-	static const struct luaL_Reg multilua [] = {
-		{"new", multilua_new},
-		{"current", multilua_current},
-		{"close", multilua_close},
-		{"openlibs", multilua_openlibs},
-		{"absindex", multilua_absindex},
-		{"arith", multilua_arith},
-		{"call", multilua_call},
-		{"checkstack", multilua_checkstack},
-		{"compare", multilua_compare},
-		{"concat", multilua_concat},
-		{"copy", multilua_copy},
-		{"createtable", multilua_createtable},
-		{"error", multilua_error},
-		{"gc", multilua_gc},
-		{"getfield", multilua_getfield},
-		{"luaversion", multilua_luaversion},
-		{"xmove", multilua_xmove},
-		{"yield", multilua_yield},
-		{"getglobal", multilua_getglobal},
-		{"geti", multilua_geti},
-		{"getmetatable", multilua_getmetatable},
-		{"gettable", multilua_gettable},
-		{"gettop", multilua_gettop},
-		{"getuservalue", multilua_getuservalue},
-		{"insert", multilua_insert},
-		{"isboolean", multilua_isboolean},
-		{"iscfunction", multilua_iscfunction},
-		{"isfunction", multilua_isfunction},
-		{"isinteger", multilua_isinteger},
-		{"islightuserdata", multilua_islightuserdata},
-		{"isnil", multilua_isnil},
-		{"isnone", multilua_isnone},
-		{"isnoneornil", multilua_isnoneornil},
-		{"isnumber", multilua_isnumber},
-		{"isstring", multilua_isstring},
-		{"istable", multilua_istable},
-		{"isthread", multilua_isthread},
-		{"isuserdata", multilua_isuserdata},
-		{"isyieldable", multilua_isyieldable},
-		{"len", multilua_len},
-		{"newtable", multilua_newtable},
-		{"newthread", multilua_newthread},
-		{"newuserdata", multilua_newuserdata},
-		{"next", multilua_next},
-		{"pcall", multilua_pcall},
-		{"pop", multilua_pop},
-		{"pushboolean", multilua_pushboolean},
-		{"pushglobaltable", multilua_pushglobaltable},
-		{"pushinteger", multilua_pushinteger},
-		{"pushstring", multilua_pushstring},
-		{"pushnstring", multilua_pushnstring},
-		{"pushnil", multilua_pushnil},
-		{"pushnumber", multilua_pushnumber},
-		{"pushvalue", multilua_pushvalue},
-		{"pushlightuserdata", multilua_pushlightuserdata},
-		{"rawequal", multilua_rawequal},
-		{"rawget", multilua_rawget},
-		{"rawgeti", multilua_rawgeti},
-		{"rawlen", multilua_rawlen},
-		{"rawset", multilua_rawset},
-		{"rawseti", multilua_rawseti},
-		{"rawsetp", multilua_rawsetp},
-		{"remove", multilua_remove},
-		{"replace", multilua_replace},
-		{"rotate", multilua_rotate},
-		{"setfield", multilua_setfield},
-		{"setglobal", multilua_setglobal},
-		{"seti", multilua_seti},
-		{"setmetatable", multilua_setmetatable},
-		{"settable", multilua_settable},
-		{"settop", multilua_settop},
-		{"setuservalue", multilua_setuservalue},
-		{"status", multilua_status},
-		{"toboolean", multilua_toboolean},
-		{"tointeger", multilua_tointeger},
-		{"tointegerx", multilua_tointegerx},
-		{"tostring", multilua_tostring},
-		{"tonumber", multilua_tonumber},
-		{"tonumberx", multilua_tonumberx},
-		{"topointer", multilua_topointer},
-		{"tothread", multilua_tothread},
-		{"touserdata", multilua_touserdata},
-		{"type", multilua_type},
-		{"gethookcount", multilua_gethookcount},
-		{"gethookmask", multilua_gethookmask},
-		{"getupvalue", multilua_getupvalue},
-		{"setupvalue", multilua_setupvalue},
-		{"upvalueid", multilua_upvalueid},
-		{"upvaluejoin", multilua_upvaluejoin},
-		{"argcheck", multilua_argcheck},
-		{"argerror", multilua_argerror},
-		{"callmeta", multilua_callmeta},
-		{"checkany", multilua_checkany},
-		{"checkinteger", multilua_checkinteger},
-		{"checkstring", multilua_checkstring},
-		{"checknumber", multilua_checknumber},
-		{"lcheckstack", multilua_lcheckstack},
-		{"checktype", multilua_checktype},
-		{"checkudata", multilua_checkudata},
-		{"checkversion", multilua_checkversion},
-		{"dofile", multilua_dofile},
-		{"dostring", multilua_dostring},
-		{"execresult", multilua_execresult},
-		{"fileresult", multilua_fileresult},
-		{"getmetafield", multilua_getmetafield},
-		{"lgetmetatable", multilua_lgetmetatable},
-		{"getsubtable", multilua_getsubtable},
-		{"gsub", multilua_gsub},
-		{"llen", multilua_llen},
-		{"loadbuffer", multilua_loadbuffer},
-		{NULL, NULL},
-	};
+	
 
 	luaL_newlib(L, multilua);
 
