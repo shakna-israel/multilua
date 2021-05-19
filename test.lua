@@ -1329,6 +1329,16 @@ do
 	assert(type(multilua.ltostring) == 'function')
 end
 
+-- TODO: Test: traceback
+do
+	assert(type(multilua.traceback) == 'function')
+end
+
+-- TODO: Test: traceback meta
+do
+	assert(type(multilua.traceback) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
