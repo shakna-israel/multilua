@@ -113,5 +113,6 @@ static int multilua_fileresult(lua_State* L);
 static int multilua_getmetafield(lua_State* L);
 static int multilua_lgetmetatable(lua_State* L);
 static int multilua_getsubtable(lua_State* L);
+static int multilua_gsub(lua_State* L);
 
 #endif

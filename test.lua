@@ -1149,6 +1149,16 @@ do
 	assert(type(multilua.getsubtable) == 'function')
 end
 
+-- TODO: Test: gsub
+do
+	assert(type(multilua.gsub) == 'function')
+end
+
+-- TODO: Test: gsub meta
+do
+	assert(type(multilua.gsub) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
