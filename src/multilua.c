@@ -151,6 +151,8 @@ static const struct luaL_Reg multilua [] = {
 	{"addstring", multilua_addstring},
 	{"addsize", multilua_addsize},
 	{"addvalue", multilua_addvalue},
+	{"pushresult", multilua_pushresult},
+	{"pushresultsize", multilua_pushresultsize},
 	{NULL, NULL},
 };
 
@@ -4358,7 +4360,7 @@ static int multilua_prepbuffsize(lua_State* L) {
 	// 3 - size
 
 	int bool_size = false;
-	size_t size = lua_tointegerx(L, 2, &bool_size);
+	size_t size = lua_tointegerx(L, 3, &bool_size);
 	if(!bool_size) {
 		lua_pushnil(L);
 		return 1;
@@ -4492,9 +4494,45 @@ static int multilua_addvalue(lua_State* L) {
 	return 1;
 }
 
-// For buffers:
-// TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
-// TODO: void luaL_pushresult (luaL_Buffer *B);
+static int multilua_pushresult(lua_State* L) {
+	// 1 - multilua state
+	// 2 - buffer
+
+	if(lua_islightuserdata(L, 2)) {
+		luaL_Buffer* buff = lua_touserdata(L, 2);
+
+		luaL_pushresult(buff);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_pushresultsize(lua_State* L) {
+	// 1 - multilua state
+	// 2 - buffer
+	// 3 - size
+
+	int bool_size = false;
+	size_t size = lua_tointegerx(L, 3, &bool_size);
+	if(!bool_size) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	if(lua_islightuserdata(L, 2)) {
+		luaL_Buffer* buff = lua_touserdata(L, 2);
+
+		luaL_pushresultsize(buff, size);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
 
 // These are slightly harder to wrap:
 // TODO: T luaL_opt (L, func, arg, dflt);

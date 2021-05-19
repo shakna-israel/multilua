@@ -1539,6 +1539,26 @@ do
 	assert(type(multilua.addvalue) == 'function')
 end
 
+-- TODO: Test: pushresult
+do
+	assert(type(multilua.pushresult) == 'function')
+end
+
+-- TODO: Test: pushresult meta
+do
+	assert(type(multilua.pushresult) == 'function')
+end
+
+-- TODO: Test: pushresultsize
+do
+	assert(type(multilua.pushresultsize) == 'function')
+end
+
+-- TODO: Test: pushresultsize meta
+do
+	assert(type(multilua.pushresultsize) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
