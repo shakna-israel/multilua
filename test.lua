@@ -1229,6 +1229,16 @@ do
 	assert(type(multilua.newmetatable) == 'function')
 end
 
+-- TODO: Test: optinteger
+do
+	assert(type(multilua.optinteger) == 'function')
+end
+
+-- TODO: Test: optinteger meta
+do
+	assert(type(multilua.optinteger) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
