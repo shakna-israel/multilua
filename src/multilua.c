@@ -118,6 +118,7 @@ static const struct luaL_Reg multilua [] = {
 	{"loadbuffer", multilua_loadbuffer},
 	{"loadbufferx", multilua_loadbufferx},
 	{"loadfile", multilua_loadfile},
+	{"loadfilex", multilua_loadfilex},
 	{NULL, NULL},
 };
 
@@ -3511,7 +3512,57 @@ static int multilua_loadfile(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_loadfilex (lua_State *L, const char *filename, const char *mode);
+static int multilua_loadfilex(lua_State* L) {
+	// 1 - multilua state
+	// 2 - filename
+	// 3 - mode
+
+	const char* filename = lua_tostring(L, 2);
+	if(!filename) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* mode = lua_tostring(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_loadfilex(current_state, filename, mode);
+		switch(r) {
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRSYNTAX:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "syntax");
+				break;
+			case LUA_ERRMEM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "gcmeta");
+				break;
+			case LUA_ERRFILE:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "file");
+				break;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "other");
+				break;
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int luaL_loadstring (lua_State *L, const char *s);
 // TODO: int luaL_newmetatable (lua_State *L, const char *tname);
 // TODO: lua_Integer luaL_optinteger (lua_State *L, int arg, lua_Integer d);

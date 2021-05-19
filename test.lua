@@ -1199,6 +1199,16 @@ do
 	assert(type(multilua.loadfile) == 'function')
 end
 
+-- TODO: Test: loadfilex
+do
+	assert(type(multilua.loadfilex) == 'function')
+end
+
+-- TODO: Test: loadfilex meta
+do
+	assert(type(multilua.loadfilex) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
