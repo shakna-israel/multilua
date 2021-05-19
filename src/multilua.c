@@ -144,6 +144,7 @@ static const struct luaL_Reg multilua [] = {
 	{"setfuncs", multilua_setfuncs},
 	{"requiref", multilua_requiref},
 	{"buffinit", multilua_buffinit},
+	{"buffinitsize", multilua_buffinitsize},
 	{NULL, NULL},
 };
 
@@ -4319,22 +4320,49 @@ static int multilua_buffinit(lua_State* L) {
 	return 1;
 }
 
-// These are slightly harder to wrap:
-// TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
-// TODO: void luaL_pushresult (luaL_Buffer *B);
+static int multilua_buffinitsize(lua_State* L) {
+	// 1 - multilua state
+	// 2 - size
+
+	int bool_size = false;
+	size_t size = lua_tointegerx(L, 2, &bool_size);
+	if(!bool_size) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_Buffer* buff = lua_newuserdata(current_state, sizeof(luaL_Buffer));
+		luaL_buffinitsize(current_state, buff, size);
+		lua_pushlightuserdata(current_state, buff);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+// For buffers:
 // TODO: char *luaL_prepbuffsize (luaL_Buffer *B, size_t sz);
 // TODO: char *luaL_prepbuffer (luaL_Buffer *B);
-// TODO: T luaL_opt (L, func, arg, dflt);
-// TODO: void luaL_newlibtable (lua_State *L, const luaL_Reg l[]);
-// TODO: void luaL_newlib (lua_State *L, const luaL_Reg l[]);
-// TODO: int luaL_error (lua_State *L, const char *fmt, ...);
-// TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
-// TODO: char *luaL_buffinitsize (lua_State *L, luaL_Buffer *B, size_t sz);
 // TODO: void luaL_addchar (luaL_Buffer *B, char c);
 // TODO: void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l);
 // TODO: void luaL_addsize (luaL_Buffer *B, size_t n);
 // TODO: void luaL_addstring (luaL_Buffer *B, const char *s);
 // TODO: void luaL_addvalue (luaL_Buffer *B);
+// TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
+// TODO: void luaL_pushresult (luaL_Buffer *B);
+
+// These are slightly harder to wrap:
+// TODO: T luaL_opt (L, func, arg, dflt);
+// TODO: void luaL_newlibtable (lua_State *L, const luaL_Reg l[]);
+// TODO: void luaL_newlib (lua_State *L, const luaL_Reg l[]);
+// TODO: int luaL_error (lua_State *L, const char *fmt, ...);
+// TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: void lua_register (lua_State *L, const char *name, lua_CFunction f);
 // TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);

@@ -144,5 +144,6 @@ static int multilua_tabletoreg(lua_State* L);
 static int multilua_setfuncs(lua_State* L);
 static int multilua_requiref(lua_State* L);
 static int multilua_buffinit(lua_State* L);
+static int multilua_buffinitsize(lua_State* L);
 
 #endif
