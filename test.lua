@@ -1119,6 +1119,16 @@ do
 	assert(type(multilua.fileresult) == 'function')
 end
 
+-- TODO: Test: getmetafield
+do
+	assert(type(multilua.getmetafield) == 'function')
+end
+
+-- TODO: Test: getmetafield meta
+do
+	assert(type(multilua.getmetafield) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

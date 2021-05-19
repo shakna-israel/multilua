@@ -110,5 +110,6 @@ static int multilua_dofile(lua_State* L);
 static int multilua_dostring(lua_State* L);
 static int multilua_execresult(lua_State* L);
 static int multilua_fileresult(lua_State* L);
+static int multilua_getmetafield(lua_State* L);
 
 #endif
