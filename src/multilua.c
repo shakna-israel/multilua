@@ -285,6 +285,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_checkinteger);
 	lua_setfield(L, -2, "checkinteger");
+
+	lua_pushcfunction(L, multilua_checkstring);
+	lua_setfield(L, -2, "checkstring");
 }
 
 void util_installmeta(lua_State* L) {
@@ -3056,7 +3059,36 @@ static int multilua_checkinteger(lua_State* L) {
 	return 1;
 }
 
-// TODO: const char *luaL_checklstring (lua_State *L, int arg, size_t *l);
+static int multilua_checkstring(lua_State* L) {
+	// 1 - multilua state
+	// 2 - arg
+
+	int bool_arg = false;
+	int arg = lua_tointegerx(L, 2, &bool_arg);
+	if(!bool_arg) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		size_t length = 0;
+		const char* s = luaL_checklstring(current_state, arg, &length);
+		if(s == NULL) {
+			lua_pushnil(L);
+		} else {
+			lua_pushlstring(L, s, length);
+		}
+
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: lua_Number luaL_checknumber (lua_State *L, int arg);
 // TODO: void luaL_checkstack (lua_State *L, int sz, const char *msg);
 // TODO: const char *luaL_checkstring (lua_State *L, int arg);
@@ -3230,6 +3262,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"callmeta", multilua_callmeta},
 		{"checkany", multilua_checkany},
 		{"checkinteger", multilua_checkinteger},
+		{"checkstring", multilua_checkstring},
 		{NULL, NULL},
 	};
 
