@@ -1159,6 +1159,16 @@ do
 	assert(type(multilua.gsub) == 'function')
 end
 
+-- TODO: Test: llen
+do
+	assert(type(multilua.llen) == 'function')
+end
+
+-- TODO: Test: llen meta
+do
+	assert(type(multilua.llen) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
