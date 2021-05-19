@@ -119,5 +119,6 @@ static int multilua_loadbuffer(lua_State* L);
 static int multilua_loadbufferx(lua_State* L);
 static int multilua_loadfile(lua_State* L);
 static int multilua_loadfilex(lua_State* L);
+static int multilua_loadstring(lua_State* L);
 
 #endif
