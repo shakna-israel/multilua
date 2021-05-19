@@ -4535,10 +4535,8 @@ static int multilua_pushresultsize(lua_State* L) {
 }
 
 // These are slightly harder to wrap:
-// TODO: T luaL_opt (L, func, arg, dflt);
 // TODO: void luaL_newlibtable (lua_State *L, const luaL_Reg l[]);
 // TODO: void luaL_newlib (lua_State *L, const luaL_Reg l[]);
-// TODO: int luaL_error (lua_State *L, const char *fmt, ...);
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: void lua_register (lua_State *L, const char *name, lua_CFunction f);
@@ -4554,9 +4552,6 @@ static int multilua_pushresultsize(lua_State* L) {
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
 // TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
 // TODO: const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n);
-
-// TODO: const char *lua_pushfstring (lua_State *L, const char *fmt, ...);
-// TODO: const char *lua_pushvfstring (lua_State *L, const char *fmt, va_list argp);
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	
