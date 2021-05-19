@@ -1479,6 +1479,16 @@ do
 	assert(type(multilua.buffinitsize) == 'function')
 end
 
+-- TODO: Test: prepbuffsize
+do
+	assert(type(multilua.prepbuffsize) == 'function')
+end
+
+-- TODO: Test: prepbuffsize meta
+do
+	assert(type(multilua.prepbuffsize) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
