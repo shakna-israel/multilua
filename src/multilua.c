@@ -309,6 +309,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_dostring);
 	lua_setfield(L, -2, "dostring");
+
+	lua_pushcfunction(L, multilua_execresult);
+	lua_setfield(L, -2, "execresult");
 }
 
 void util_installmeta(lua_State* L) {
@@ -3330,7 +3333,30 @@ static int multilua_dostring(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_execresult (lua_State *L, int stat);
+static int multilua_execresult(lua_State* L) {
+	// 1 - multilua state
+	// 2 - stat
+
+	int bool_stat = false;
+	int stat = lua_tointegerx(L, 2, &bool_stat);
+	if(!bool_stat) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_execresult(current_state, stat);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int luaL_fileresult (lua_State *L, int stat, const char *fname);
 // TODO: int luaL_getmetafield (lua_State *L, int obj, const char *e);
 // TODO: int luaL_getmetatable (lua_State *L, const char *tname);
@@ -3503,6 +3529,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"checkversion", multilua_checkversion},
 		{"dofile", multilua_dofile},
 		{"dostring", multilua_dostring},
+		{"execresult", multilua_execresult},
 		{NULL, NULL},
 	};
 

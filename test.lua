@@ -1099,6 +1099,16 @@ do
 	assert(type(multilua.dostring) == 'function')
 end
 
+-- TODO: Test: execresult
+do
+	assert(type(multilua.execresult) == 'function')
+end
+
+-- TODO: Test: execresult meta
+do
+	assert(type(multilua.execresult) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
