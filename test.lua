@@ -1299,6 +1299,16 @@ do
 	obj:close()
 end
 
+-- TODO: Test: lsetmetatable
+do
+	assert(type(multilua.lsetmetatable) == 'function')
+end
+
+-- TODO: Test: lsetmetatable meta
+do
+	assert(type(multilua.lsetmetatable) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
