@@ -1059,6 +1059,16 @@ do
 	assert(type(multilua.checktype) == 'function')
 end
 
+-- TODO: Test: checkudata
+do
+	assert(type(multilua.checkudata) == 'function')
+end
+
+-- TODO: Test: checkudata meta
+do
+	assert(type(multilua.checkudata) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
