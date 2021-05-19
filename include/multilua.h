@@ -139,5 +139,6 @@ static int multilua_pushthread(lua_State* L);
 static int multilua_tocfunction(lua_State* L);
 static int multilua_pushcclosure(lua_State* L);
 static int multilua_pushcfunction(lua_State* L);
+static int multilua_newreg(lua_State* L);
 
 #endif

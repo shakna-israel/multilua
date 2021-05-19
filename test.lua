@@ -1419,6 +1419,16 @@ do
 	assert(type(multilua.pushcfunction) == 'function')
 end
 
+-- TODO: Test: newreg
+do
+	assert(type(multilua.newreg) == 'function')
+end
+
+-- TODO: Test: newreg meta
+do
+	assert(type(multilua.newreg) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
