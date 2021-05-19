@@ -115,5 +115,6 @@ static int multilua_lgetmetatable(lua_State* L);
 static int multilua_getsubtable(lua_State* L);
 static int multilua_gsub(lua_State* L);
 static int multilua_llen(lua_State* L);
+static int multilua_loadbuffer(lua_State* L);
 
 #endif

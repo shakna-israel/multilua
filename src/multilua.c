@@ -330,6 +330,9 @@ void util_installfuncs(lua_State* L) {
 
 	lua_pushcfunction(L, multilua_llen);
 	lua_setfield(L, -2, "llen");
+
+	lua_pushcfunction(L, multilua_loadbuffer);
+	lua_setfield(L, -2, "loadbuffer");
 }
 
 void util_installmeta(lua_State* L) {
@@ -3552,7 +3555,57 @@ static int multilua_llen(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_loadbuffer (lua_State *L, const char *buff, size_t sz, const char *name);
+static int multilua_loadbuffer(lua_State* L) {
+	// 1 - multilua state
+	// 2 - buffer
+	// 3 - name
+
+	size_t length = 0;
+	const char* buffer = lua_tolstring(L, 2, &length);
+	if(!buffer) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* chunkname = lua_tostring(L, 3);
+	if(!chunkname) {
+		chunkname = "=(loadbuffer)";
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_loadbuffer(current_state, buffer, length, chunkname);
+		switch(r) {
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRSYNTAX:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "syntax");
+				break;
+			case LUA_ERRMEM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "other");
+				break;
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: int luaL_loadbufferx (lua_State *L, const char *buff, size_t sz, const char *name, const char *mode);
 // TODO: int luaL_loadfile (lua_State *L, const char *filename);
 // TODO: int luaL_loadfilex (lua_State *L, const char *filename, const char *mode);
@@ -3725,6 +3778,7 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 		{"getsubtable", multilua_getsubtable},
 		{"gsub", multilua_gsub},
 		{"llen", multilua_llen},
+		{"loadbuffer", multilua_loadbuffer},
 		{NULL, NULL},
 	};
 
