@@ -1379,6 +1379,16 @@ do
 	assert(type(multilua.rawgetp) == 'function')
 end
 
+-- TODO: Test: pushthread
+do
+	assert(type(multilua.pushthread) == 'function')
+end
+
+-- TODO: Test: pushthread meta
+do
+	assert(type(multilua.pushthread) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
