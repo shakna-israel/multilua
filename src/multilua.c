@@ -147,6 +147,7 @@ static const struct luaL_Reg multilua [] = {
 	{"buffinitsize", multilua_buffinitsize},
 	{"prepbuffsize", multilua_prepbuffsize},
 	{"prepbuffer", multilua_prepbuffer},
+	{"addchar", multilua_addchar},
 	{NULL, NULL},
 };
 
@@ -4404,8 +4405,27 @@ static int multilua_prepbuffer(lua_State* L) {
 	return 1;
 }
 
+static int multilua_addchar(lua_State* L) {
+	// 1 - multilua state
+	// 2 - buffer
+	// 3 - character
+
+	const char* str = lua_tostring(L, 3);
+	char c = str[0];
+
+	if(lua_islightuserdata(L, 2)) {
+		luaL_Buffer* buff = lua_touserdata(L, 2);
+
+		luaL_addchar(buff, c);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // For buffers:
-// TODO: void luaL_addchar (luaL_Buffer *B, char c);
 // TODO: void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l);
 // TODO: void luaL_addsize (luaL_Buffer *B, size_t n);
 // TODO: void luaL_addstring (luaL_Buffer *B, const char *s);
