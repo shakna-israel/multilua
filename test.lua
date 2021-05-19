@@ -1219,6 +1219,16 @@ do
 	assert(type(multilua.loadstring) == 'function')
 end
 
+-- TODO: Test: newmetatable
+do
+	assert(type(multilua.newmetatable) == 'function')
+end
+
+-- TODO: Test: newmetatable meta
+do
+	assert(type(multilua.newmetatable) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation

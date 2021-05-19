@@ -120,6 +120,7 @@ static const struct luaL_Reg multilua [] = {
 	{"loadfile", multilua_loadfile},
 	{"loadfilex", multilua_loadfilex},
 	{"loadstring", multilua_loadstring},
+	{"newmetatable", multilua_newmetatable},
 	{NULL, NULL},
 };
 
@@ -3612,7 +3613,33 @@ static int multilua_loadstring(lua_State* L) {
 	return 1;
 }
 
-// TODO: int luaL_newmetatable (lua_State *L, const char *tname);
+static int multilua_newmetatable(lua_State* L) {
+	// 1 - multilua state
+	// 2 - table_name
+
+	const char* table_name = lua_tostring(L, 2);
+	if(!table_name) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int r = luaL_newmetatable(current_state, table_name);
+		if(r == 0) {
+			lua_pushboolean(L, true);
+		} else {
+			lua_pushboolean(L, false);
+		}
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // TODO: lua_Integer luaL_optinteger (lua_State *L, int arg, lua_Integer d);
 // TODO: const char *luaL_optlstring (lua_State *L, int arg, const char *d, size_t *l);
 // TODO: lua_Number luaL_optnumber (lua_State *L, int arg, lua_Number d);
