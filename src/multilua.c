@@ -142,6 +142,7 @@ static const struct luaL_Reg multilua [] = {
 	{"newreg", multilua_newreg},
 	{"tabletoreg", multilua_tabletoreg},
 	{"setfuncs", multilua_setfuncs},
+	{"requiref", multilua_requiref},
 	{NULL, NULL},
 };
 
@@ -4264,8 +4265,42 @@ static int multilua_setfuncs(lua_State* L) {
 	return 1;
 }
 
+static int multilua_requiref(lua_State* L) {
+	// 1 - multilua state
+	// 2 - modname
+	// 3 - openf
+	// 4 - glb
+
+	const char* modname = lua_tostring(L, 2);
+	if(!modname) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_CFunction* openf = NULL;
+	if(lua_islightuserdata(L, 3)) {
+		openf = lua_touserdata(L, 3);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int glb = lua_toboolean(L, 4);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		luaL_requiref(current_state, modname, *openf, glb);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
-// TODO: void luaL_requiref (lua_State *L, const char *modname, lua_CFunction openf, int glb);
 // TODO: void luaL_pushresultsize (luaL_Buffer *B, size_t sz);
 // TODO: void luaL_pushresult (luaL_Buffer *B);
 // TODO: char *luaL_prepbuffsize (luaL_Buffer *B, size_t sz);

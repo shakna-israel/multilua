@@ -142,5 +142,6 @@ static int multilua_pushcfunction(lua_State* L);
 static int multilua_newreg(lua_State* L);
 static int multilua_tabletoreg(lua_State* L);
 static int multilua_setfuncs(lua_State* L);
+static int multilua_requiref(lua_State* L);
 
 #endif

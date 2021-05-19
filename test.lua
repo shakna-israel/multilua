@@ -1449,6 +1449,16 @@ do
 	assert(type(multilua.setfuncs) == 'function')
 end
 
+-- TODO: Test: requiref
+do
+	assert(type(multilua.requiref) == 'function')
+end
+
+-- TODO: Test: requiref meta
+do
+	assert(type(multilua.requiref) == 'function')
+end
+
 -- TODO: Test self-library manipulation...
 do
 	-- Test: Creation
