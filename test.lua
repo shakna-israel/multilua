@@ -1569,7 +1569,7 @@ do
 	assert(type(multilua.newlib) == 'function')
 end
 
--- TODO: Test self-library manipulation...
+-- Test self-library manipulation...
 do
 	-- Test: Creation
 	local obj = multilua.current()
@@ -1581,10 +1581,9 @@ do
 	assert(multilua.close(obj) == nil)
 
 	-- Closing the current state is ignored:
+	-- (This will segfault if it fails...)
 	obj = multilua.current()
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 	assert(obj:close() == nil)
-
-	-- TODO: Lotta tests.
 end

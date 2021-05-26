@@ -25,11 +25,13 @@ Caveat: Some parts of the exposed API are missing, as Lua would struggle to make
 
 ## Status
 
-Unuseable. Literally.
+Alpha.
 
-Not only is this unuseable in its current state, it is completely undocumented and doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
+It "works", but is undocumented, untested, and may be... Unpredictable.
 
-Which makes this unuseable _and_ dangerous.
+This is completely undocumented and doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
+
+Which makes this probably _unsafe_ unless you know exactly what you are doing.
 
 ---
 
