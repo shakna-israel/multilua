@@ -19,8 +19,6 @@ e.g.
 
 	L:close()
 
-Caveat: Some parts of the exposed API are missing, as Lua would struggle to make it easy to represent some things.
-
 ---
 
 ## Status

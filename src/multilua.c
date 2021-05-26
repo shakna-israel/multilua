@@ -413,59 +413,62 @@ static int multilua_arith(lua_State* L) {
 		
 		switch(op[0]) {
 			case '+':
-				lua_arith(L, LUA_OPADD);
+				lua_arith(current_state, LUA_OPADD);
 				break;
 			case '-':
 				if(length == 2 && op[1] == 'u') {
-					lua_arith(L, LUA_OPUNM);
+					lua_arith(current_state, LUA_OPUNM);
 				} else {
-					lua_arith(L, LUA_OPSUB);
+					lua_arith(current_state, LUA_OPSUB);
 				}
 				break;
 			case '*':
-				lua_arith(L, LUA_OPMUL);
+				lua_arith(current_state, LUA_OPMUL);
 				break;
 			case '/':
 				if(length == 2 && op[1] == '/') {
-					lua_arith(L, LUA_OPIDIV);
+					lua_arith(current_state, LUA_OPIDIV);
 				} else {
-					lua_arith(L, LUA_OPDIV);
+					lua_arith(current_state, LUA_OPDIV);
 				}
 				break;
 			case '%':
-				lua_arith(L, LUA_OPMOD);
+				lua_arith(current_state, LUA_OPMOD);
 				break;
 			case '^':
-				lua_arith(L, LUA_OPPOW);
+				lua_arith(current_state, LUA_OPPOW);
 				break;
 			case '&':
-				lua_arith(L, LUA_OPBAND);
+				lua_arith(current_state, LUA_OPBAND);
 				break;
 			case '|':
-				lua_arith(L, LUA_OPBOR);
+				lua_arith(current_state, LUA_OPBOR);
 				break;
 			case '<':
-				lua_arith(L, LUA_OPSHL);
+				lua_arith(current_state, LUA_OPSHL);
 				break;
 			case '>':
-				lua_arith(L, LUA_OPSHR);
+				lua_arith(current_state, LUA_OPSHR);
 				break;
 			case '~':
 				if(length == 2 && op[1] == '!') {
-					lua_arith(L, LUA_OPBNOT);
+					lua_arith(current_state, LUA_OPBNOT);
 				} else
 				if(length == 2 && op[1] == '|') {
-					lua_arith(L, LUA_OPBXOR);
+					lua_arith(current_state, LUA_OPBXOR);
 				} else
 				{
 					lua_pushnil(L);
+					return 1;
 				}
 				break;
 			default:
 				lua_pushnil(L);
-				break;
+				return 1;
 		}
 		
+		lua_Number x = lua_tonumber(current_state, -1);
+		lua_pushnumber(L, x);
 		return 1;
 	}
 	// Don't need obj.self anymore:

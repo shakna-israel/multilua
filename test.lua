@@ -77,29 +77,133 @@ do
 end
 
 
--- TODO: Test: openlibs
+-- Test openlibs
 do
 	assert(type(multilua.openlibs) == 'function')
+
+	local obj = multilua.new()
+	multilua.openlibs(obj)
+
+	-- String Library now exists:
+	multilua.getglobal(obj, "string")
+	t = multilua.type(obj, -1)
+	assert(t == 'table')
 end
 
--- TODO: Test: openlibs meta
+-- Test: openlibs meta
 do
 	assert(type(multilua.openlibs) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.openlibs) == 'function')
+	obj:openlibs()
+
+	-- String Library now exists:
+	obj:getglobal("string")
+	t = obj:type(-1)
+	assert(t == 'table')
 end
 
--- TODO: Test: absindex
+-- Test: absindex
 do
 	assert(type(multilua.absindex) == 'function')
+
+	local obj = multilua.new()
+
+	-- Nothing on stack, should be 0.
+	assert(multilua.absindex(obj, -1) == 0)
+
+	multilua.pushinteger(obj, 1)
+
+	-- Number on stack, should be 0.
+	assert(multilua.absindex(obj, -1) == 1)
 end
 
--- TODO: Test: absindex meta
+-- Test: absindex meta
 do
 	assert(type(multilua.absindex) == 'function')
+
+	local obj = multilua.new()
+
+	-- Nothing on stack, should be 0.
+	assert(obj:absindex(-1) == 0)
+
+	obj:pushinteger(1)
+
+	-- Number on stack, should be 0.
+	assert(obj:absindex(-1) == 1)
 end
 
 -- TODO: Test: arith
 do
 	assert(type(multilua.arith) == 'function')
+
+	local obj = multilua.new()
+
+	-- Addition
+	multilua.pushinteger(obj, 1)
+	multilua.pushinteger(obj, 1)
+	assert(multilua.arith(obj, "+") == 2.0)
+
+	-- Negation
+	multilua.pushinteger(obj, 1)
+	multilua.pushinteger(obj, 1)
+	assert(multilua.arith(obj, "-") == 0.0)
+
+	-- Unary Minus
+	multilua.pushinteger(obj, 1)
+	assert(multilua.arith(obj, "-u") == -1.0)
+
+	-- Multiply
+	multilua.pushinteger(obj, 1)
+	multilua.pushinteger(obj, 2)
+	assert(multilua.arith(obj, "*") == 2.0)
+
+	-- Divide
+	multilua.pushinteger(obj, 2)
+	multilua.pushinteger(obj, 1)
+	assert(multilua.arith(obj, "/") == 2.0)
+
+	-- Integer Divide
+	multilua.pushinteger(obj, 2)
+	multilua.pushinteger(obj, 1)
+	assert(multilua.arith(obj, "//") == 2.0)
+
+	-- Modulus
+	multilua.pushinteger(obj, 2)
+	multilua.pushinteger(obj, 2)
+	assert(multilua.arith(obj, "%") == 0.0)
+
+	-- Exponent
+	multilua.pushinteger(obj, 2)
+	multilua.pushinteger(obj, 2)
+	assert(multilua.arith(obj, "^") == 4.0)
+
+	-- Bitwise AND
+	multilua.pushinteger(obj, 5)
+	multilua.pushinteger(obj, 3)
+	assert(multilua.arith(obj, "&") == 1.0)
+
+	-- Bitwise OR
+	multilua.pushinteger(obj, 5)
+	multilua.pushinteger(obj, 3)
+	assert(multilua.arith(obj, "|") == 7.0)
+
+	-- Bitwise Leftshift
+	multilua.pushinteger(obj, 5)
+	multilua.pushinteger(obj, 3)
+	assert(multilua.arith(obj, "<<") == 40.0)
+
+	-- Bitwise Rightshift
+	multilua.pushinteger(obj, 5)
+	multilua.pushinteger(obj, 3)
+	assert(multilua.arith(obj, ">>") == 0.0)
+
+	-- TODO: Bitwise NOT
+	-- "~!"
+
+	-- TODO: Bitwise XOR
+	-- "~|"
 end
 
 -- TODO: Test: arith meta
