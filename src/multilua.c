@@ -1772,11 +1772,7 @@ static int multilua_pushboolean(lua_State* L) {
 	// 2 - b
 	lua_checkstack(L, 4);
 
-	int b_bool = false;
-	int b = lua_tointegerx(L, 2, &b_bool);
-	if(!b_bool) {
-		b = false;
-	}
+	int b = lua_toboolean(L, 2);
 
 	lua_getfield(L, 1, "self");
 
