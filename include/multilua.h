@@ -5,6 +5,7 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+static int multilua_dumpstack(lua_State* L);
 static int multilua_new(lua_State* L);
 static int multilua_close(lua_State* L);
 static int multilua_openlibs(lua_State* L);
@@ -153,5 +154,6 @@ static int multilua_addsize(lua_State* L);
 static int multilua_addvalue(lua_State* L);
 static int multilua_pushresult(lua_State* L);
 static int multilua_pushresultsize(lua_State* L);
+static int multilua_newlib(lua_State* L);
 
 #endif
