@@ -167,7 +167,7 @@ do
 	-- Integer Divide
 	multilua.pushinteger(obj, 2)
 	multilua.pushinteger(obj, 1)
-	assert(multilua.arith(obj, "//") == 2.0)
+	assert(multilua.arith(obj, "//") == 2)
 
 	-- Modulus
 	multilua.pushinteger(obj, 2)
