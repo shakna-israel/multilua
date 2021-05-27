@@ -600,14 +600,31 @@ do
 	assert(type(multilua.isboolean) == 'function')
 end
 
--- TODO: Test: iscfunction
+-- Test: iscfunction
 do
 	assert(type(multilua.iscfunction) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.pushcfunction(obj, multilua.new)
+	assert(multilua.iscfunction(obj, -1))
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.iscfunction(obj, -1) == false)
 end
 
--- TODO: Test: iscfunction meta
+-- Test: iscfunction meta
 do
 	assert(type(multilua.iscfunction) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.iscfunction) == 'function')
+
+	obj:pushcfunction(multilua.new)
+	assert(obj:iscfunction(-1))
+
+	obj:pushinteger(10)
+	assert(obj:iscfunction(-1) == false)
 end
 
 -- TODO: Test: isfunction
@@ -1670,14 +1687,24 @@ do
 	assert(type(multilua.pushcclosure) == 'function')
 end
 
--- TODO: Test: pushcfunction
+-- Test: pushcfunction
 do
 	assert(type(multilua.pushcfunction) == 'function')
+
+	local obj = multilua.new()
+
+	assert(multilua.pushcfunction(obj, multilua.new))
+	assert(multilua.iscfunction(obj, -1))
 end
 
--- TODO: Test: pushcfunction meta
+-- Test: pushcfunction meta
 do
 	assert(type(multilua.pushcfunction) == 'function')
+
+	local obj = multilua.new()
+
+	assert(obj:pushcfunction(multilua.new))
+	assert(obj:iscfunction(-1))
 end
 
 -- TODO: Test: newreg
