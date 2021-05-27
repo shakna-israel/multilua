@@ -209,7 +209,7 @@ do
 	assert(multilua.arith(obj, "~|") == 6.0)
 end
 
--- TODO: Test: arith meta
+-- Test: arith meta
 do
 	assert(type(multilua.arith) == 'function')
 
@@ -319,14 +319,41 @@ do
 	obj:close()
 end
 
--- TODO: Test: compare
+-- Test: compare
 do
 	assert(type(multilua.compare) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.pushinteger(obj, 10)
+	multilua.pushinteger(obj, 11)
+
+	assert(multilua.compare(obj, -1, -2, "==") == false)
+	assert(multilua.compare(obj, -1, -2, "<") == false)
+	assert(multilua.compare(obj, -1, -2, "<=") == false)
+
+	assert(multilua.compare(obj, -2, -1, "==") == false)
+	assert(multilua.compare(obj, -2, -1, "<") == true)
+	assert(multilua.compare(obj, -2, -1, "<=") == true)
 end
 
--- TODO: Test: compare meta
+-- Test: compare meta
 do
 	assert(type(multilua.compare) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.compare) == 'function')
+
+	obj:pushinteger(10)
+	obj:pushinteger(11)
+	
+	assert(obj:compare(-1, -2, "==") == false)
+	assert(obj:compare(-1, -2, "<") == false)
+	assert(obj:compare(-1, -2, "<=") == false)
+
+	assert(obj:compare(-2, -1, "==") == false)
+	assert(obj:compare(-2, -1, "<") == true)
+	assert(obj:compare(-2, -1, "<=") == true)
 end
 
 -- TODO: Test: concat
