@@ -428,9 +428,6 @@ static int multilua_arith(lua_State* L) {
 			case '/':
 				if(length == 2 && op[1] == '/') {
 					lua_arith(current_state, LUA_OPIDIV);
-					lua_Integer y = lua_tonumber(current_state, -1);
-					lua_pushinteger(L, y);
-					return 1;
 				} else {
 					lua_arith(current_state, LUA_OPDIV);
 				}
@@ -469,10 +466,21 @@ static int multilua_arith(lua_State* L) {
 				lua_pushnil(L);
 				return 1;
 		}
-		
-		lua_Number x = lua_tonumber(current_state, -1);
-		lua_pushnumber(L, x);
-		return 1;
+
+		if(lua_isinteger(current_state, -1)) {
+			lua_Integer y = lua_tointeger(current_state, -1);
+			lua_pushinteger(L, y);
+			return 1;
+		} else
+		if(lua_isnumber(current_state, -1)) {
+			lua_Number x = lua_tonumber(current_state, -1);
+			lua_pushnumber(L, x);
+			return 1;
+		} else
+		{
+			lua_pushnil(L);
+			return 1;
+		}
 	}
 	// Don't need obj.self anymore:
 	lua_pop(L, 1);

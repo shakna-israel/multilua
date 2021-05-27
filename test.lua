@@ -134,7 +134,7 @@ do
 	assert(obj:absindex(-1) == 1)
 end
 
--- TODO: Test: arith
+-- Test: arith
 do
 	assert(type(multilua.arith) == 'function')
 
@@ -199,16 +199,90 @@ do
 	multilua.pushinteger(obj, 3)
 	assert(multilua.arith(obj, ">>") == 0.0)
 
-	-- TODO: Bitwise NOT
-	-- "~!"
+	-- Bitwise NOT
+	multilua.pushinteger(obj, -2)
+	assert(multilua.arith(obj, "~!") == 1.0)
 
-	-- TODO: Bitwise XOR
-	-- "~|"
+	-- Bitwise XOR
+	multilua.pushinteger(obj, 5)
+	multilua.pushinteger(obj, 3)
+	assert(multilua.arith(obj, "~|") == 6.0)
 end
 
 -- TODO: Test: arith meta
 do
 	assert(type(multilua.arith) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.arith) == 'function')
+
+	-- Addition
+	obj:pushinteger(1)
+	obj:pushinteger(1)
+	assert(obj:arith("+") == 2.0)
+
+	-- Negation
+	obj:pushinteger(1)
+	obj:pushinteger(1)
+	assert(obj:arith("-") == 0.0)
+
+	-- Unary Minus
+	obj:pushinteger(1)
+	assert(obj:arith("-u") == -1.0)
+
+	-- Multiply
+	obj:pushinteger(1)
+	obj:pushinteger(2)
+	assert(obj:arith("*") == 2.0)
+
+	-- Divide
+	obj:pushinteger(2)
+	obj:pushinteger(1)
+	assert(obj:arith("/") == 2.0)
+
+	-- Integer Divide
+	obj:pushinteger(2)
+	obj:pushinteger(1)
+	assert(obj:arith("//") == 2)
+
+	-- Modulus
+	obj:pushinteger(2)
+	obj:pushinteger(2)
+	assert(obj:arith("%") == 0.0)
+
+	-- Exponent
+	obj:pushinteger(2)
+	obj:pushinteger(2)
+	assert(obj:arith("^") == 4.0)
+
+	-- Bitwise AND
+	obj:pushinteger(5)
+	obj:pushinteger(3)
+	assert(obj:arith("&") == 1.0)
+
+	-- Bitwise OR
+	obj:pushinteger(5)
+	obj:pushinteger(3)
+	assert(obj:arith("|") == 7.0)
+
+	-- Bitwise Leftshift
+	obj:pushinteger(5)
+	obj:pushinteger(3)
+	assert(obj:arith("<<") == 40.0)
+
+	-- Bitwise Rightshift
+	obj:pushinteger(5)
+	obj:pushinteger(3)
+	assert(obj:arith(">>") == 0.0)
+
+	-- Bitwise NOT
+	obj:pushinteger(-2)
+	assert(obj:arith("~!") == 1.0)
+
+	-- Bitwise XOR
+	obj:pushinteger(5)
+	obj:pushinteger(3)
+	assert(obj:arith("~|") == 6.0)
 end
 
 -- TODO: Test: call
