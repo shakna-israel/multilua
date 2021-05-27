@@ -356,14 +356,37 @@ do
 	assert(obj:compare(-2, -1, "<=") == true)
 end
 
--- TODO: Test: concat
+-- Test: concat
 do
 	assert(type(multilua.concat) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.pushstring(obj, "h")
+	multilua.pushstring(obj, "e")
+	multilua.pushstring(obj, "l")
+	multilua.pushstring(obj, "l")
+	multilua.pushstring(obj, "o")
+
+	assert(multilua.concat(obj, 5))
+	assert(multilua.tostring(obj, -1) == "hello")
 end
 
--- TODO: Test: concat meta
+-- Test: concat meta
 do
 	assert(type(multilua.concat) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.concat) == 'function')
+
+	obj:pushstring("h")
+	obj:pushstring("e")
+	obj:pushstring("l")
+	obj:pushstring("l")
+	obj:pushstring("o")
+
+	assert(obj:concat(5))
+	assert(obj:tostring(-1) == "hello")
 end
 
 -- TODO: Test: copy
