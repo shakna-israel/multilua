@@ -51,6 +51,38 @@ You can also generate pdf, epub, and html forms using [`bookwriter`](https://git
 
 ---
 
+## Building
+
+The included `Makefile` can generate the shared library for you:
+
+	make
+
+Place the resulting `multilua.so` somewhere in `LUA_CPATH`. (Which, by default, can be the root directory of your project.)
+
+### Dependencies
+
++ Lua 5.3 & headers.
+
++ pkg-config
+
++ make
+
++ C99 compatible C compiler.
+
+### Documentation Dependencies (Optional)
+
+Generating the documentation also requires [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
+
+	make doc
+
+### Testing
+
+Testing has no additional dependencies.
+
+	make test
+
+---
+
 ## License
 
 See the `LICENSE` file.
