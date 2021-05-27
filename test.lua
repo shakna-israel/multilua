@@ -389,14 +389,29 @@ do
 	assert(obj:tostring(-1) == "hello")
 end
 
--- TODO: Test: copy
+-- Test: copy
 do
 	assert(type(multilua.copy) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.pushinteger(obj, 3)
+
+	assert(multilua.copy(obj, -1, -2))
+	assert(multilua.tointeger(obj, -2) == 3)
 end
 
--- TODO: Test: copy meta
+-- Test: copy meta
 do
 	assert(type(multilua.copy) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.copy) == 'function')
+
+	obj:pushinteger(3)
+
+	assert(obj:copy(-1, -2))
+	assert(obj:tointeger(-2) == 3)
 end
 
 -- TODO: Test: createtable

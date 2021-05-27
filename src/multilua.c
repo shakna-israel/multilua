@@ -671,6 +671,21 @@ static int multilua_copy(lua_State* L) {
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 
+		// Try and grow the stack so a segfault is _unlikely_:
+		int stack_need = 0;
+		if(fromidx < 0) {
+			stack_need = stack_need + (fromidx * -1);
+		} else {
+			stack_need = stack_need + fromidx;
+		}
+		if(toidx < 0) {
+			stack_need = stack_need + (toidx * -1);
+		} else {
+			stack_need = stack_need + toidx;
+		}
+		lua_checkstack(current_state, stack_need * 2);
+
+		// Copy the indicies...
 		lua_copy(current_state, fromidx, toidx);
 
 		lua_pushboolean(L, true);
