@@ -414,14 +414,43 @@ do
 	assert(obj:tointeger(-2) == 3)
 end
 
--- TODO: Test: createtable
+-- Test: createtable
 do
 	assert(type(multilua.createtable) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.createtable(obj)
+	assert(multilua.type(obj, -1) == 'table')
+
+	multilua.createtable(obj, 10)
+	assert(multilua.type(obj, -1) == 'table')
+
+	multilua.createtable(obj, nil, 10)
+	assert(multilua.type(obj, -1) == 'table')
+
+	multilua.createtable(obj, 10, 10)
+	assert(multilua.type(obj, -1) == 'table')
 end
 
--- TODO: Test: createtable meta
+-- Test: createtable meta
 do
 	assert(type(multilua.createtable) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.createtable) == 'function')
+
+	obj:createtable()
+	assert(obj:type(-1) == 'table')
+
+	obj:createtable(10)
+	assert(obj:type(-1) == 'table')
+
+	obj:createtable(nil, 10)
+	assert(obj:type(-1) == 'table')
+
+	obj:createtable(10, 10)
+	assert(obj:type(-1) == 'table')
 end
 
 -- Can we even test `error`??
