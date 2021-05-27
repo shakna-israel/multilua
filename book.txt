@@ -4,6 +4,7 @@
   1.1.2 Memory Overhead
   1.1.3 Cleaning Up
   1.1.4 Multilua State
+2 Definitions
 Index
 1 Introduction
 **************
@@ -93,10 +94,14 @@ seems like - a C-pointer to a lua_State.
    Note: In the case of an invalid ‘multilua’ state (such as one that
 has been closed), then "self" may actually be ‘nil’.
 
+2 Definitions
+*************
+
 Index
 *****
 
 * Menu:
 
-* chapter, Introduction:                 Introduction.          (line 9)
+* chapter, Definitions:                  Definitions.          (line 98)
+* chapter, Introduction:                 Introduction.         (line 10)
 

@@ -41,6 +41,16 @@ Which makes this probably _unsafe_ unless you know exactly what you are doing.
 
 ---
 
+## Documentation
+
+The documentation is currently under significant development and _incredibly incomplete_.
+
+However, you can find a rendered form at `book.txt`.
+
+You can also generate pdf, epub, and html forms using [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
+
+---
+
 ## License
 
 See the `LICENSE` file.
