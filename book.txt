@@ -6,6 +6,7 @@
   1.1.4 Multilua State
 2 Definitions
 2.1 multilua.new
+2.2 multilua.close
 Index
 1 Introduction
 **************
@@ -101,7 +102,7 @@ has been closed), then "self" may actually be ‘nil’.
 2.1 multilua.new
 ================
 
- -- Function: multilua.new
+ -- Function: multilua.new -> nil|table
 
      This function attempts to create a fresh ‘multilua’ state object.
 
@@ -110,14 +111,44 @@ has been closed), then "self" may actually be ‘nil’.
         • ‘nil’ - Something went wrong. Probably a memory error.
         • ‘table’ - The ‘multilua’ state object.
 
+
+
+                                 — — —
+
+
+2.2 multilua.close
+==================
+
+ -- Function: multilua.close state -> nil
+
+     This function, given a ‘multilua’ STATE, closes the state.
+
+     STATE[’SELF’] should become ‘nil’ after this function is called.
+
+     WARNING: This function invokes a garbage collection on STATE, and
+     therefore may have a performance impact.
+
+     WARNING: If the STATE is the host Lua’s STATE, this function is a
+     no-op.
+
+     Note: Whilst the STATE attempts to prove that it is closed, use
+     after closing should be considered a code smell.
+
+
+
+                                 — — —
+
+
 Index
 *****
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line  99)
-* chapter, Introduction:                 Introduction.        (line  11)
-* function, multilua.new:                Definitions.         (line 103)
-* multilua state:                        Definitions.         (line 112)
-* multilua.new:                          Definitions.         (line 103)
+* chapter, Definitions:                  Definitions.         (line 100)
+* chapter, Introduction:                 Introduction.        (line  12)
+* function, multilua.close:              Definitions.         (line 121)
+* function, multilua.new:                Definitions.         (line 104)
+* multilua state:                        Definitions.         (line 113)
+* multilua.close:                        Definitions.         (line 121)
+* multilua.new:                          Definitions.         (line 104)
 

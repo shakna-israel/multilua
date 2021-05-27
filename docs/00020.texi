@@ -2,7 +2,7 @@
 
 @funcsection{multilua.new}
 
-@deffn Function multilua.new
+@deffn Function multilua.new -> nil|table
 
 This function attempts to create a fresh @code{multilua} state object.
 
@@ -16,4 +16,171 @@ It returns one of:
 @cindex multilua state
 @end deffn
 
-@comment TODO
+---
+
+@funcsection{multilua.close}
+
+@deffn Function multilua.close state -> nil
+
+This function, given a @code{multilua} @var{state}, closes the state.
+
+@var{state['self']} should become @code{nil} after this function is called.
+
+@i{WARNING}: This function invokes a garbage collection on @var{state}, and therefore may have a performance impact.
+
+@i{WARNING}: If the @var{state} is the host Lua's @var{state}, this function is a no-op.
+
+@i{Note}: Whilst the @var{state} attempts to prove that it is closed, use after closing should be considered a @i{code smell}.
+
+@end deffn
+
+---
+
+@comment TODO: multilua.dump
+@comment TODO: multilua.current
+@comment TODO: multilua.openlibs
+@comment TODO: multilua.absindex
+@comment TODO: multilua.arith
+@comment TODO: multilua.call
+@comment TODO: multilua.checkstack
+@comment TODO: multilua.compare
+@comment TODO: multilua.concat
+@comment TODO: multilua.copy
+@comment TODO: multilua.createtable
+@comment TODO: multilua.error
+@comment TODO: multilua.gc
+@comment TODO: multilua.getfield
+@comment TODO: multilua.luaversion
+@comment TODO: multilua.xmove
+@comment TODO: multilua.yield
+@comment TODO: multilua.getglobal
+@comment TODO: multilua.geti
+@comment TODO: multilua.getmetatable
+@comment TODO: multilua.gettable
+@comment TODO: multilua.gettop
+@comment TODO: multilua.getuservalue
+@comment TODO: multilua.insert
+@comment TODO: multilua.isboolean
+@comment TODO: multilua.iscfunction
+@comment TODO: multilua.isfunction
+@comment TODO: multilua.isinteger
+@comment TODO: multilua.islightuserdata
+@comment TODO: multilua.isnil
+@comment TODO: multilua.isnone
+@comment TODO: multilua.isnoneornil
+@comment TODO: multilua.isnumber
+@comment TODO: multilua.isstring
+@comment TODO: multilua.istable
+@comment TODO: multilua.isthread
+@comment TODO: multilua.isuserdata
+@comment TODO: multilua.isyieldable
+@comment TODO: multilua.len
+@comment TODO: multilua.newtable
+@comment TODO: multilua.newthread
+@comment TODO: multilua.newuserdata
+@comment TODO: multilua.next
+@comment TODO: multilua.pcall
+@comment TODO: multilua.pop
+@comment TODO: multilua.pushboolean
+@comment TODO: multilua.pushglobaltable
+@comment TODO: multilua.pushinteger
+@comment TODO: multilua.pushstring
+@comment TODO: multilua.pushnstring
+@comment TODO: multilua.pushnil
+@comment TODO: multilua.pushnumber
+@comment TODO: multilua.pushvalue
+@comment TODO: multilua.pushlightuserdata
+@comment TODO: multilua.rawequal
+@comment TODO: multilua.rawget
+@comment TODO: multilua.rawgeti
+@comment TODO: multilua.rawlen
+@comment TODO: multilua.rawset
+@comment TODO: multilua.rawseti
+@comment TODO: multilua.rawsetp
+@comment TODO: multilua.remove
+@comment TODO: multilua.replace
+@comment TODO: multilua.rotate
+@comment TODO: multilua.setfield
+@comment TODO: multilua.setglobal
+@comment TODO: multilua.seti
+@comment TODO: multilua.setmetatable
+@comment TODO: multilua.settable
+@comment TODO: multilua.settop
+@comment TODO: multilua.setuservalue
+@comment TODO: multilua.status
+@comment TODO: multilua.toboolean
+@comment TODO: multilua.tointeger
+@comment TODO: multilua.tointegerx
+@comment TODO: multilua.tostring
+@comment TODO: multilua.tonumber
+@comment TODO: multilua.tonumberx
+@comment TODO: multilua.topointer
+@comment TODO: multilua.tothread
+@comment TODO: multilua.touserdata
+@comment TODO: multilua.type
+@comment TODO: multilua.gethookcount
+@comment TODO: multilua.gethookmask
+@comment TODO: multilua.getupvalue
+@comment TODO: multilua.setupvalue
+@comment TODO: multilua.upvalueid
+@comment TODO: multilua.upvaluejoin
+@comment TODO: multilua.argcheck
+@comment TODO: multilua.argerror
+@comment TODO: multilua.callmeta
+@comment TODO: multilua.checkany
+@comment TODO: multilua.checkinteger
+@comment TODO: multilua.checkstring
+@comment TODO: multilua.checknumber
+@comment TODO: multilua.lcheckstack
+@comment TODO: multilua.checktype
+@comment TODO: multilua.checkudata
+@comment TODO: multilua.checkversion
+@comment TODO: multilua.dofile
+@comment TODO: multilua.dostring
+@comment TODO: multilua.execresult
+@comment TODO: multilua.fileresult
+@comment TODO: multilua.getmetafield
+@comment TODO: multilua.lgetmetatable
+@comment TODO: multilua.getsubtable
+@comment TODO: multilua.gsub
+@comment TODO: multilua.llen
+@comment TODO: multilua.loadbuffer
+@comment TODO: multilua.loadbufferx
+@comment TODO: multilua.loadfile
+@comment TODO: multilua.loadfilex
+@comment TODO: multilua.loadstring
+@comment TODO: multilua.newmetatable
+@comment TODO: multilua.optinteger
+@comment TODO: multilua.optstring
+@comment TODO: multilua.optnumber
+@comment TODO: multilua.ref
+@comment TODO: multilua.refnil
+@comment TODO: multilua.noref
+@comment TODO: multilua.lsetmetatable
+@comment TODO: multilua.testudata
+@comment TODO: multilua.ltostring
+@comment TODO: multilua.traceback
+@comment TODO: multilua.unref
+@comment TODO: multilua.where
+@comment TODO: multilua.resume
+@comment TODO: multilua.rawgetp
+@comment TODO: multilua.pushthread
+@comment TODO: multilua.tocfunction
+@comment TODO: multilua.pushcclosure
+@comment TODO: multilua.pushcfunction
+@comment TODO: multilua.newreg
+@comment TODO: multilua.tabletoreg
+@comment TODO: multilua.setfuncs
+@comment TODO: multilua.requiref
+@comment TODO: multilua.buffinit
+@comment TODO: multilua.buffinitsize
+@comment TODO: multilua.prepbuffsize
+@comment TODO: multilua.prepbuffer
+@comment TODO: multilua.addchar
+@comment TODO: multilua.addstring
+@comment TODO: multilua.addsize
+@comment TODO: multilua.addvalue
+@comment TODO: multilua.pushresult
+@comment TODO: multilua.pushresultsize
+@comment TODO: multilua.newlib
+

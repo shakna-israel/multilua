@@ -185,6 +185,14 @@ void util_installmeta(lua_State* L) {
 	lua_pushcfunction(L, multilua_equal);
 	lua_setfield(L, -2, "__eq");
 
+	// BUG: This doesn't seem to be linking...
+	// Show the stack size with #:
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, multilua_gettop);
+	lua_setfield(L, -2, "__len");
+
+	// TODO: link index to type?
+
 	// Create the automatic closer:
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_close);
