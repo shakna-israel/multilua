@@ -7,6 +7,10 @@ all: multilua.o
 multilua.o:
 	$(CC) $(LUALIB) $(INCLUDE) -c -fPIC -o multilua.o src/multilua.c
 
+.PHONY: doc
+doc:
+	bookwriter render
+
 .PHONY: test
 test: clean all
 	lua5.3 test.lua
@@ -15,3 +19,7 @@ test: clean all
 clean:
 	-rm multilua.o
 	-rm multilua.so
+	-rm book.pdf
+	-rm book.html
+	-rm book.epub
+	-rm book.txt

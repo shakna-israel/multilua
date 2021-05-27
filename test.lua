@@ -627,14 +627,25 @@ do
 	assert(obj:iscfunction(-1) == false)
 end
 
--- TODO: Test: isfunction
+-- Test: isfunction
 do
 	assert(type(multilua.isfunction) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.dostring(obj, "return function() end")
+	assert(multilua.isfunction(obj, -1))
 end
 
--- TODO: Test: isfunction meta
+-- Test: isfunction meta
 do
 	assert(type(multilua.isfunction) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.isfunction) == "function")
+
+	obj:dostring("return function() end")
+	assert(obj:isfunction(-1))
 end
 
 -- TODO: Test: isinteger
