@@ -1,0 +1,19 @@
+# Definitions
+
+@funcsection{multilua.new}
+
+@deffn Function multilua.new
+
+This function attempts to create a fresh @code{multilua} state object.
+
+It returns one of:
+
+@itemize
+@item @code{nil} - Something went wrong. Probably a memory error.
+@item @code{table} - The @code{multilua} state object.
+@end itemize
+
+@cindex multilua state
+@end deffn
+
+@comment TODO
