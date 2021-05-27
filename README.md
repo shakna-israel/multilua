@@ -25,6 +25,8 @@ e.g.
 
 Note: You can have as many Lua states as you want. The memory overhead is surprisingly small, and states don't interact with each other.
 
+Note: You don't _need_ to call `close`. The GC will also close it for you, if the object goes out of scope.
+
 ---
 
 ## Status
