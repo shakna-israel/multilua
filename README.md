@@ -15,9 +15,15 @@ e.g.
 	local L = assert(multilua.new())
 	L:openlibs()
 	
-	...
+	L:pushstring("Hello,")
+	L:pushstring(" ")
+	L:pushstring("World!")
+	assert(L:concat(3))
+	assert(L:tostring(-1) == "Hello, World!")
 
 	L:close()
+
+Note: You can have as many Lua states as you want. The memory overhead is surprisingly small, and states don't interact with each other.
 
 ---
 
