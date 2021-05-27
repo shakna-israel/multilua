@@ -1,0 +1,67 @@
+# Introduction
+
+@section Library Design
+
+The overall design of the library is such that it should mostly match Lua 5.3's C API, and thus be familiar to the programmer.
+
+The library generally follows one of the two forms:
+
+@cartouche
+@verbatim
+multilua.function(multilua_state, ...)
+
+multilua_state:function(...)
+@end verbatim
+@end cartouche
+
+Most functions will return @code{nil} upon failure, and either some result, or @code{true} upon success. This should allow the programmer to wrap most function calls inside either some sort of error handling, or a simple @code{assert}.
+
+However there are some differences to the C-API, and some design challenges, that the programmer should be aware of.
+
+@subsection No Enums
+
+When it comes to places where Lua would usually make use of an @code{enum}, we instead tend to make use of strings, as would usually be done from the Lua side of things.
+
+For example:
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = assert(multilua.new())
+
+obj:pushinteger(10)
+obj:pushinteger(11)
+print(obj:compare(-1, -2, "=="))
+@end verbatim
+@end cartouche
+
+Usually, in the C-API, you would pass @code{LUA_OPEQ}, but instead, we pass the string @code{"=="}.
+
+@subsection Memory Overhead
+
+To simplify making use of the API, and to prevent a number of memory errors, @code{multilua} will call @code{lua_checkstack} for you automatically.
+
+Whilst this makes it much @i{safer} to use the API, it also means that @code{multilua} may sometimes use more memory than is strictly necessary.
+
+Whilst the overhead does not @i{tend} to be significant, there is some overhead, and the programmer @i{may} care about that.
+
+@subsection Cleaning Up
+
+@code{multilua} states @i{are} Garbage-Collected values.
+
+This means that whilst you @i{can} and @i{should} cleanup a state when you don't need it anymore, by calling the @i{close} method, the host Lua's Garbage Collector will also call this method when it feels the need to get rid of a @code{multilua} state.
+
+Like all GC collections, this @i{may} have performance ramifications for your program - which you can work around by calling @i{close} yourself.
+
+@subsection Multilua State
+
+The @code{multilua} state object is a @i{table}, with a bunch of methods attached to it, and a single value located at the key @code{"self"}.
+
+This @code{"self"} value is a @i{lightuserdata} value. If the programmer feels the need to modify or play with this in any way, shape, or form, then they will be entering the terrifying land of @i{Undefined Behaviour}, and nobody can help them.
+
+In short: @i{don't touch it}.
+
+However, if you are keen on messing with things, and possessing less than average intelligence, then the @i{"self"} value is actually what it seems like - a C-pointer to a @i{lua_State}.
+
+Note: In the case of an invalid @code{multilua} state (such as one that has been closed), then @i{"self"} may actually be @code{nil}.
