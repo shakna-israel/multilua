@@ -7,23 +7,12 @@ assert(type(multilua) == 'table')
 -- Test: We have a library version
 assert(multilua.version ~= nil)
 
-print("---")
-for k, v in pairs(multilua) do
-	print(k, v)
-end
-print("---")
-
 -- Test: creation
 do
 	assert(type(multilua.new) == 'function')
 	local obj = multilua.new()
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
-
-	-- TODO: remove this print
-	for k, v in pairs(obj) do
-		print(k, v)
-	end
 
 	-- Test: closing
 	assert(type(multilua.close) == 'function')
