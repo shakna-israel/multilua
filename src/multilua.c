@@ -4486,7 +4486,7 @@ static int multilua_pushcfunction(lua_State* L) {
 	lua_checkstack(L, 4);
 
 	lua_CFunction func = NULL;
-	if(lua_islightuserdata(L, 2)) {
+	if(lua_iscfunction(L, 2)) {
 		func = lua_touserdata(L, 2);
 	} else {
 		lua_pushnil(L);
