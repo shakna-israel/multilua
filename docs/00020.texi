@@ -187,3 +187,4 @@ This function, given a @code{multilua} @var{state}, closes the state.
 @comment TODO: multilua.atpanic
 @comment TODO: multilua.load
 @comment TODO: multilua.getallocf
+@comment TODO: multilua.setallocf

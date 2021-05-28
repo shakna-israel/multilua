@@ -1908,6 +1908,16 @@ do
 	assert(type(multilua.getallocf) == 'function')
 end
 
+-- TODO: Test: setallocf
+do
+	assert(type(multilua.setallocf) == 'function')
+end
+
+-- TODO: Test: setallocf meta
+do
+	assert(type(multilua.setallocf) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation
