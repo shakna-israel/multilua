@@ -185,3 +185,4 @@ This function, given a @code{multilua} @var{state}, closes the state.
 @comment TODO: multilua.newlib
 @comment TODO: multilua.register
 @comment TODO: multilua.atpanic
+@comment TODO: multilua.load

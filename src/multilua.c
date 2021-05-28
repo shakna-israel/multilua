@@ -157,6 +157,7 @@ static const struct luaL_Reg multilua [] = {
 	{"newlib", multilua_newlib},
 	{"register", multilua_register},
 	{"atpanic", multilua_atpanic},
+	{"load", multilua_load},
 	{NULL, NULL},
 };
 
@@ -5017,20 +5018,92 @@ static int multilua_atpanic(lua_State* L) {
 	return 1;
 }
 
+static int multilua_load(lua_State* L) {
+	// 1 - multilua state
+	// 2 - lua_Reader reader
+	// 3 - data
+	// 4 - chunkname
+	// 5 - mode
+	lua_checkstack(L, 7);
+
+	lua_Reader reader = NULL;
+	if(lua_isuserdata(L, 2)) {
+		reader = lua_touserdata(L, 2);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	void* data = NULL;
+	if(lua_isuserdata(L, 3)) {
+		data = lua_touserdata(L, 3);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const char* chunkname = lua_tostring(L, 4);
+	if(!chunkname) {
+		chunkname = "=(multilua_load)";
+	}
+
+	const char* mode = lua_tostring(L, 5);
+	if(!mode) {
+		mode = "bt";
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, LUA_MINSTACK + 7);
+
+		int r = lua_load(current_state, reader, data, chunkname, mode);
+		switch(r) {
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRSYNTAX:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "syntax");
+				break;
+			case LUA_ERRMEM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "unknown");
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
-// TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
-// TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
+
 // TODO: lua_Alloc lua_getallocf (lua_State *L, void **ud);
+// TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: void *lua_getextraspace (lua_State *L);
-// TODO: int lua_load (lua_State *L, lua_Reader reader, void *data, const char *chunkname, const char *mode);
+
+// TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
 // TODO: int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx, lua_KFunction k);
-// TODO: lua_Hook lua_gethook (lua_State *L);
+
 // TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
-// TODO: const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n);
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
+
+// TODO: lua_Hook lua_gethook (lua_State *L);
 // TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
+
 // TODO: const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n);
+// TODO: const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n);
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	luaL_newlib(L, multilua);

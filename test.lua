@@ -1888,6 +1888,16 @@ do
 	assert(type(multilua.atpanic) == 'function')
 end
 
+-- TODO: Test: load
+do
+	assert(type(multilua.load) == 'function')
+end
+
+-- TODO: Test: load meta
+do
+	assert(type(multilua.load) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation

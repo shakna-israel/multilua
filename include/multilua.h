@@ -157,5 +157,6 @@ static int multilua_pushresultsize(lua_State* L);
 static int multilua_newlib(lua_State* L);
 static int multilua_register(lua_State* L);
 static int multilua_atpanic(lua_State* L);
+static int multilua_load(lua_State* L);
 
 #endif
