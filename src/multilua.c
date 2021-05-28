@@ -155,6 +155,7 @@ static const struct luaL_Reg multilua [] = {
 	{"pushresult", multilua_pushresult},
 	{"pushresultsize", multilua_pushresultsize},
 	{"newlib", multilua_newlib},
+	{"register", multilua_register},
 	{NULL, NULL},
 };
 
@@ -4953,10 +4954,43 @@ static int multilua_pushresultsize(lua_State* L) {
 	return 1;
 }
 
+static int multilua_register(lua_State* L) {
+	// 1 - multilua state
+	// 2 - name
+	// 3 - function
+	lua_checkstack(L, 5);
+
+	const char* name = lua_tostring(L, 2);
+	if(!name) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_CFunction func = NULL;
+	if(lua_iscfunction(L, 3)) {
+		func = lua_touserdata(L, 3);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 6);
+
+		lua_register(current_state, name, func);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
-// TODO: void lua_register (lua_State *L, const char *name, lua_CFunction f);
 // TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
 // TODO: lua_Alloc lua_getallocf (lua_State *L, void **ud);
 // TODO: void *lua_getextraspace (lua_State *L);

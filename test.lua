@@ -1868,6 +1868,16 @@ do
 	assert(type(multilua.newlib) == 'function')
 end
 
+-- TODO: Test: register
+do
+	assert(type(multilua.register) == 'function')
+end
+
+-- TODO: Test: register meta
+do
+	assert(type(multilua.register) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation
