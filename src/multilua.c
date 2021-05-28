@@ -158,6 +158,7 @@ static const struct luaL_Reg multilua [] = {
 	{"register", multilua_register},
 	{"atpanic", multilua_atpanic},
 	{"load", multilua_load},
+	{"getallocf", multilua_getallocf},
 	{NULL, NULL},
 };
 
@@ -5086,10 +5087,35 @@ static int multilua_load(lua_State* L) {
 	return 1;
 }
 
+static int multilua_getallocf(lua_State * L) {
+	// 1 - multilua state
+	// 2 - **ud (optional)
+	lua_checkstack(L, 4);
+
+	void** ud = NULL;
+	if(lua_isuserdata(L, 2)) {
+		ud = lua_touserdata(L, 2);
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 4);
+
+		lua_Alloc r = lua_getallocf(current_state, ud);
+
+		lua_pushlightuserdata(current_state, r);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 
-// TODO: lua_Alloc lua_getallocf (lua_State *L, void **ud);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: void *lua_getextraspace (lua_State *L);
 

@@ -1898,6 +1898,16 @@ do
 	assert(type(multilua.load) == 'function')
 end
 
+-- TODO: Test: getallocf
+do
+	assert(type(multilua.getallocf) == 'function')
+end
+
+-- TODO: Test: getallocf meta
+do
+	assert(type(multilua.getallocf) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation
