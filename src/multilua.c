@@ -5010,11 +5010,135 @@ static int multilua_getextraspace(lua_State* L) {
 	return 1;
 }
 
+static int multilua_pcallk(lua_State* L) {
+	// 1 - multilua state
+	// 2 - int nargs
+	// 3 - int nresults
+	// 4 - int msgh
+	// 5 - lua_KContext ctx (numeric)
+	// 6 - lua_KFunction* k (pointer)
+	lua_checkstack(L, 10);
+
+	int bool_nargs = false;
+	int nargs = lua_tointegerx(L, 2, &bool_nargs);
+	if(!bool_nargs) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_nresults = false;
+	int nresults = lua_tointegerx(L, 3, &bool_nresults);
+	if(!bool_nresults) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_msgh = false;
+	int msgh = lua_tointegerx(L, 4, &bool_msgh);
+	if(!bool_msgh) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_ctx = false;
+	lua_KContext ctx = lua_tointegerx(L, 5, &bool_ctx);
+	if(!bool_ctx) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_KFunction* func = NULL;
+	if(lua_islightuserdata(L, 6)) {
+		func = lua_touserdata(L, 6);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, LUA_MINSTACK + 7);
+
+		int r = lua_pcallk(current_state, nargs, nresults, msgh, ctx, *func);
+		switch(r) {
+			case LUA_OK:
+				lua_pushboolean(L, true);
+				lua_pushstring(L, "ok");
+				break;
+			case LUA_ERRRUN:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "runtime");
+				break;
+			case LUA_ERRMEM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "memory");
+				break;
+			case LUA_ERRERR:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "error");
+				break;
+			case LUA_ERRGCMM:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "gcmeta");
+				break;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "unknown");
+				break;
+		}
+		return 2;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_yieldk(lua_State* L) {
+	// 1 - multilua state
+	// 2 - int nresults
+	// 3 - lua_KContext ctx (numeric)
+	// 4 - lua_KFunction* k
+	lua_checkstack(L, 6);
+
+	int bool_nresults = false;
+	int nresults = lua_tointegerx(L, 2, &bool_nresults);
+	if(!bool_nresults) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int bool_ctx = false;
+	lua_KContext ctx = lua_tointegerx(L, 3, &bool_ctx);
+	if(!bool_ctx) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_KFunction* k = NULL;
+	if(lua_islightuserdata(L, 4)) {
+		k = lua_touserdata(L, 4);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, LUA_MINSTACK + 6);
+
+		lua_yieldk(current_state, nresults, ctx, *k);
+		lua_pushboolean(L, true);
+		return 1;
+	}	
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
-
-// TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
-// TODO: int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx, lua_KFunction k);
 
 // TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);

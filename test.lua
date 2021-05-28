@@ -1928,6 +1928,26 @@ do
 	assert(type(multilua.getextraspace) == 'function')
 end
 
+-- TODO: Test: pcallk
+do
+	assert(type(multilua.pcallk) == 'function')
+end
+
+-- TODO: Test: pcallk meta
+do
+	assert(type(multilua.pcallk) == 'function')
+end
+
+-- TODO: Test: yieldk
+do
+	assert(type(multilua.yieldk) == 'function')
+end
+
+-- TODO: Test: yieldk meta
+do
+	assert(type(multilua.yieldk) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation
