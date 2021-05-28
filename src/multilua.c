@@ -156,6 +156,7 @@ static const struct luaL_Reg multilua [] = {
 	{"pushresultsize", multilua_pushresultsize},
 	{"newlib", multilua_newlib},
 	{"register", multilua_register},
+	{"atpanic", multilua_atpanic},
 	{NULL, NULL},
 };
 
@@ -4988,13 +4989,40 @@ static int multilua_register(lua_State* L) {
 	return 1;
 }
 
+static int multilua_atpanic(lua_State* L) {
+	// 1 - multilua state
+	// 2 - panicf
+	lua_checkstack(L, 4);
+
+	lua_CFunction func = NULL;
+	if(lua_iscfunction(L, 2)) {
+		func = lua_touserdata(L, 2);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 4);
+
+		lua_CFunction oldpanic = lua_atpanic(current_state, func);
+		lua_pushcfunction(current_state, oldpanic);
+		lua_pushcfunction(L, oldpanic);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 // TODO: void lua_setallocf (lua_State *L, lua_Alloc f, void *ud);
 // TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
 // TODO: lua_Alloc lua_getallocf (lua_State *L, void **ud);
 // TODO: void *lua_getextraspace (lua_State *L);
-// TODO: lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf); (?)
 // TODO: int lua_load (lua_State *L, lua_Reader reader, void *data, const char *chunkname, const char *mode);
 // TODO: int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx, lua_KFunction k);
 // TODO: lua_Hook lua_gethook (lua_State *L);

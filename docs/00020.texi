@@ -184,3 +184,4 @@ This function, given a @code{multilua} @var{state}, closes the state.
 @comment TODO: multilua.pushresultsize
 @comment TODO: multilua.newlib
 @comment TODO: multilua.register
+@comment TODO: multilua.atpanic
