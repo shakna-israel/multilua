@@ -138,17 +138,17 @@ errors, and all sorts of other goodies are entirely possible.
 
  -- Function: multilua.close state -> nil
 
-     This function, given a ‘multilua’ STATE, closes the state.
+     This function, given a ‘multilua’ ‘state’, closes the state.
 
-     STATE[’SELF’] should become ‘nil’ after this function is called.
+     ‘state['self']’ should become ‘nil’ after this function is called.
 
-     WARNING: This function invokes a garbage collection on STATE, and
+     WARNING: This function invokes a garbage collection on ‘state’, and
      therefore may have a performance impact.
 
-     WARNING: If the STATE is the host Lua’s STATE, this function is a
-     no-op.
+     WARNING: If the ‘state’ is the host Lua’s ‘state’, this function is
+     a no-op.
 
-     Note: Whilst the STATE attempts to prove that it is closed, use
+     Note: Whilst the ‘state’ attempts to prove that it is closed, use
      after closing should be considered a code smell.
 
 

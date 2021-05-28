@@ -22,15 +22,15 @@ It returns one of:
 
 @deffn Function multilua.close state -> nil
 
-This function, given a @code{multilua} @var{state}, closes the state.
+This function, given a @code{multilua} @code{state}, closes the state.
 
-@var{state['self']} should become @code{nil} after this function is called.
+@code{state['self']} should become @code{nil} after this function is called.
 
-@i{WARNING}: This function invokes a garbage collection on @var{state}, and therefore may have a performance impact.
+@i{WARNING}: This function invokes a garbage collection on @code{state}, and therefore may have a performance impact.
 
-@i{WARNING}: If the @var{state} is the host Lua's @var{state}, this function is a no-op.
+@i{WARNING}: If the @code{state} is the host Lua's @code{state}, this function is a no-op.
 
-@i{Note}: Whilst the @var{state} attempts to prove that it is closed, use after closing should be considered a @i{code smell}.
+@i{Note}: Whilst the @code{state} attempts to prove that it is closed, use after closing should be considered a @i{code smell}.
 
 @end deffn
 
