@@ -156,6 +156,7 @@ static const struct luaL_Reg multilua [] = {
 	{"load", multilua_load},
 	{"getallocf", multilua_getallocf},
 	{"setallocf", multilua_setallocf},
+	{"getextraspace", multilua_getextraspace},
 	{NULL, NULL},
 };
 

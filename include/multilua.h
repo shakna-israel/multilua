@@ -160,6 +160,7 @@ static int multilua_atpanic(lua_State* L);
 static int multilua_load(lua_State* L);
 static int multilua_getallocf(lua_State * L);
 static int multilua_setallocf(lua_State *L);
+static int multilua_getextraspace(lua_State* L);
 
 #include <multilua_registry.h>
 

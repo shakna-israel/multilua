@@ -4991,10 +4991,27 @@ static int multilua_setallocf(lua_State *L) {
 	return 1;
 }
 
+static int multilua_getextraspace(lua_State* L) {
+	// 1 - multilua state
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 2);
+
+		void* extra = lua_getextraspace(current_state);
+		lua_pushlightuserdata(current_state, extra);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
-
-// TODO: void *lua_getextraspace (lua_State *L);
 
 // TODO: int lua_pcallk (lua_State *L, int nargs, int nresults, int msgh, lua_KContext ctx, lua_KFunction k);
 // TODO: int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx, lua_KFunction k);

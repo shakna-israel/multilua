@@ -1918,6 +1918,16 @@ do
 	assert(type(multilua.setallocf) == 'function')
 end
 
+-- TODO: Test: getextraspace
+do
+	assert(type(multilua.getextraspace) == 'function')
+end
+
+-- TODO: Test: getextraspace meta
+do
+	assert(type(multilua.getextraspace) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation
