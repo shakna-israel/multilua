@@ -65,3 +65,13 @@ In short: @i{don't touch it}.
 However, if you are keen on messing with things, and possessing less than average intelligence, then the @i{"self"} value is actually what it seems like - a C-pointer to a @i{lua_State}.
 
 Note: In the case of an invalid @code{multilua} state (such as one that has been closed), then @i{"self"} may actually be @code{nil}.
+
+@subsection Safety
+
+Whilst @code{multilua} does attempt to protect you from doing downright idiotic things, quite a lot of the API is still using memory pointers, which are treated exactly as what they are.
+
+This means if the programmer does something idiotic, like passing the wrong kind of pointer to the wrong function, they will still have things misbehave as if they had done that in C.
+
+Which, unfortunately, means segmentation faults, memory corruption errors, and all sorts of other goodies are entirely possible.
+
+@code{multilua} cannot protect you against everything.

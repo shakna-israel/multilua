@@ -4,6 +4,7 @@
   1.1.2 Memory Overhead
   1.1.3 Cleaning Up
   1.1.4 Multilua State
+  1.1.5 Safety
 2 Definitions
 2.1 multilua.new
 2.2 multilua.close
@@ -96,6 +97,22 @@ seems like - a C-pointer to a lua_State.
    Note: In the case of an invalid ‘multilua’ state (such as one that
 has been closed), then "self" may actually be ‘nil’.
 
+1.1.5 Safety
+------------
+
+Whilst ‘multilua’ does attempt to protect you from doing downright
+idiotic things, quite a lot of the API is still using memory pointers,
+which are treated exactly as what they are.
+
+   This means if the programmer does something idiotic, like passing the
+wrong kind of pointer to the wrong function, they will still have things
+misbehave as if they had done that in C.
+
+   Which, unfortunately, means segmentation faults, memory corruption
+errors, and all sorts of other goodies are entirely possible.
+
+   ‘multilua’ cannot protect you against everything.
+
 2 Definitions
 *************
 
@@ -144,11 +161,11 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 100)
-* chapter, Introduction:                 Introduction.        (line  12)
-* function, multilua.close:              Definitions.         (line 121)
-* function, multilua.new:                Definitions.         (line 104)
-* multilua state:                        Definitions.         (line 113)
-* multilua.close:                        Definitions.         (line 121)
-* multilua.new:                          Definitions.         (line 104)
+* chapter, Definitions:                  Definitions.         (line 117)
+* chapter, Introduction:                 Introduction.        (line  13)
+* function, multilua.close:              Definitions.         (line 138)
+* function, multilua.new:                Definitions.         (line 121)
+* multilua state:                        Definitions.         (line 130)
+* multilua.close:                        Definitions.         (line 138)
+* multilua.new:                          Definitions.         (line 121)
 
