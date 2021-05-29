@@ -5262,6 +5262,9 @@ static int multilua_checkoption(lua_State* L) {
 
 	for(size_t i = 0; i < tlength; i++) {
 		t = lua_geti(L, 4, i);
+		if(t == LUA_TNIL) {
+			break;
+		} else
 		if(t != LUA_TSTRING) {
 			free(lst);
 			lua_pushnil(L);
