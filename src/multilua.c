@@ -25,7 +25,7 @@ void util_installfuncs(lua_State* L) {
 }
 
 void util_installmeta(lua_State* L) {
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 6);
 
 	// Create the comparator:
 	lua_getmetatable(L, -1);
@@ -50,7 +50,7 @@ static int multilua_equal(lua_State* L) {
 	// 1 - multilua stateA
 	// 2 - multilua stateB
 
-	lua_checkstack(L, 2);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -78,7 +78,7 @@ static int multilua_equal(lua_State* L) {
 }
 
 static int multilua_current(lua_State* L) {
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 8);
 
 	// Otherwise, create our table:
 	lua_newtable(L);
@@ -104,7 +104,7 @@ static int multilua_current(lua_State* L) {
 }
 
 static int multilua_new(lua_State* L) {
-	lua_checkstack(L, 8);
+	lua_checkstack(L, lua_gettop(L) + 8);
 
 	lua_State* new_state = luaL_newstate();
 
@@ -140,7 +140,7 @@ static int multilua_new(lua_State* L) {
 }
 
 static int multilua_close(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -166,7 +166,7 @@ static int multilua_close(lua_State* L) {
 }
 
 static int multilua_dumpstack(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 	lua_getfield(L, 1, "self");
 
 	if(lua_islightuserdata(L, -1)) {
@@ -204,7 +204,7 @@ static int multilua_dumpstack(lua_State* L) {
 }
 
 static int multilua_openlibs(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -225,7 +225,7 @@ static int multilua_openlibs(lua_State* L) {
 }
 
 static int multilua_absindex(lua_State* L) {
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int idx = lua_tointeger(L, 2);
 
@@ -249,7 +249,7 @@ static int multilua_absindex(lua_State* L) {
 }
 
 static int multilua_arith(lua_State* L) {
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	size_t length = 0;
 	const char* op = lua_tolstring(L, 2, &length);
@@ -346,7 +346,7 @@ static int multilua_arith(lua_State* L) {
 }
 
 static int multilua_call(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int nargs_bool = false;
 	int nargs = lua_tointegerx(L, 2, &nargs_bool);
@@ -379,7 +379,7 @@ static int multilua_call(lua_State* L) {
 }
 
 static int multilua_checkstack(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int n_bool = false;
 	int n = lua_tointegerx(L, 2, &n_bool);
@@ -412,7 +412,7 @@ static int multilua_compare(lua_State* L) {
 	// "=="
 	// "<"
 	// "<="
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index1_bool = false;
 	int index1 = lua_tointegerx(L, 2, &index1_bool);
@@ -472,7 +472,7 @@ static int multilua_compare(lua_State* L) {
 }
 
 static int multilua_concat(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	int n_bool = false;
 	int n = lua_tointegerx(L, 2, &n_bool);
@@ -503,7 +503,7 @@ static int multilua_copy(lua_State* L) {
 	// 2 - fromidx
 	// 3 - toidx
 
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) * 2);
 
 	int fromidx_bool = false;
 	int fromidx = lua_tointegerx(L, 2, &fromidx_bool);
@@ -556,7 +556,7 @@ static int multilua_createtable(lua_State* L) {
 	// 2- narr
 	// 3 - nrec
 
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	int narr_bool = false;
 	int narr = lua_tointegerx(L, 2, &narr_bool);
@@ -587,7 +587,7 @@ static int multilua_createtable(lua_State* L) {
 }
 
 static int multilua_error(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -608,7 +608,7 @@ static int multilua_gc(lua_State* L) {
 	// 1 - multilua state
 	// 2 - what
 	// 3 - data
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int data_bool = false;
 	int data = lua_tointegerx(L, 3, &data_bool);
@@ -688,7 +688,7 @@ static int multilua_getfield(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - k
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -721,7 +721,7 @@ static int multilua_getfield(lua_State* L) {
 }
 
 static int multilua_luaversion(lua_State* L) {
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -743,7 +743,7 @@ static int multilua_xmove(lua_State* L) {
 	// 1 - multilua state from
 	// 2 - multilua state to
 	// 3 - n
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -780,7 +780,7 @@ static int multilua_xmove(lua_State* L) {
 static int multilua_yield(lua_State* L) {
 	// 1 - multilua state
 	// 2 - nresults
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int nresults_bool = false;
 	int nresults = lua_tointegerx(L, 2, &nresults_bool);
@@ -808,7 +808,7 @@ static int multilua_yield(lua_State* L) {
 static int multilua_getglobal(lua_State* L) {
 	// 1 - multilua state
 	// 2 - name
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* name = lua_tostring(L, 2);
 	if(!name) {
@@ -834,7 +834,7 @@ static int multilua_geti(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - i
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -871,7 +871,7 @@ static int multilua_geti(lua_State* L) {
 static int multilua_getmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -903,7 +903,7 @@ static int multilua_getmetatable(lua_State* L) {
 static int multilua_gettable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -930,7 +930,7 @@ static int multilua_gettable(lua_State* L) {
 
 static int multilua_gettop(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -950,7 +950,7 @@ static int multilua_gettop(lua_State* L) {
 static int multilua_getuservalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -977,7 +977,7 @@ static int multilua_getuservalue(lua_State* L) {
 static int multilua_insert(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1005,7 +1005,7 @@ static int multilua_insert(lua_State* L) {
 static int multilua_isboolean(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1036,7 +1036,7 @@ static int multilua_isboolean(lua_State* L) {
 static int multilua_iscfunction(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1067,7 +1067,7 @@ static int multilua_iscfunction(lua_State* L) {
 static int multilua_isfunction(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1098,7 +1098,7 @@ static int multilua_isfunction(lua_State* L) {
 static int multilua_isinteger(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1129,7 +1129,7 @@ static int multilua_isinteger(lua_State* L) {
 static int multilua_islightuserdata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1160,7 +1160,7 @@ static int multilua_islightuserdata(lua_State* L) {
 static int multilua_isnil(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1191,7 +1191,7 @@ static int multilua_isnil(lua_State* L) {
 static int multilua_isnone(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1222,7 +1222,7 @@ static int multilua_isnone(lua_State* L) {
 static int multilua_isnoneornil(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1253,7 +1253,7 @@ static int multilua_isnoneornil(lua_State* L) {
 static int multilua_isnumber(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1284,7 +1284,7 @@ static int multilua_isnumber(lua_State* L) {
 static int multilua_isstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1315,7 +1315,7 @@ static int multilua_isstring(lua_State* L) {
 static int multilua_istable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1346,7 +1346,7 @@ static int multilua_istable(lua_State* L) {
 static int multilua_isthread(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1377,7 +1377,7 @@ static int multilua_isthread(lua_State* L) {
 static int multilua_isuserdata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1407,7 +1407,7 @@ static int multilua_isuserdata(lua_State* L) {
 
 static int multilua_isyieldable(lua_State* L) {
 	// 1 - multistate lua
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -1431,7 +1431,7 @@ static int multilua_isyieldable(lua_State* L) {
 static int multilua_len(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int index_bool = false;
 	int index = lua_tointegerx(L, 2, &index_bool);
@@ -1458,7 +1458,7 @@ static int multilua_len(lua_State* L) {
 
 static int multilua_newtable(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -1477,7 +1477,7 @@ static int multilua_newtable(lua_State* L) {
 
 static int multilua_newthread(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -1503,7 +1503,7 @@ static int multilua_newthread(lua_State* L) {
 static int multilua_newuserdata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - size
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_size = false;
 	size_t size = lua_tointegerx(L, 2, &bool_size);
@@ -1531,7 +1531,7 @@ static int multilua_newuserdata(lua_State* L) {
 static int multilua_next(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -1561,7 +1561,7 @@ static int multilua_pcall(lua_State* L) {
 	// 2 - nargs
 	// 3 - nresults
 	// 4 - msgh
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int nargs_bool = false;
 	int nargs = lua_tointegerx(L, 2, &nargs_bool);
@@ -1627,7 +1627,7 @@ static int multilua_pcall(lua_State* L) {
 static int multilua_pop(lua_State* L) {
 	// 1 - multilua state
 	// 2 - n
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_n = false;
 	int n = lua_tointegerx(L, 2, &bool_n);
@@ -1654,7 +1654,7 @@ static int multilua_pop(lua_State* L) {
 static int multilua_pushboolean(lua_State* L) {
 	// 1 - multilua state
 	// 2 - b
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int b = lua_toboolean(L, 2);
 
@@ -1676,7 +1676,7 @@ static int multilua_pushboolean(lua_State* L) {
 
 static int multilua_pushglobaltable(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -1696,7 +1696,7 @@ static int multilua_pushglobaltable(lua_State* L) {
 static int multilua_pushinteger(lua_State* L) {
 	// 1 - multilua state
 	// 2 - n
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int n_bool = false;
 	lua_Integer n = lua_tointegerx(L, 2, &n_bool);
@@ -1723,7 +1723,7 @@ static int multilua_pushinteger(lua_State* L) {
 static int multilua_pushstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - s
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	size_t length = 0;
 	const char* s = lua_tolstring(L, 2, &length);
@@ -1751,7 +1751,7 @@ static int multilua_pushnstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - s
 	// 3 - maxlength
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int maxlength_bool = false;
 	lua_Integer maxlength = lua_tointegerx(L, 3, &maxlength_bool);
@@ -1789,7 +1789,7 @@ static int multilua_pushnstring(lua_State* L) {
 
 static int multilua_pushnil(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 
@@ -1809,7 +1809,7 @@ static int multilua_pushnil(lua_State* L) {
 static int multilua_pushnumber(lua_State* L) {
 	// 1 - multilua state
 	// 2 - n
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int n_bool = false;
 	lua_Number n = lua_tonumberx(L, 2, &n_bool);
@@ -1836,7 +1836,7 @@ static int multilua_pushnumber(lua_State* L) {
 static int multilua_pushvalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -1863,7 +1863,7 @@ static int multilua_pushvalue(lua_State* L) {
 static int multilua_pushlightuserdata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - lightuserdata
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	if(!lua_islightuserdata(L, 2)) {
 		lua_pushnil(L);
@@ -1890,7 +1890,7 @@ static int multilua_rawequal(lua_State* L) {
 	// 1 - multilua state
 	// 2 - indexA
 	// 3 - indexB
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_indexA = false;
 	int indexA = lua_tointegerx(L, 2, &bool_indexA);
@@ -1927,7 +1927,7 @@ static int multilua_rawequal(lua_State* L) {
 static int multilua_rawget(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -1954,7 +1954,7 @@ static int multilua_rawgeti(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -1987,7 +1987,7 @@ static int multilua_rawgeti(lua_State* L) {
 static int multilua_rawlen(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, -2, &bool_index);
@@ -2013,7 +2013,7 @@ static int multilua_rawlen(lua_State* L) {
 static int multilua_rawset(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2040,7 +2040,7 @@ static int multilua_rawseti(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - i
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2074,7 +2074,7 @@ static int multilua_rawsetp(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - pointer
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2105,7 +2105,7 @@ static int multilua_rawsetp(lua_State* L) {
 static int multilua_remove(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2131,7 +2131,7 @@ static int multilua_remove(lua_State* L) {
 static int multilua_replace(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2158,7 +2158,7 @@ static int multilua_rotate(lua_State* L) {
 	// 1 - multilua state
 	// 2 - idx
 	// 3 - n
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_idx = false;
 	int idx = lua_tointegerx(L, 2, &bool_idx);
@@ -2192,7 +2192,7 @@ static int multilua_setfield(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - key
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2225,7 +2225,7 @@ static int multilua_setfield(lua_State* L) {
 static int multilua_setglobal(lua_State* L) {
 	// 1 - multilua state
 	// 2 - name
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* name = lua_tostring(L, 2);
 	if(!name) {
@@ -2251,7 +2251,7 @@ static int multilua_seti(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - n
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2284,7 +2284,7 @@ static int multilua_seti(lua_State* L) {
 static int multilua_setmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2310,7 +2310,7 @@ static int multilua_setmetatable(lua_State* L) {
 static int multilua_settable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2336,7 +2336,7 @@ static int multilua_settable(lua_State* L) {
 static int multilua_settop(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2362,7 +2362,7 @@ static int multilua_settop(lua_State* L) {
 static int multilua_setuservalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2387,7 +2387,7 @@ static int multilua_setuservalue(lua_State* L) {
 
 static int multilua_status(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -2428,7 +2428,7 @@ static int multilua_status(lua_State* L) {
 static int multilua_toboolean(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2454,7 +2454,7 @@ static int multilua_toboolean(lua_State* L) {
 static int multilua_tointeger(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2480,7 +2480,7 @@ static int multilua_tointeger(lua_State* L) {
 static int multilua_tointegerx(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2513,7 +2513,7 @@ static int multilua_tointegerx(lua_State* L) {
 static int multilua_tostring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2545,7 +2545,7 @@ static int multilua_tostring(lua_State* L) {
 static int multilua_tonumber(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2571,7 +2571,7 @@ static int multilua_tonumber(lua_State* L) {
 static int multilua_tonumberx(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2603,7 +2603,7 @@ static int multilua_tonumberx(lua_State* L) {
 static int multilua_topointer(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2634,7 +2634,7 @@ static int multilua_topointer(lua_State* L) {
 static int multilua_tothread(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2665,7 +2665,7 @@ static int multilua_tothread(lua_State* L) {
 static int multilua_touserdata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2696,7 +2696,7 @@ static int multilua_touserdata(lua_State* L) {
 static int multilua_type(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -2720,7 +2720,7 @@ static int multilua_type(lua_State* L) {
 
 static int multilua_gethookcount(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -2738,7 +2738,7 @@ static int multilua_gethookcount(lua_State* L) {
 
 static int multilua_gethookmask(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -2758,7 +2758,7 @@ static int multilua_getupvalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - funcindex
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_funcindex = false;
 	int funcindex = lua_tointegerx(L, 2, &bool_funcindex);
@@ -2801,7 +2801,7 @@ static int multilua_setupvalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - funcindex
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_funcindex = false;
 	int funcindex = lua_tointegerx(L, 2, &bool_funcindex);
@@ -2845,7 +2845,7 @@ static int multilua_upvalueid(lua_State* L) {
 	// 1 - multilua state
 	// 2 - funcindex
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_funcindex = false;
 	int funcindex = lua_tointegerx(L, 2, &bool_funcindex);
@@ -2881,7 +2881,7 @@ static int multilua_upvaluejoin(lua_State* L) {
 	// 3 - nA
 	// 4 - funcindexB
 	// 5 - nB
-	lua_checkstack(L, 7);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_funcindexA = false;
 	int funcindexA = lua_tointegerx(L, 2, &bool_funcindexA);
@@ -2930,7 +2930,7 @@ static int multilua_argcheck(lua_State* L) {
 	// 2 - bool cond
 	// 3 - arg
 	// 4 - extramsg
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int cond = lua_toboolean(L, 2);
 
@@ -2961,7 +2961,7 @@ static int multilua_argerror(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - extramsg
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -2990,7 +2990,7 @@ static int multilua_callmeta(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - field
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -3022,7 +3022,7 @@ static int multilua_callmeta(lua_State* L) {
 static int multilua_checkany(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3048,7 +3048,7 @@ static int multilua_checkany(lua_State* L) {
 static int multilua_checkinteger(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3074,7 +3074,7 @@ static int multilua_checkinteger(lua_State* L) {
 static int multilua_checkstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3106,7 +3106,7 @@ static int multilua_checkstring(lua_State* L) {
 static int multilua_checknumber(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3133,7 +3133,7 @@ static int multilua_lcheckstack(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - msg
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3162,7 +3162,7 @@ static int multilua_checktype(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - type
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3230,7 +3230,7 @@ static int multilua_checkudata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - tname
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3261,7 +3261,7 @@ static int multilua_checkudata(lua_State* L) {
 
 static int multilua_checkversion(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -3280,7 +3280,7 @@ static int multilua_checkversion(lua_State* L) {
 static int multilua_dofile(lua_State* L) {
 	// 1 - multilua state
 	// 2 - filename
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	const char* filename = lua_tostring(L, 2);
 	if(!filename) {
@@ -3310,7 +3310,7 @@ static int multilua_dofile(lua_State* L) {
 static int multilua_dostring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - string
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* source = lua_tostring(L, 2);
 	if(!source) {
@@ -3340,7 +3340,7 @@ static int multilua_dostring(lua_State* L) {
 static int multilua_execresult(lua_State* L) {
 	// 1 - multilua state
 	// 2 - stat
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_stat = false;
 	int stat = lua_tointegerx(L, 2, &bool_stat);
@@ -3367,7 +3367,7 @@ static int multilua_fileresult(lua_State* L) {
 	// 1 - multilua state
 	// 2 - stat
 	// 3 - filename
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_stat = false;
 	int stat = lua_tointegerx(L, 2, &bool_stat);
@@ -3400,7 +3400,7 @@ static int multilua_getmetafield(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - field
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -3432,7 +3432,7 @@ static int multilua_getmetafield(lua_State* L) {
 static int multilua_lgetmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - tname
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* table_name = lua_tostring(L, 2);
 	if(!table_name) {
@@ -3458,7 +3458,7 @@ static int multilua_getsubtable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - idx
 	// 3 - fname
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_idx = false;
 	int idx = lua_tointegerx(L, 2, &bool_idx);
@@ -3492,7 +3492,7 @@ static int multilua_gsub(lua_State* L) {
 	// 2 - source
 	// 3 - pattern
 	// 4 - replacement
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* source = lua_tostring(L, 2);
 	if(!source) {
@@ -3529,7 +3529,7 @@ static int multilua_gsub(lua_State* L) {
 static int multilua_llen(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -3556,7 +3556,7 @@ static int multilua_loadbuffer(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - name
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	size_t length = 0;
 	const char* buffer = lua_tolstring(L, 2, &length);
@@ -3610,7 +3610,7 @@ static int multilua_loadbufferx(lua_State* L) {
 	// 2 - buffer
 	// 3 - chunkname
 	// 4 - mode
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	size_t length = 0;
 	const char* buffer = lua_tolstring(L, 2, &length);
@@ -3664,7 +3664,7 @@ static int multilua_loadbufferx(lua_State* L) {
 static int multilua_loadfile(lua_State* L) {
 	// 1 - multilua state
 	// 2 - filename
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* filename = lua_tostring(L, 2);
 	if(!filename) {
@@ -3715,7 +3715,7 @@ static int multilua_loadfilex(lua_State* L) {
 	// 1 - multilua state
 	// 2 - filename
 	// 3 - mode
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* filename = lua_tostring(L, 2);
 	if(!filename) {
@@ -3767,7 +3767,7 @@ static int multilua_loadfilex(lua_State* L) {
 static int multilua_loadstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - source
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* source = lua_tostring(L, 2);
 	if(!source) {
@@ -3817,7 +3817,7 @@ static int multilua_loadstring(lua_State* L) {
 static int multilua_newmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - table_name
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* table_name = lua_tostring(L, 2);
 	if(!table_name) {
@@ -3847,7 +3847,7 @@ static int multilua_optinteger(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - default
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) * 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3881,7 +3881,7 @@ static int multilua_optstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - default
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3919,7 +3919,7 @@ static int multilua_optnumber(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - default
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -3952,7 +3952,7 @@ static int multilua_optnumber(lua_State* L) {
 static int multilua_ref(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -3976,13 +3976,13 @@ static int multilua_ref(lua_State* L) {
 }
 
 static int multilua_refnil(lua_State* L) {
-	lua_checkstack(L, 2);
+	lua_checkstack(L, lua_gettop(L) + 2);
 	lua_pushinteger(L, LUA_REFNIL);
 	return 1;
 }
 
 static int multilua_noref(lua_State* L) {
-	lua_checkstack(L, 2);
+	lua_checkstack(L, lua_gettop(L) + 2);
 	lua_pushinteger(L, LUA_NOREF);
 	return 1;
 }
@@ -3990,7 +3990,7 @@ static int multilua_noref(lua_State* L) {
 static int multilua_lsetmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - table_name
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* table_name = lua_tostring(L, 2);
 	if(!table_name) {
@@ -4016,7 +4016,7 @@ static int multilua_testudata(lua_State* L) {
 	// 1 - multilua state
 	// 2 - arg
 	// 3 - table_name
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -4052,7 +4052,7 @@ static int multilua_testudata(lua_State* L) {
 static int multilua_ltostring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -4080,7 +4080,7 @@ static int multilua_traceback(lua_State* L) {
 	// 1 - multilua state
 	// 2 - msg
 	// 3 - level
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* msg = lua_tostring(L, 2);
 
@@ -4108,7 +4108,7 @@ static int multilua_unref(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - reference
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -4141,7 +4141,7 @@ static int multilua_unref(lua_State* L) {
 static int multilua_where(lua_State* L) {
 	// 1 - multilua state
 	// 2 - level
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_level = false;
 	int level = lua_tointegerx(L, 2, &bool_level);
@@ -4168,7 +4168,7 @@ static int multilua_resume(lua_State* L) {
 	// 1 - multilua state
 	// 2 - thread
 	// 3 - nargs
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_nargs = false;
 	int nargs = lua_tointegerx(L, 3, &bool_nargs);
@@ -4225,7 +4225,7 @@ static int multilua_rawgetp(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - pointer
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -4254,7 +4254,7 @@ static int multilua_rawgetp(lua_State* L) {
 
 static int multilua_pushthread(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -4273,7 +4273,7 @@ static int multilua_pushthread(lua_State* L) {
 static int multilua_tocfunction(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
 	int index = lua_tointegerx(L, 2, &bool_index);
@@ -4304,7 +4304,7 @@ static int multilua_pushcclosure(lua_State* L) {
 	// 1 - multilua state
 	// 2 - cfunction
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_n = false;
 	int n = lua_tointegerx(L, 3, &bool_n);
@@ -4338,7 +4338,7 @@ static int multilua_pushcclosure(lua_State* L) {
 static int multilua_pushcfunction(lua_State* L) {
 	// 1 - multilua state
 	// 2 - func
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_CFunction func = NULL;
 	if(lua_iscfunction(L, 2)) {
@@ -4364,7 +4364,7 @@ static int multilua_pushcfunction(lua_State* L) {
 
 static int multilua_newreg(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -4384,7 +4384,7 @@ static int multilua_tabletoreg(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	// 3 - table
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_tindex = false;
 	int table_index = lua_tointegerx(L, 2, &bool_tindex);
@@ -4461,7 +4461,7 @@ static int multilua_setfuncs(lua_State* L) {
 	// 1 - multilua state
 	// 2 - lreg
 	// 3 - nup
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_nup = false;
 	int nup = lua_tointegerx(L, 3, &bool_nup);
@@ -4490,7 +4490,7 @@ static int multilua_setfuncs(lua_State* L) {
 static int multilua_newlib(lua_State* L) {
 	// 1 - multilua state
 	// 2 - reg pointer
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	if(lua_islightuserdata(L, 2)) {
 		const luaL_Reg** lreg = lua_touserdata(L, 2);
@@ -4530,7 +4530,7 @@ static int multilua_requiref(lua_State* L) {
 	// 2 - modname
 	// 3 - openf
 	// 4 - glb
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* modname = lua_tostring(L, 2);
 	if(!modname) {
@@ -4564,7 +4564,7 @@ static int multilua_requiref(lua_State* L) {
 
 static int multilua_buffinit(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -4585,7 +4585,7 @@ static int multilua_buffinit(lua_State* L) {
 static int multilua_buffinitsize(lua_State* L) {
 	// 1 - multilua state
 	// 2 - size
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_size = false;
 	size_t size = lua_tointegerx(L, 2, &bool_size);
@@ -4614,7 +4614,7 @@ static int multilua_prepbuffsize(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - size
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_size = false;
 	size_t size = lua_tointegerx(L, 3, &bool_size);
@@ -4649,7 +4649,7 @@ static int multilua_prepbuffsize(lua_State* L) {
 static int multilua_prepbuffer(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	if(lua_islightuserdata(L, 2)) {
 		luaL_Buffer* buff = lua_touserdata(L, 2);
@@ -4674,7 +4674,7 @@ static int multilua_addchar(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - character
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* str = lua_tostring(L, 3);
 	char c = str[0];
@@ -4695,7 +4695,7 @@ static int multilua_addstring(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - string
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	size_t length = 0;
 	const char* string = lua_tostring(L, 3);
@@ -4720,7 +4720,7 @@ static int multilua_addsize(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - n
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_n = false;
 	size_t n = lua_tointegerx(L, 3, &bool_n);
@@ -4744,7 +4744,7 @@ static int multilua_addsize(lua_State* L) {
 static int multilua_addvalue(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	if(lua_islightuserdata(L, 2)) {
 		luaL_Buffer* buff = lua_touserdata(L, 2);
@@ -4761,7 +4761,7 @@ static int multilua_addvalue(lua_State* L) {
 static int multilua_pushresult(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	if(lua_islightuserdata(L, 2)) {
 		luaL_Buffer* buff = lua_touserdata(L, 2);
@@ -4779,7 +4779,7 @@ static int multilua_pushresultsize(lua_State* L) {
 	// 1 - multilua state
 	// 2 - buffer
 	// 3 - size
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_size = false;
 	size_t size = lua_tointegerx(L, 3, &bool_size);
@@ -4804,7 +4804,7 @@ static int multilua_register(lua_State* L) {
 	// 1 - multilua state
 	// 2 - name
 	// 3 - function
-	lua_checkstack(L, 5);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	const char* name = lua_tostring(L, 2);
 	if(!name) {
@@ -4837,7 +4837,7 @@ static int multilua_register(lua_State* L) {
 static int multilua_atpanic(lua_State* L) {
 	// 1 - multilua state
 	// 2 - panicf
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_CFunction func = NULL;
 	if(lua_iscfunction(L, 2)) {
@@ -4868,7 +4868,7 @@ static int multilua_load(lua_State* L) {
 	// 3 - data
 	// 4 - chunkname
 	// 5 - mode
-	lua_checkstack(L, 7);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_Reader reader = NULL;
 	if(lua_isuserdata(L, 2)) {
@@ -4933,7 +4933,7 @@ static int multilua_load(lua_State* L) {
 static int multilua_getallocf(lua_State * L) {
 	// 1 - multilua state
 	// 2 - **ud (optional)
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	void** ud = NULL;
 	if(lua_islightuserdata(L, 2)) {
@@ -4960,6 +4960,7 @@ static int multilua_setallocf(lua_State *L) {
 	// 1 - multilua state
 	// 2 - allocfunc
 	// 3 - *ud
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_Alloc* func = NULL;
 	if(lua_islightuserdata(L, 2)) {
@@ -4993,7 +4994,7 @@ static int multilua_setallocf(lua_State *L) {
 
 static int multilua_getextraspace(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 3);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
@@ -5017,7 +5018,7 @@ static int multilua_pcallk(lua_State* L) {
 	// 4 - int msgh
 	// 5 - lua_KContext ctx (numeric)
 	// 6 - lua_KFunction* k (pointer)
-	lua_checkstack(L, 10);
+	lua_checkstack(L, lua_gettop(L) + 4);
 
 	int bool_nargs = false;
 	int nargs = lua_tointegerx(L, 2, &bool_nargs);
@@ -5099,7 +5100,7 @@ static int multilua_yieldk(lua_State* L) {
 	// 2 - int nresults
 	// 3 - lua_KContext ctx (numeric)
 	// 4 - lua_KFunction* k
-	lua_checkstack(L, 6);
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_nresults = false;
 	int nresults = lua_tointegerx(L, 2, &bool_nresults);
@@ -5139,7 +5140,7 @@ static int multilua_yieldk(lua_State* L) {
 
 static int multilua_gethook(lua_State* L) {
 	// 1 - multilua state
-	lua_checkstack(L, 4);
+	lua_checkstack(L, lua_gettop(L) + 3);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
