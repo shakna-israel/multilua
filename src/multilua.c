@@ -52,6 +52,9 @@ static int multilua_newindex(lua_State* L) {
 	// 1 - multilua state
 	// 2 - key
 	// 3 - value
+	lua_checkstack(L, lua_gettop(L) + 3);
+
+	// BUG: Sometimes segfaults...
 
 	int bool_key = false;
 	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
@@ -71,11 +74,23 @@ static int multilua_newindex(lua_State* L) {
 		const char* string;
 		void* ud = NULL;
 
+		// Convert to a positive num...
+		key = lua_absindex(current_state, key);
+		// Ensure space...
+		lua_checkstack(current_state, key);
+
+		// TODO: Does this make sense to do?
+		while(key > lua_gettop(current_state)) {
+			lua_pushnil(current_state);
+		}
+
 		// Find the right push function:
 		int t = lua_type(L, 3);
 		switch(t) {
 			case LUA_TNIL:
 				lua_pushnil(current_state);
+				lua_copy(current_state, -1, key);
+				lua_pop(current_state, -1);
 				break;
 			case LUA_TNUMBER:
 				if(lua_isinteger(L, 3)) {
@@ -172,7 +187,7 @@ static int multilua_current(lua_State* L) {
 
 	// Create the meta/table...
 	lua_newtable(L);
-	lua_copy(L, -1, -2);
+	lua_pushvalue(L, -1);
 	lua_setmetatable(L, -2);
 
 	util_installfuncs(L);

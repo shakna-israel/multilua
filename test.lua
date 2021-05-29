@@ -65,7 +65,7 @@ do
 	obj2:close()
 end
 
--- TODO: Test newindex metamethod
+-- Test newindex metamethod
 do
 	local obj = multilua.new()
 
@@ -95,7 +95,9 @@ do
 
 	-- TODO: thread is an error
 
-	-- TODO: Pushing lightuserdata is allowed
+	-- Pushing lightuserdata is allowed
+	obj[#obj + 1] = obj['self']
+	assert(obj[#obj] == 'userdata')
 end
 
 -- Test openlibs
