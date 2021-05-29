@@ -11,13 +11,10 @@ do
 	obj:pushstring("Hello, World!")
 	obj:newtable()
 
-	print(#obj, obj:gettop())
-	print(getmetatable(obj))
-
 	-- Print all types on stack:
-	local i = obj:gettop()
+	local i = #obj
 	while i > 0 do
-		local t = obj:type(i)
+		local t = obj[i]
 		
 		if t == "nil" then
 			print("<nil>")
