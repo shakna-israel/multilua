@@ -133,6 +133,21 @@ do
 	assert(#obj == 10)
 end
 
+-- Test: []
+do
+	assert(type(multilua.gettop) == 'function')
+
+	local obj = multilua.new()
+
+	obj:pushinteger(10)
+	obj:pushstring("hello")
+	obj:pushboolean(false)
+
+	assert(obj[1] == "number")
+	assert(obj[2] == "string")
+	assert(obj[3] == "boolean")
+end
+
 -- Test: absindex
 do
 	assert(type(multilua.absindex) == 'function')

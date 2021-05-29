@@ -39,8 +39,9 @@ void util_installmeta(lua_State* L) {
 	lua_setfield(L, -2, "__len");
 
 	// TODO: link index to type?
-	//lua_getmetatable(L, -1);
-	//lua_pushcfunction(L, multilua_geti)
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, multilua_type);
+	lua_setfield(L, -2, "__index");
 
 	// Create the automatic closer:
 	lua_getmetatable(L, -1);
