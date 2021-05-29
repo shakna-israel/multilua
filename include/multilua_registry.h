@@ -161,6 +161,7 @@ static const struct luaL_Reg multilua [] = {
 	{"yieldk", multilua_yieldk},
 	{"gethook", multilua_gethook},
 	{"sethook", multilua_sethook},
+	{"checkoption", multilua_checkoption},
 	{NULL, NULL},
 };
 

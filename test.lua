@@ -1968,6 +1968,16 @@ do
 	assert(type(multilua.sethook) == 'function')
 end
 
+-- TODO: Test: checkoption
+do
+	assert(type(multilua.checkoption) == 'function')
+end
+
+-- TODO: Test: checkoption meta
+do
+	assert(type(multilua.checkoption) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation

@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <multilua.h>
 
@@ -5228,9 +5229,65 @@ static int multilua_sethook(lua_State *L) {
 	return 1;
 }
 
-// These are slightly harder to wrap:
-// TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
+static int multilua_checkoption(lua_State* L) {
+	// 1 - multilua state
+	// 2 - int arg_index
+	// 3 - def (can be NULL)
+	// 4 - lst (table array)
 
+	int bool_arg = false;
+	int arg = lua_tointegerx(L, 2, &bool_arg);
+	if(!bool_arg) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	// Can be NULL:
+	const char* def = lua_tostring(L, 3);
+
+	int t = lua_type(L, 4);
+	if(t != LUA_TTABLE) {
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_len(L, 4);
+	lua_Integer tlength = lua_tointeger(L, -1);
+	lua_pop(L, -1);
+
+	const char** lst = calloc(sizeof(const char*), tlength + 2);
+	if(!lst) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	for(size_t i = 0; i < tlength; i++) {
+		t = lua_geti(L, 4, i);
+		if(t != LUA_TSTRING) {
+			free(lst);
+			lua_pushnil(L);
+			return 1;
+		}
+
+		lst[i] = lua_tostring(L, -1);
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_Integer r = luaL_checkoption(current_state, arg, def, lst);
+		free(lst);
+		lua_pushinteger(current_state, r);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	free(lst);
+	lua_pushnil(L);
+	return 1;
+}
+
+// These are slightly harder to wrap:
 // TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
 
