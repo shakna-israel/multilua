@@ -63,23 +63,28 @@ static int multilua_newindex(lua_State* L) {
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 
+		// Placeholder types for the switch:
 		lua_Number x = 0;
-
+		lua_Integer y = 0;
 		lua_CFunction func = NULL;
-
 		size_t string_length = 0;
 		const char* string;
-
 		void* ud = NULL;
 
+		// Find the right push function:
 		int t = lua_type(L, 3);
 		switch(t) {
 			case LUA_TNIL:
 				lua_pushnil(current_state);
 				break;
 			case LUA_TNUMBER:
-				x = lua_tonumber(L, 3);
-				lua_pushnumber(current_state, x);
+				if(lua_isinteger(L, 3)) {
+					y = lua_tointeger(L, 3);
+					lua_pushinteger(current_state, y);
+				} else {
+					x = lua_tonumber(L, 3);
+					lua_pushnumber(current_state, x);
+				}
 				lua_copy(current_state, -1, key);
 				lua_pop(current_state, -1);
 				break;
