@@ -192,3 +192,4 @@ This function, given a @code{multilua} @code{state}, closes the state.
 @comment TODO: multilua.pcallk
 @comment TODO: multilua.yieldk
 @comment TODO: multilua.gethook
+@comment TODO: multilua.sethook

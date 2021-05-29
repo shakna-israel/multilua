@@ -1958,6 +1958,16 @@ do
 	assert(type(multilua.gethook) == 'function')
 end
 
+-- TODO: Test: sethook
+do
+	assert(type(multilua.sethook) == 'function')
+end
+
+-- TODO: Test: sethook meta
+do
+	assert(type(multilua.sethook) == 'function')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation

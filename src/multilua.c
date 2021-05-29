@@ -5137,7 +5137,6 @@ static int multilua_yieldk(lua_State* L) {
 	return 1;
 }
 
-// TODO: lua_Hook lua_gethook (lua_State *L);
 static int multilua_gethook(lua_State* L) {
 	// 1 - multilua state
 	lua_checkstack(L, 4);
@@ -5157,7 +5156,76 @@ static int multilua_gethook(lua_State* L) {
 	return 1;
 }
 
-// TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
+static int multilua_sethook(lua_State *L) {
+	// 1 - multilua state
+	// 2 - hook (pointer)
+	// 3 - mask (truthy table)
+	// 4 - int count (default: 0)
+	lua_checkstack(L, lua_gettop(L) + 4);
+
+	int t;
+
+	lua_Hook func = NULL;
+	if(lua_islightuserdata(L, 2)) {
+		func = lua_touserdata(L, 2);
+	} else {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	// Get the mask:
+
+	int mask = 0;
+	t = lua_type(L, 3);
+	if(t != LUA_TTABLE) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	t = lua_getfield(L, 3, "call");
+	if(t != LUA_TNIL) {
+		mask |= LUA_MASKCALL;
+	}
+	lua_pop(L, -1);
+
+	t = lua_getfield(L, 3, "return");
+	if(t != LUA_TNIL) {
+		mask |= LUA_MASKRET;
+	}
+	lua_pop(L, -1);
+
+	t = lua_getfield(L, 3, "line");
+	if(t != LUA_TNIL) {
+		mask |= LUA_MASKLINE;
+	}
+	lua_pop(L, -1);
+
+	t = lua_getfield(L, 3, "count");
+	if(t != LUA_TNIL) {
+		mask |= LUA_MASKCOUNT;
+	}
+	lua_pop(L, -1);
+
+	// Count defaults to 0.
+	int bool_count = false;
+	int count = lua_tointegerx(L, 4, &bool_count);
+	if(!bool_count) {
+		count = 0;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 6);
+
+		lua_sethook(current_state, func, mask, count);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
 
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
