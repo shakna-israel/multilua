@@ -5137,14 +5137,33 @@ static int multilua_yieldk(lua_State* L) {
 	return 1;
 }
 
+// TODO: lua_Hook lua_gethook (lua_State *L);
+static int multilua_gethook(lua_State* L) {
+	// 1 - multilua state
+	lua_checkstack(L, 4);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_Hook hook = lua_gethook(current_state);
+		lua_pushlightuserdata(current_state, hook);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+// TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
+
 // These are slightly harder to wrap:
 // TODO: int luaL_checkoption (lua_State *L, int arg, const char *def, const char *const lst[]);
 
 // TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
-
-// TODO: lua_Hook lua_gethook (lua_State *L);
-// TODO: void lua_sethook (lua_State *L, lua_Hook f, int mask, int count);
 
 // TODO: const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n);
 // TODO: const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n);

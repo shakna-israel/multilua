@@ -159,6 +159,7 @@ static const struct luaL_Reg multilua [] = {
 	{"getextraspace", multilua_getextraspace},
 	{"pcallk", multilua_pcallk},
 	{"yieldk", multilua_yieldk},
+	{"gethook", multilua_gethook},
 	{NULL, NULL},
 };
 
