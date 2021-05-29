@@ -33,13 +33,14 @@ void util_installmeta(lua_State* L) {
 	lua_pushcfunction(L, multilua_equal);
 	lua_setfield(L, -2, "__eq");
 
-	// BUG: This doesn't seem to be linking...
 	// Show the stack size with #:
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_gettop);
 	lua_setfield(L, -2, "__len");
 
 	// TODO: link index to type?
+	//lua_getmetatable(L, -1);
+	//lua_pushcfunction(L, multilua_geti)
 
 	// Create the automatic closer:
 	lua_getmetatable(L, -1);
@@ -84,16 +85,12 @@ static int multilua_current(lua_State* L) {
 	// Otherwise, create our table:
 	lua_newtable(L);
 
-	// Create the metatable...
+	// Create the meta/table...
 	lua_newtable(L);
-	util_installfuncs(L);
-	// Set the metatable
+	lua_copy(L, -1, -2);
 	lua_setmetatable(L, -2);
 
-	// Set the object's index to it's own metatable:
-	lua_getmetatable(L, -1);
-	lua_getmetatable(L, -2);
-	lua_setfield(L, -2, "__index");
+	util_installfuncs(L);
 
 	util_installmeta(L);
 
@@ -117,19 +114,12 @@ static int multilua_new(lua_State* L) {
 
 	lua_checkstack(new_state, 2);
 
-	// Otherwise, create our table:
+	// Create the meta/table...
 	lua_newtable(L);
-
-	// Create the metatable...
-	lua_newtable(L);
-	util_installfuncs(L);
-	// Set the metatable
+	lua_copy(L, -1, -2);
 	lua_setmetatable(L, -2);
 
-	// Set the object's index to it's own metatable:
-	lua_getmetatable(L, -1);
-	lua_getmetatable(L, -2);
-	lua_setfield(L, -2, "__index");
+	util_installfuncs(L);
 
 	util_installmeta(L);
 

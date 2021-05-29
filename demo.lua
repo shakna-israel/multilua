@@ -11,6 +11,9 @@ do
 	obj:pushstring("Hello, World!")
 	obj:newtable()
 
+	print(#obj, obj:gettop())
+	print(getmetatable(obj))
+
 	-- Print all types on stack:
 	local i = obj:gettop()
 	while i > 0 do

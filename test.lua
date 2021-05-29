@@ -93,6 +93,46 @@ do
 	assert(t == 'table')
 end
 
+-- Test: gettop
+do
+	assert(type(multilua.gettop) == 'function')
+
+	local obj = multilua.new()
+
+	for i = 1, 10 do
+		multilua.pushinteger(obj, i)
+	end
+
+	assert(multilua.gettop(obj) == 10)
+end
+
+-- Test: gettop meta
+do
+	assert(type(multilua.gettop) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.gettop) == 'function')
+
+	for i = 1, 10 do
+		obj:pushinteger(i)
+	end
+
+	assert(obj:gettop() == 10)
+end
+
+-- Test: #
+do
+	assert(type(multilua.gettop) == 'function')
+
+	local obj = multilua.new()
+
+	for i = 1, 10 do
+		multilua.pushinteger(obj, i)
+	end
+
+	assert(#obj == 10)
+end
+
 -- Test: absindex
 do
 	assert(type(multilua.absindex) == 'function')
@@ -558,16 +598,6 @@ end
 -- TODO: Test: gettable meta
 do
 	assert(type(multilua.gettable) == 'function')
-end
-
--- TODO: Test: gettop
-do
-	assert(type(multilua.gettop) == 'function')
-end
-
--- TODO: Test: gettop meta
-do
-	assert(type(multilua.gettop) == 'function')
 end
 
 -- TODO: Test: getuservalue
