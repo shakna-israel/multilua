@@ -5234,6 +5234,7 @@ static int multilua_checkoption(lua_State* L) {
 	// 2 - int arg_index
 	// 3 - def (can be NULL)
 	// 4 - lst (table array)
+	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_arg = false;
 	int arg = lua_tointegerx(L, 2, &bool_arg);
@@ -5253,6 +5254,8 @@ static int multilua_checkoption(lua_State* L) {
 	lua_len(L, 4);
 	lua_Integer tlength = lua_tointeger(L, -1);
 	lua_pop(L, -1);
+
+	lua_checkstack(L, tlength);
 
 	const char** lst = calloc(sizeof(const char*), tlength + 2);
 	if(!lst) {
