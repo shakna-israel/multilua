@@ -65,6 +65,38 @@ do
 	obj2:close()
 end
 
+-- TODO: Test newindex metamethod
+do
+	local obj = multilua.new()
+
+	-- Pushing numbers...
+	obj[#obj + 1] = 10
+	assert(obj[#obj] == "number")
+
+	-- Pushing booleans
+	obj[#obj + 1] = true
+	assert(obj[#obj] == "boolean")
+
+	-- Pushing strings
+	obj[#obj + 1] = "hello world"
+	assert(obj[#obj] == "string")
+
+	-- TODO: this is an error:
+	--obj[#obj + 1] = {}
+
+	-- TODO: this is an error:
+	--obj[#obj + 1] = function() end
+
+	-- Pushing C Functions
+	obj[#obj + 1] = multilua.new
+	assert(obj[#obj] == "function")
+
+	-- TODO: full userdata is an error
+
+	-- TODO: thread is an error
+
+	-- TODO: Pushing lightuserdata is allowed
+end
 
 -- Test openlibs
 do

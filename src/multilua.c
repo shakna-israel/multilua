@@ -38,7 +38,6 @@ void util_installmeta(lua_State* L) {
 	lua_pushcfunction(L, multilua_gettop);
 	lua_setfield(L, -2, "__len");
 
-	// TODO: link index to type?
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_type);
 	lua_setfield(L, -2, "__index");
@@ -47,6 +46,86 @@ void util_installmeta(lua_State* L) {
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_close);
 	lua_setfield(L, -2, "__gc");
+}
+
+static int multilua_newindex(lua_State* L) {
+	// 1 - multilua state
+	// 2 - key
+	// 3 - value
+
+	int bool_key = false;
+	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
+	if(!bool_key) {
+		return luaL_error(L, "Expected integer key.");
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		lua_Number x = 0;
+
+		lua_CFunction func = NULL;
+
+		size_t string_length = 0;
+		const char* string;
+
+		void* ud = NULL;
+
+		int t = lua_type(L, 3);
+		switch(t) {
+			case LUA_TNIL:
+				lua_pushnil(current_state);
+				break;
+			case LUA_TNUMBER:
+				x = lua_tonumber(L, 3);
+				lua_pushnumber(current_state, x);
+				lua_copy(current_state, -1, key);
+				lua_pop(current_state, -1);
+				break;
+			case LUA_TBOOLEAN:
+				x = lua_toboolean(L, 3);
+				lua_pushboolean(current_state, x);
+				lua_copy(current_state, -1, key);
+				lua_pop(current_state, -1);
+				break;
+			case LUA_TSTRING:
+				string = lua_tolstring(L, 3, &string_length);
+				lua_pushlstring(current_state, string, string_length);
+				lua_copy(current_state, -1, key);
+				lua_pop(current_state, -1);
+				break;
+			case LUA_TTABLE:
+				return luaL_error(L, "Unsupported push type: table.");
+			case LUA_TFUNCTION:
+				if(lua_iscfunction(L, 3)) {
+					func = lua_touserdata(L, 3);
+					lua_pushcfunction(current_state, func);
+					lua_copy(current_state, -1, key);
+					lua_pop(current_state, -1);
+				} else {
+					return luaL_error(L, "Unsupported push type: Lua function.");
+				}
+				break;
+			case LUA_TUSERDATA:
+				return luaL_error(L, "Unsupported push type: full userdata.");
+			case LUA_TTHREAD:
+				return luaL_error(L, "Unsupported push type: thread.");
+			case LUA_TLIGHTUSERDATA:
+				ud = lua_touserdata(L, 3);
+				lua_pushlightuserdata(current_state, ud);
+				lua_copy(current_state, -1, key);
+				lua_pop(current_state, -1);
+				break;
+			default:
+				return luaL_error(L, "Unsupported push type: unknown.");
+		}
+
+		return 0;
+	}
+
+	luaL_error(L, "Error during assignment.");
+	return 0;
 }
 
 static int multilua_equal(lua_State* L) {
@@ -99,6 +178,9 @@ static int multilua_current(lua_State* L) {
 	lua_pushlightuserdata(L, L);
 	lua_setfield(L, -2, "self");
 
+	lua_pushcfunction(L, multilua_newindex);
+	lua_setfield(L, -2, "__newindex");
+
 	return 1;
 }
 
@@ -128,6 +210,9 @@ static int multilua_new(lua_State* L) {
 	lua_pushlightuserdata(L, new_state);
 	lua_setfield(L, -2, "self");
 
+	lua_pushcfunction(L, multilua_newindex);
+	lua_setfield(L, -2, "__newindex");
+
 	return 1;
 }
 
@@ -149,8 +234,9 @@ static int multilua_close(lua_State* L) {
 	lua_pop(L, 1);
 
 	// Set self to nil:
+	lua_pushstring(L, "self");
 	lua_pushnil(L);
-	lua_setfield(L, -2, "self");
+	lua_rawset(L, -3);
 
 	// To not break return semantics:
 	lua_pushnil(L);
