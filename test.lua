@@ -98,6 +98,10 @@ do
 	-- Pushing lightuserdata is allowed
 	obj[#obj + 1] = obj['self']
 	assert(obj[#obj] == 'userdata')
+
+	-- Can still modify fields:
+	obj['hello'] = 'world'
+	assert(obj['hello'] == 'world')
 end
 
 -- Test openlibs

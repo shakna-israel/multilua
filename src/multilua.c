@@ -54,12 +54,22 @@ static int multilua_newindex(lua_State* L) {
 	// 3 - value
 	lua_checkstack(L, lua_gettop(L) + 3);
 
-	// BUG: Sometimes segfaults...
-
 	int bool_key = false;
 	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
 	if(!bool_key) {
-		return luaL_error(L, "Expected integer key.");
+		
+		// Not a integer key, fallback to "regular" behaviour.
+		const char* str_key = lua_tostring(L, 3);
+
+		// Probably not trying to access table or stack.
+		if(!str_key) {
+			return luaL_error(L, "Expected a integer or string index.");
+		}
+
+		lua_copy(L, 2, -1);
+		lua_pushstring(L, str_key);
+		lua_rawset(L, 1);
+		return 1;
 	}
 
 	lua_getfield(L, 1, "self");
@@ -79,8 +89,10 @@ static int multilua_newindex(lua_State* L) {
 		// Ensure space...
 		lua_checkstack(current_state, key);
 
+		// Where our pushed value will end up:
 		size_t fromidx = lua_absindex(current_state, -1) + 1;
 
+		// Pushing too high on the stack (invalid toidx):
 		if(key > fromidx) {
 			return luaL_error(L, "Pushing to invalid stack index: %d\n", key);
 		}
@@ -269,7 +281,7 @@ static int multilua_close(lua_State* L) {
 	// Set self to nil:
 	lua_pushstring(L, "self");
 	lua_pushnil(L);
-	lua_rawset(L, -3);
+	lua_rawset(L, 1);
 
 	// To not break return semantics:
 	lua_pushnil(L);
