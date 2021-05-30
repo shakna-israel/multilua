@@ -79,9 +79,10 @@ static int multilua_newindex(lua_State* L) {
 		// Ensure space...
 		lua_checkstack(current_state, key);
 
-		// TODO: Does this make sense to do?
-		while(key > lua_gettop(current_state)) {
-			lua_pushnil(current_state);
+		size_t fromidx = lua_absindex(current_state, -1) + 1;
+
+		if(key > fromidx) {
+			return luaL_error(L, "Pushing to invalid stack index: %d\n", key);
 		}
 
 		// Find the right push function:
@@ -89,8 +90,10 @@ static int multilua_newindex(lua_State* L) {
 		switch(t) {
 			case LUA_TNIL:
 				lua_pushnil(current_state);
-				lua_copy(current_state, -1, key);
-				lua_pop(current_state, -1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
 				break;
 			case LUA_TNUMBER:
 				if(lua_isinteger(L, 3)) {
@@ -100,20 +103,26 @@ static int multilua_newindex(lua_State* L) {
 					x = lua_tonumber(L, 3);
 					lua_pushnumber(current_state, x);
 				}
-				lua_copy(current_state, -1, key);
-				lua_pop(current_state, -1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
 				break;
 			case LUA_TBOOLEAN:
 				x = lua_toboolean(L, 3);
 				lua_pushboolean(current_state, x);
-				lua_copy(current_state, -1, key);
-				lua_pop(current_state, -1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
 				break;
 			case LUA_TSTRING:
 				string = lua_tolstring(L, 3, &string_length);
 				lua_pushlstring(current_state, string, string_length);
-				lua_copy(current_state, -1, key);
-				lua_pop(current_state, -1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
 				break;
 			case LUA_TTABLE:
 				return luaL_error(L, "Unsupported push type: table.");
@@ -121,8 +130,10 @@ static int multilua_newindex(lua_State* L) {
 				if(lua_iscfunction(L, 3)) {
 					func = lua_touserdata(L, 3);
 					lua_pushcfunction(current_state, func);
-					lua_copy(current_state, -1, key);
-					lua_pop(current_state, -1);
+					if(fromidx != key) {
+						lua_copy(current_state, fromidx, key);
+						lua_pop(current_state, fromidx);
+					}
 				} else {
 					return luaL_error(L, "Unsupported push type: Lua function.");
 				}
@@ -134,8 +145,10 @@ static int multilua_newindex(lua_State* L) {
 			case LUA_TLIGHTUSERDATA:
 				ud = lua_touserdata(L, 3);
 				lua_pushlightuserdata(current_state, ud);
-				lua_copy(current_state, -1, key);
-				lua_pop(current_state, -1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
 				break;
 			default:
 				return luaL_error(L, "Unsupported push type: unknown.");

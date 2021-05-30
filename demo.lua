@@ -6,7 +6,6 @@ do
 	-- Put some stuff onto the stack
 	for i=1, 10 do
 		obj[#obj + 1] = i
-		print(#obj)
 	end
 	obj:pushboolean(true)
 	obj:pushstring("Hello, World!")
