@@ -15,11 +15,11 @@ e.g.
 	local L = assert(multilua.new())
 	L:openlibs()
 	
-	L:pushstring("Hello,")
-	L:pushstring(" ")
-	L:pushstring("World!")
+	L[#L + 1] = "Hello,"
+	L[#L + 1] = " "
+	L[#L + 1] = "World!"
 	assert(L:concat(3))
-	assert(L:tostring(-1) == "Hello, World!")
+	assert(L(-1) == "Hello, World!")
 
 	L:close()
 
