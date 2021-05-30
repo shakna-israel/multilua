@@ -144,6 +144,87 @@ static int multilua_metameth_call(lua_State* L) {
 	return 1;
 }
 
+static int multilua_fetchable(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	lua_checkstack(L, lua_gettop(L) + 3);
+
+	int bool_key = false;
+	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
+	if(!key) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		// Convert to a positive num...
+		key = lua_absindex(current_state, key);
+		
+		int last_valid = lua_absindex(current_state, -1);
+		if(key > last_valid) {
+			lua_pushnil(L);
+			return 1;
+		}
+
+		// Find the right push function:
+		int t = lua_type(current_state, key);
+		switch(t) {
+			case LUA_TNONE:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TNIL:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TNUMBER:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TBOOLEAN:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TSTRING:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TTABLE:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "table");
+				return 2;
+			case LUA_TFUNCTION:
+				if(lua_iscfunction(current_state, key)) {
+					lua_pushboolean(L, true);
+					return 1;
+				} else {
+					lua_pushboolean(L, false);
+					lua_pushstring(L, "function");
+					return 2;
+				}
+			case LUA_TUSERDATA:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "userdata");
+				return 2;
+			case LUA_TTHREAD:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "thread");
+				return 2;
+			case LUA_TLIGHTUSERDATA:
+				lua_pushboolean(L, true);
+				return 1;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "unknown");
+				return 2;
+		}
+
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 static int multilua_newindex(lua_State* L) {
 	// 1 - multilua state
 	// 2 - key

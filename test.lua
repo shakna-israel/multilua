@@ -156,6 +156,16 @@ do
 	assert(obj(-1) == obj.self)
 end
 
+-- TODO: test fetchable
+do
+	assert(type(multilua.fetchable) == 'function')
+end
+
+-- TODO: test fetchable meta
+do
+	assert(type(multilua.fetchable) == 'function')
+end
+
 -- Test openlibs
 do
 	assert(type(multilua.openlibs) == 'function')
