@@ -38,9 +38,17 @@ void util_installmeta(lua_State* L) {
 	lua_pushcfunction(L, multilua_gettop);
 	lua_setfield(L, -2, "__len");
 
+	// Allow getting type by index:
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_type);
 	lua_setfield(L, -2, "__index");
+
+	// TODO: __call should be a type-agnostic copy from state to host state
+
+	// Supply a name for tostring:
+	lua_getmetatable(L, -1);
+	lua_pushstring(L, "multilua");
+	lua_setfield(L, -2, "__name");
 
 	// Create the automatic closer:
 	lua_getmetatable(L, -1);

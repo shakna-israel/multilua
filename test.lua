@@ -104,6 +104,12 @@ do
 	assert(obj['hello'] == 'world')
 end
 
+-- Test tostring name
+do
+	local obj = multilua.new()
+	assert(tostring(obj):sub(1, 9) == "multilua:")
+end
+
 -- Test openlibs
 do
 	assert(type(multilua.openlibs) == 'function')
