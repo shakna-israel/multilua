@@ -167,6 +167,7 @@ static int multilua_gethook(lua_State* L);
 static int multilua_sethook(lua_State *L);
 static int multilua_checkoption(lua_State* L);
 static int multilua_newindex(lua_State* L);
+static int multilua_metameth_call(lua_State* L);
 
 #include <multilua_registry.h>
 

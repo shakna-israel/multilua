@@ -43,7 +43,10 @@ void util_installmeta(lua_State* L) {
 	lua_pushcfunction(L, multilua_type);
 	lua_setfield(L, -2, "__index");
 
-	// TODO: __call should be a type-agnostic copy from state to host state
+	// Allow copying stack values by call:
+	lua_getmetatable(L, -1);
+	lua_pushcfunction(L, multilua_metameth_call);
+	lua_setfield(L, -2, "__call");
 
 	// Supply a name for tostring:
 	lua_getmetatable(L, -1);
@@ -54,6 +57,91 @@ void util_installmeta(lua_State* L) {
 	lua_getmetatable(L, -1);
 	lua_pushcfunction(L, multilua_close);
 	lua_setfield(L, -2, "__gc");
+}
+
+static int multilua_metameth_call(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	lua_checkstack(L, lua_gettop(L) + 3);
+
+	int bool_key = false;
+	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
+	if(!key) {
+		return luaL_error(L, "Expected an integer index.");
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		// Placeholder types for the switch:
+		lua_Number x = 0;
+		lua_Integer y = 0;
+		lua_CFunction func = NULL;
+		size_t string_length = 0;
+		const char* string;
+		void* ud = NULL;
+
+		// Convert to a positive num...
+		key = lua_absindex(current_state, key);
+		
+		int last_valid = lua_absindex(current_state, -1);
+		if(key > last_valid) {
+			return luaL_error(current_state, "Invalid stack index: %d", key);
+		}
+
+		// Find the right push function:
+		int t = lua_type(current_state, key);
+		switch(t) {
+			case LUA_TNONE:
+				// Index is still valid, so push something.
+				lua_pushnil(L);
+				return 1;
+			case LUA_TNIL:
+				lua_pushnil(L);
+				return 1;
+			case LUA_TNUMBER:
+				if(lua_isinteger(current_state, key)) {
+					y = lua_tointeger(current_state, key);
+					lua_pushinteger(L, y);
+				} else {
+					x = lua_tonumber(current_state, key);
+					lua_pushnumber(L, x);
+				}
+				return 1;
+			case LUA_TBOOLEAN:
+				y = lua_toboolean(current_state, key);
+				lua_pushboolean(L, y);
+				return 1;
+			case LUA_TSTRING:
+				string = lua_tolstring(current_state, key, &string_length);
+				lua_pushlstring(L, string, string_length);
+				return 1;
+			case LUA_TTABLE:
+				return luaL_error(current_state, "Cannot deepcopy a table automatically.");
+			case LUA_TFUNCTION:
+				if(lua_iscfunction(current_state, key)) {
+					func = lua_touserdata(current_state, key);
+					lua_pushcfunction(L, func);
+					return 1;
+				} else {
+					return luaL_error(current_state, "Cannot deepcopy a Lua function automatically.");
+				}
+			case LUA_TUSERDATA:
+				return luaL_error(current_state, "Cannot copy a full userdata object.");
+			case LUA_TTHREAD:
+				return luaL_error(current_state, "Cannot copy a thread object.");
+			case LUA_TLIGHTUSERDATA:
+				ud = lua_touserdata(current_state, key);
+				lua_pushlightuserdata(L, ud);
+				return 1;
+			default:
+				return luaL_error(current_state, "Cannot copy an unknown object.");
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
 }
 
 static int multilua_newindex(lua_State* L) {

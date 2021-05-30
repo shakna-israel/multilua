@@ -110,6 +110,52 @@ do
 	assert(tostring(obj):sub(1, 9) == "multilua:")
 end
 
+-- Test copying values by call
+do
+	local obj = multilua.new()
+
+	-- Calling on nothing to get nil
+	assert(obj(-1) == nil)
+
+	-- Calling to get nil
+	obj[#obj + 1] = nil
+	assert(obj(-1) == nil)
+
+	-- Calling to get an integer
+	obj[#obj + 1] = 10
+	assert(obj(-1) == 10)
+
+	-- Calling to get a float
+	obj[#obj + 1] = 1.3
+	assert(obj(-1) == 1.3)
+
+	-- Calling to get a boolean
+	obj[#obj + 1] = false
+	assert(obj(-1) == false)
+	obj[#obj + 1] = true
+	assert(obj(-1) == true)
+
+	-- Calling to get a string
+	obj[#obj + 1] = "Hello, World!"
+	assert(obj(-1) == "Hello, World!")
+
+	-- TODO: Getting a table errors
+
+	-- Calling to get a C Function
+	obj[#obj + 1] = multilua.new
+	assert(type(obj(-1)) == 'function')
+
+	-- TODO: Getting a Lua function is an error
+
+	-- TODO: Getting a full userdata is an error
+
+	-- TODO: Getting a thread is an error
+
+	-- Calling to get lightuserdata
+	obj[#obj + 1] = obj.self
+	assert(obj(-1) == obj.self)
+end
+
 -- Test openlibs
 do
 	assert(type(multilua.openlibs) == 'function')
