@@ -194,3 +194,12 @@ This function, given a @code{multilua} @code{state}, closes the state.
 @comment TODO: multilua.gethook
 @comment TODO: multilua.sethook
 @comment TODO: multilua.checkoption
+
+
+@funcsection{multilua.fetchable}
+
+@deffn Function multilua.fetchable -> nil|boolean
+
+@comment TODO
+
+@end deffn

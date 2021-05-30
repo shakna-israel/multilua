@@ -1,0 +1,103 @@
+# Metamethods
+
+@code{multilua} includes a variety of metamethods to make programming feel simpler, and closer to what one would expect in Lua, instead of only like the C-API.
+
+These metamethods in no way restrict the power of what you can do - they simple abstract away some of the fiddlier bits of the API.
+
+---
+
+@section Length Operator
+
+Lua's length operator has been overridden to match @code{multilua.gettop}, that is, it'll return the current size of the stack for the given object.
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+assert(#obj == obj:gettop())
+@end verbatim
+@end cartouche
+
+---
+
+@section Index Operator
+
+Lua's index fetching has been overridden so that @code{integer} keys will return the type found at that position on the stack. String keys will continue to operate as expected.
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj:pushstring("Hello")
+
+assert(obj[-1] == 'string')
+@end verbatim
+@end cartouche
+
+---
+
+@section New Index Operator
+
+Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack. String keys will continue to operate as expected.
+
+WARNING: If a value being passed cannot simply be copied, it will raise an error.
+
+This can currently copy the current values:
+
+@itemize
+@item @code{nil}
+@item @code{integer}
+@item @code{number}
+@item @code{boolean}
+@item @code{string}
+@item @code{CFunction}
+@item @code{lightuserdata}
+@end itemize
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = 10
+@end verbatim
+@end cartouche
+
+---
+
+@section Call Operator
+
+The @code{metalua} state object can be called, with an argument of the index, to return a copyable value from the stack. This value is not modified or popped.
+
+See also, @ref{Definitions, multilua.fetchable, multilua.fetchable}.
+
+WARNING: If a value being passed cannot simply be copied, it will raise an error.
+
+This can currently copy the current values:
+
+@itemize
+@item @code{nil}
+@item @code{integer}
+@item @code{number}
+@item @code{boolean}
+@item @code{string}
+@item @code{CFunction}
+@item @code{lightuserdata}
+@end itemize
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = 10
+
+assert(obj(-1) == 10)
+@end verbatim
+@end cartouche

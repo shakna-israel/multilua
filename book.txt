@@ -5,9 +5,15 @@
   1.1.3 Cleaning Up
   1.1.4 Multilua State
   1.1.5 Safety
-2 Definitions
-2.1 multilua.new
-2.2 multilua.close
+2 Metamethods
+2.1 Length Operator
+2.2 Index Operator
+2.3 New Index Operator
+2.4 Call Operator
+3 Definitions
+3.1 multilua.new
+3.2 multilua.close
+3.3 multilua.fetchable
 Index
 1 Introduction
 **************
@@ -113,10 +119,123 @@ errors, and all sorts of other goodies are entirely possible.
 
    ‘multilua’ cannot protect you against everything.
 
-2 Definitions
+2 Metamethods
 *************
 
-2.1 multilua.new
+‘multilua’ includes a variety of metamethods to make programming feel
+simpler, and closer to what one would expect in Lua, instead of only
+like the C-API.
+
+   These metamethods in no way restrict the power of what you can do -
+they simple abstract away some of the fiddlier bits of the API.
+
+
+
+                                 — — —
+
+
+2.1 Length Operator
+===================
+
+Lua’s length operator has been overridden to match ‘multilua.gettop’,
+that is, it’ll return the current size of the stack for the given
+object.
+
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+assert(#obj == obj:gettop())
+
+
+
+                                 — — —
+
+
+2.2 Index Operator
+==================
+
+Lua’s index fetching has been overridden so that ‘integer’ keys will
+return the type found at that position on the stack. String keys will
+continue to operate as expected.
+
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj:pushstring("Hello")
+
+assert(obj[-1] == 'string')
+
+
+
+                                 — — —
+
+
+2.3 New Index Operator
+======================
+
+Lua’s new index operator has been overridden so that ‘integer’ keys will
+operate on the stack. String keys will continue to operate as expected.
+
+   WARNING: If a value being passed cannot simply be copied, it will
+raise an error.
+
+   This can currently copy the current values:
+
+   • ‘nil’
+   • ‘integer’
+   • ‘number’
+   • ‘boolean’
+   • ‘string’
+   • ‘CFunction’
+   • ‘lightuserdata’
+
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = 10
+
+
+
+                                 — — —
+
+
+2.4 Call Operator
+=================
+
+The ‘metalua’ state object can be called, with an argument of the index,
+to return a copyable value from the stack. This value is not modified or
+popped.
+
+   See also, *note multilua.fetchable: Definitions.
+
+   WARNING: If a value being passed cannot simply be copied, it will
+raise an error.
+
+   This can currently copy the current values:
+
+   • ‘nil’
+   • ‘integer’
+   • ‘number’
+   • ‘boolean’
+   • ‘string’
+   • ‘CFunction’
+   • ‘lightuserdata’
+
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = 10
+
+assert(obj(-1) == 10)
+
+3 Definitions
+*************
+
+3.1 multilua.new
 ================
 
  -- Function: multilua.new -> nil|table
@@ -133,7 +252,7 @@ errors, and all sorts of other goodies are entirely possible.
                                  — — —
 
 
-2.2 multilua.close
+3.2 multilua.close
 ==================
 
  -- Function: multilua.close state -> nil
@@ -156,16 +275,24 @@ errors, and all sorts of other goodies are entirely possible.
                                  — — —
 
 
+3.3 multilua.fetchable
+======================
+
+ -- Function: multilua.fetchable -> nil|boolean
+
 Index
 *****
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 117)
-* chapter, Introduction:                 Introduction.        (line  13)
-* function, multilua.close:              Definitions.         (line 138)
-* function, multilua.new:                Definitions.         (line 121)
-* multilua state:                        Definitions.         (line 130)
-* multilua.close:                        Definitions.         (line 138)
-* multilua.new:                          Definitions.         (line 121)
+* chapter, Definitions:                  Definitions.         (line 236)
+* chapter, Introduction:                 Introduction.        (line  19)
+* chapter, Metamethods:                  Metamethods.         (line 124)
+* function, multilua.close:              Definitions.         (line 257)
+* function, multilua.fetchable:          Definitions.         (line 280)
+* function, multilua.new:                Definitions.         (line 240)
+* multilua state:                        Definitions.         (line 249)
+* multilua.close:                        Definitions.         (line 257)
+* multilua.fetchable:                    Definitions.         (line 280)
+* multilua.new:                          Definitions.         (line 240)
 
