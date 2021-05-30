@@ -255,7 +255,7 @@ assert(obj(-1) == 10)
 3.2 multilua.close
 ==================
 
- -- Function: multilua.close state -> nil
+ -- Function: multilua.close <table:state> -> nil
 
      This function, given a ‘multilua’ ‘state’, closes the state.
 
@@ -278,7 +278,21 @@ assert(obj(-1) == 10)
 3.3 multilua.fetchable
 ======================
 
- -- Function: multilua.fetchable -> nil|boolean
+ -- Function: multilua.fetchable <table:state> <integer:index> ->
+          nil|boolean
+
+     Given a ‘multilua state’ and a valid ‘index’, returns whether or
+     not the value can be safely copied from ‘state’ to the host Lua
+     state.
+
+     Returns:
+
+        • ‘nil’ - An error ocurred.
+             • The ‘index’ may be invalid.
+             • The ‘state’ may be invalid.
+        • ‘false’ - The value cannot be safely copied. You will need to
+          manually deepcopy it.
+        • ‘true’ - The value can be safely copied.
 
 Index
 *****

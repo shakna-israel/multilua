@@ -20,7 +20,7 @@ It returns one of:
 
 @funcsection{multilua.close}
 
-@deffn Function multilua.close state -> nil
+@deffn Function multilua.close <table:state> -> nil
 
 This function, given a @code{multilua} @code{state}, closes the state.
 
@@ -198,8 +198,20 @@ This function, given a @code{multilua} @code{state}, closes the state.
 
 @funcsection{multilua.fetchable}
 
-@deffn Function multilua.fetchable -> nil|boolean
+@deffn Function multilua.fetchable <table:state> <integer:index> -> nil|boolean
 
-@comment TODO
+Given a @code{multilua state} and a valid @code{index}, returns whether or not the value can be safely copied from @code{state} to the host Lua state.
+
+Returns:
+
+@itemize
+@item @code{nil} - An error ocurred.
+	@itemize
+	@item The @code{index} may be invalid.
+	@item The @code{state} may be invalid.
+	@end itemize
+@item @code{false} - The value cannot be safely copied. You will need to manually deepcopy it.
+@item @code{true} - The value can be safely copied.
+@end itemize
 
 @end deffn
