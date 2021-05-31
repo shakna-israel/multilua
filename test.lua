@@ -159,23 +159,17 @@ do
 
 	local should_fail
 
-	-- Getting a table errors
-	should_fail = function()
-		obj:newtable()
-		obj(-1)
-	end
-	assert(pcall(should_fail) == false)
+	-- Can fetch table references:
+	obj:newtable()
+	assert(type(obj(-1)) == 'table')
 
 	-- Calling to get a C Function
 	obj[#obj + 1] = multilua.new
 	assert(type(obj(-1)) == 'function')
 
-	-- Getting a Lua function is an error
-	should_fail = function()
-		obj:dostring("return function() end")
-		obj(-1)
-	end
-	assert(pcall(should_fail) == false)
+	-- Can get a Lua function
+	obj:dostring("return function() end")
+	assert(type(obj(-1)) == 'function')
 
 	-- Getting a full userdata is an error
 	should_fail = function()
@@ -229,7 +223,7 @@ do
 
 	-- table
 	multilua.newtable(obj)
-	assert(multilua.fetchable(obj, -1) == false)
+	assert(multilua.fetchable(obj, -1))
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
@@ -237,7 +231,7 @@ do
 
 	-- lua function
 	multilua.dostring(obj, "return function() end")
-	assert(multilua.fetchable(obj, -1) == false)
+	assert(multilua.fetchable(obj, -1))
 
 	multilua.openlibs(obj)
 
@@ -285,7 +279,7 @@ do
 
 	-- table
 	multilua.newtable(obj)
-	assert(obj:fetchable(-1) == false)
+	assert(obj:fetchable(-1))
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
@@ -293,7 +287,7 @@ do
 
 	-- lua function
 	multilua.dostring(obj, "return function() end")
-	assert(obj:fetchable(-1) == false)
+	assert(obj:fetchable(-1))
 
 	multilua.openlibs(obj)
 
@@ -341,7 +335,7 @@ do
 
 	-- table
 	multilua.newtable(obj)
-	assert(multilua.fetchable(obj) == false)
+	assert(multilua.fetchable(obj))
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
@@ -349,7 +343,7 @@ do
 
 	-- lua function
 	multilua.dostring(obj, "return function() end")
-	assert(multilua.fetchable(obj) == false)
+	assert(multilua.fetchable(obj))
 
 	multilua.openlibs(obj)
 
@@ -397,7 +391,7 @@ do
 
 	-- table
 	multilua.newtable(obj)
-	assert(obj:fetchable() == false)
+	assert(obj:fetchable())
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
@@ -405,7 +399,7 @@ do
 
 	-- lua function
 	multilua.dostring(obj, "return function() end")
-	assert(obj:fetchable() == false)
+	assert(obj:fetchable())
 
 	multilua.openlibs(obj)
 
@@ -991,14 +985,30 @@ do
 	obj:close()
 end
 
--- TODO: Test: xmove
+-- Test: xmove
 do
 	assert(type(multilua.xmove) == 'function')
+
+	local obj_a = multilua.new()
+	local obj_b = multilua.new()
+
+	multilua.dostring(obj_a, "return function() end")
+	multilua.xmove(obj_a, obj_b, 1)
+
+	assert(obj_b[-1] == 'function')
 end
 
--- TODO: Test: xmove meta
+-- Test: xmove meta
 do
 	assert(type(multilua.xmove) == 'function')
+
+	local obj_a = multilua.new()
+	local obj_b = multilua.new()
+
+	obj_a:dostring("return function() end")
+	obj_a:xmove(obj_b, 1)
+
+	assert(obj_b[-1] == 'function')
 end
 
 -- TODO: Test: yield

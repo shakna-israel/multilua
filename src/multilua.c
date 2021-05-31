@@ -118,14 +118,18 @@ static int multilua_metameth_call(lua_State* L) {
 				lua_pushlstring(L, string, string_length);
 				return 1;
 			case LUA_TTABLE:
-				return luaL_error(L, "Cannot deepcopy a table automatically.");
+				lua_pushvalue(current_state, key);
+				lua_xmove(current_state, L, 1);
+				return 1;
 			case LUA_TFUNCTION:
 				if(lua_iscfunction(current_state, key)) {
 					func = lua_touserdata(current_state, key);
 					lua_pushcfunction(L, func);
 					return 1;
 				} else {
-					return luaL_error(L, "Cannot deepcopy a Lua function automatically.");
+					lua_pushvalue(current_state, key);
+					lua_xmove(current_state, L, 1);
+					return 1;
 				}
 			case LUA_TUSERDATA:
 				return luaL_error(L, "Cannot copy a full userdata object.");
@@ -194,18 +198,11 @@ static int multilua_fetchable(lua_State* L) {
 				lua_pushboolean(L, true);
 				return 1;
 			case LUA_TTABLE:
-				lua_pushboolean(L, false);
-				lua_pushstring(L, "table");
-				return 2;
+				lua_pushboolean(L, true);
+				return 1;
 			case LUA_TFUNCTION:
-				if(lua_iscfunction(current_state, key)) {
-					lua_pushboolean(L, true);
-					return 1;
-				} else {
-					lua_pushboolean(L, false);
-					lua_pushstring(L, "function");
-					return 2;
-				}
+				lua_pushboolean(L, true);
+				return 1;
 			case LUA_TUSERDATA:
 				lua_pushboolean(L, false);
 				lua_pushstring(L, "userdata");

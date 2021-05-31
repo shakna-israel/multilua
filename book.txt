@@ -221,8 +221,14 @@ raise an error.
    • ‘number’
    • ‘boolean’
    • ‘string’
+   • ‘table’
    • ‘CFunction’
+   • ‘Lua function’
    • ‘lightuserdata’
+
+   WARNING: For Lua functions, tables, if the originating state is
+closed, and then they are attempted to be used, will result in Undefined
+Behaviour.
 
 local multilua = require "multilua"
 
@@ -301,14 +307,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 236)
+* chapter, Definitions:                  Definitions.         (line 242)
 * chapter, Introduction:                 Introduction.        (line  19)
 * chapter, Metamethods:                  Metamethods.         (line 124)
-* function, multilua.close:              Definitions.         (line 257)
-* function, multilua.fetchable:          Definitions.         (line 280)
-* function, multilua.new:                Definitions.         (line 240)
-* multilua state:                        Definitions.         (line 249)
-* multilua.close:                        Definitions.         (line 257)
-* multilua.fetchable:                    Definitions.         (line 280)
-* multilua.new:                          Definitions.         (line 240)
+* function, multilua.close:              Definitions.         (line 263)
+* function, multilua.fetchable:          Definitions.         (line 286)
+* function, multilua.new:                Definitions.         (line 246)
+* multilua state:                        Definitions.         (line 255)
+* multilua.close:                        Definitions.         (line 263)
+* multilua.fetchable:                    Definitions.         (line 286)
+* multilua.new:                          Definitions.         (line 246)
 

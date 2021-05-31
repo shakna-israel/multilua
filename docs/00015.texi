@@ -86,9 +86,13 @@ This can currently copy the current values:
 @item @code{number}
 @item @code{boolean}
 @item @code{string}
+@item @code{table}
 @item @code{CFunction}
+@item @code{Lua function}
 @item @code{lightuserdata}
 @end itemize
+
+WARNING: For Lua functions, tables, if the originating state is closed, and then they are attempted to be used, will result in Undefined Behaviour.
 
 @cartouche
 @verbatim
