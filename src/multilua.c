@@ -663,10 +663,15 @@ static int multilua_call(lua_State* L) {
 	}
 
 	int nresults_bool = false;
-	int nresults = lua_tointegerx(L, 3, &nresults_bool);
+	int nresults;
 
-	if(!nresults_bool) {
+	if(lua_isnoneornil(L, 3)) {
 		nresults = LUA_MULTRET;
+	} else {
+		nresults = lua_tointegerx(L, 3, &nresults_bool);
+		if(!nresults_bool) {
+			nresults = LUA_MULTRET;
+		}
 	}
 
 	lua_getfield(L, 1, "self");
