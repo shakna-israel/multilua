@@ -242,7 +242,7 @@ assert(obj(-1) == 10)
 
      This function attempts to create a fresh ‘multilua’ state object.
 
-     It returns one of:
+     Returns:
 
         • ‘nil’ - Something went wrong. Probably a memory error.
         • ‘table’ - The ‘multilua’ state object.

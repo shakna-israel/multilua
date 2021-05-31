@@ -81,19 +81,37 @@ do
 	obj[#obj + 1] = "hello world"
 	assert(obj[#obj] == "string")
 
-	-- TODO: this is an error:
-	--obj[#obj + 1] = {}
+	local should_fail
 
-	-- TODO: this is an error:
-	--obj[#obj + 1] = function() end
+	-- Cannot push tables
+	should_fail = function()
+		obj[#obj + 1] = {}
+	end
+	assert(pcall(should_fail) == false)
+
+	-- Cannot push Lua functions
+	should_fail = function()
+		obj[#obj + 1] = function() end
+	end
+	assert(pcall(should_fail) == false)
 
 	-- Pushing C Functions
 	obj[#obj + 1] = multilua.new
 	assert(obj[#obj] == "function")
 
-	-- TODO: full userdata is an error
+	-- Full userdata is an error
+	should_fail = function()
+		local f = io.open("test.lua", "r")
+		obj[#obj + 1] = f
+	end
+	assert(pcall(should_fail) == false)
 
-	-- TODO: thread is an error
+	-- Thread is an error
+	should_fail = function()
+		local co = coroutine.create(function() end)
+		obj[#obj + 1] = co
+	end
+	assert(pcall(should_fail) == false)
 
 	-- Pushing lightuserdata is allowed
 	obj[#obj + 1] = obj['self']
@@ -139,17 +157,41 @@ do
 	obj[#obj + 1] = "Hello, World!"
 	assert(obj(-1) == "Hello, World!")
 
-	-- TODO: Getting a table errors
+	local should_fail
+
+	-- Getting a table errors
+	should_fail = function()
+		obj:newtable()
+		obj(-1)
+	end
+	assert(pcall(should_fail) == false)
 
 	-- Calling to get a C Function
 	obj[#obj + 1] = multilua.new
 	assert(type(obj(-1)) == 'function')
 
-	-- TODO: Getting a Lua function is an error
+	-- Getting a Lua function is an error
+	should_fail = function()
+		obj:dostring("return function() end")
+		obj(-1)
+	end
+	assert(pcall(should_fail) == false)
 
-	-- TODO: Getting a full userdata is an error
+	-- Getting a full userdata is an error
+	should_fail = function()
+		obj:openlibs()
+		obj:dostring("return io.open('test.lua', 'r')")
+		obj(-1)
+	end
+	assert(pcall(should_fail) == false)
 
-	-- TODO: Getting a thread is an error
+	-- Getting a thread is an error
+	should_fail = function()
+		obj:openlibs()
+		obj:dostring("return coroutine.create(function() end)")
+		obj(-1)
+	end
+	assert(pcall(should_fail) == false)
 
 	-- Calling to get lightuserdata
 	obj[#obj + 1] = obj.self

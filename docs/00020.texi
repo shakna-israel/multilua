@@ -6,7 +6,7 @@
 
 This function attempts to create a fresh @code{multilua} state object.
 
-It returns one of:
+Returns:
 
 @itemize
 @item @code{nil} - Something went wrong. Probably a memory error.

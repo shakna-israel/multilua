@@ -87,7 +87,7 @@ static int multilua_metameth_call(lua_State* L) {
 		
 		int last_valid = lua_absindex(current_state, -1);
 		if(key > last_valid) {
-			return luaL_error(current_state, "Invalid stack index: %d", key);
+			return luaL_error(L, "Invalid stack index: %d", key);
 		}
 
 		// Find the right push function:
@@ -118,25 +118,25 @@ static int multilua_metameth_call(lua_State* L) {
 				lua_pushlstring(L, string, string_length);
 				return 1;
 			case LUA_TTABLE:
-				return luaL_error(current_state, "Cannot deepcopy a table automatically.");
+				return luaL_error(L, "Cannot deepcopy a table automatically.");
 			case LUA_TFUNCTION:
 				if(lua_iscfunction(current_state, key)) {
 					func = lua_touserdata(current_state, key);
 					lua_pushcfunction(L, func);
 					return 1;
 				} else {
-					return luaL_error(current_state, "Cannot deepcopy a Lua function automatically.");
+					return luaL_error(L, "Cannot deepcopy a Lua function automatically.");
 				}
 			case LUA_TUSERDATA:
-				return luaL_error(current_state, "Cannot copy a full userdata object.");
+				return luaL_error(L, "Cannot copy a full userdata object.");
 			case LUA_TTHREAD:
-				return luaL_error(current_state, "Cannot copy a thread object.");
+				return luaL_error(L, "Cannot copy a thread object.");
 			case LUA_TLIGHTUSERDATA:
 				ud = lua_touserdata(current_state, key);
 				lua_pushlightuserdata(L, ud);
 				return 1;
 			default:
-				return luaL_error(current_state, "Cannot copy an unknown object.");
+				return luaL_error(L, "Cannot copy an unknown object.");
 		}
 	}
 
