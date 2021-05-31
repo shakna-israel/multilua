@@ -712,6 +712,33 @@ do
 	assert(obj(-1) == 20)
 end
 
+-- Test: call with optional return count
+do
+	assert(type(multilua.call) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.dostring(obj, "return function(a, b) return a + b end");
+	multilua.pushinteger(obj, 10)
+	multilua.pushinteger(obj, 10)
+	assert(multilua.call(obj, 2))
+	assert(obj(-1) == 20)
+end
+
+-- Test: call meta with optional return count
+do
+	assert(type(multilua.call) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.call) == 'function')
+
+	obj:dostring("return function(a, b) return a + b end");
+	obj:pushinteger(10)
+	obj:pushinteger(10)
+	assert(obj:call(2))
+	assert(obj(-1) == 20)
+end
+
 -- Test: checkstack
 do
 	local obj = multilua.new()
