@@ -31,13 +31,15 @@ Note: You don't _need_ to call `close`. The GC will also close it for you, if th
 
 ## Status
 
-Alpha.
+Alpha. Unversioned.
 
 It "works", but is undocumented, untested, and may be... Unpredictable.
 
-This is completely undocumented and doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
+It doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
 
 Which makes this probably _unsafe_ unless you know exactly what you are doing.
+
+Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shakna/multilua).
 
 ---
 
