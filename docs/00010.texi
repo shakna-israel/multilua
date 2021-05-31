@@ -79,3 +79,20 @@ Which, unfortunately, means segmentation faults, memory corruption errors, and a
 @code{multilua} cannot protect you against everything.
 
 It explicitly @emph{will not} protect you if you allow the originating state to clean up a reference value that you're using in another Lua state, including the host state.
+
+For example, this will result in @emph{Undefined Behaviour} (probably a segmentation fault), as a reference is not maintained by the originating state:
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = {hello = "world"}
+collectgarbage("collect")
+
+t = obj(-1)
+@end verbatim
+@end cartouche
+
+There is no way for @code{obj} to know that the host Lua has garbage-collected the original table value. And no way for the host Lua to know that it shouldn't collect the value - it doesn't see it inside its own state.

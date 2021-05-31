@@ -127,6 +127,24 @@ errors, and all sorts of other goodies are entirely possible.
 state to clean up a reference value that you’re using in another Lua
 state, including the host state.
 
+   For example, this will result in _Undefined Behaviour_ (probably a
+segmentation fault), as a reference is not maintained by the originating
+state:
+
+local multilua = require "multilua"
+
+local obj = multilua.new()
+
+obj[#obj + 1] = {hello = "world"}
+collectgarbage("collect")
+
+t = obj(-1)
+
+   There is no way for ‘obj’ to know that the host Lua has
+garbage-collected the original table value. And no way for the host Lua
+to know that it shouldn’t collect the value - it doesn’t see it inside
+its own state.
+
 2 Metamethods
 *************
 
@@ -305,14 +323,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 240)
+* chapter, Definitions:                  Definitions.         (line 258)
 * chapter, Introduction:                 Introduction.        (line  19)
-* chapter, Metamethods:                  Metamethods.         (line 132)
-* function, multilua.close:              Definitions.         (line 261)
-* function, multilua.fetchable:          Definitions.         (line 284)
-* function, multilua.new:                Definitions.         (line 244)
-* multilua state:                        Definitions.         (line 253)
-* multilua.close:                        Definitions.         (line 261)
-* multilua.fetchable:                    Definitions.         (line 284)
-* multilua.new:                          Definitions.         (line 244)
+* chapter, Metamethods:                  Metamethods.         (line 150)
+* function, multilua.close:              Definitions.         (line 279)
+* function, multilua.fetchable:          Definitions.         (line 302)
+* function, multilua.new:                Definitions.         (line 262)
+* multilua state:                        Definitions.         (line 271)
+* multilua.close:                        Definitions.         (line 279)
+* multilua.fetchable:                    Definitions.         (line 302)
+* multilua.new:                          Definitions.         (line 262)
 
