@@ -83,6 +83,10 @@ get rid of a ‘multilua’ state.
    Like all GC collections, this may have performance ramifications for
 your program - which you can work around by calling close yourself.
 
+   This also causes any reference types to be cleaned up - some of which
+may have been copied to various other states. In which case... Welcome
+to the terrifying land of _Undefined Behaviour_.
+
 1.1.4 Multilua State
 --------------------
 
@@ -118,6 +122,10 @@ misbehave as if they had done that in C.
 errors, and all sorts of other goodies are entirely possible.
 
    ‘multilua’ cannot protect you against everything.
+
+   It explicitly _will not_ protect you if you allow the originating
+state to clean up a reference value that you’re using in another Lua
+state, including the host state.
 
 2 Metamethods
 *************
@@ -297,14 +305,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 232)
+* chapter, Definitions:                  Definitions.         (line 240)
 * chapter, Introduction:                 Introduction.        (line  19)
-* chapter, Metamethods:                  Metamethods.         (line 124)
-* function, multilua.close:              Definitions.         (line 253)
-* function, multilua.fetchable:          Definitions.         (line 276)
-* function, multilua.new:                Definitions.         (line 236)
-* multilua state:                        Definitions.         (line 245)
-* multilua.close:                        Definitions.         (line 253)
-* multilua.fetchable:                    Definitions.         (line 276)
-* multilua.new:                          Definitions.         (line 236)
+* chapter, Metamethods:                  Metamethods.         (line 132)
+* function, multilua.close:              Definitions.         (line 261)
+* function, multilua.fetchable:          Definitions.         (line 284)
+* function, multilua.new:                Definitions.         (line 244)
+* multilua state:                        Definitions.         (line 253)
+* multilua.close:                        Definitions.         (line 261)
+* multilua.fetchable:                    Definitions.         (line 284)
+* multilua.new:                          Definitions.         (line 244)
 

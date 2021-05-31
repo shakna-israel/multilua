@@ -54,6 +54,8 @@ This means that whilst you @i{can} and @i{should} cleanup a state when you don't
 
 Like all GC collections, this @i{may} have performance ramifications for your program - which you can work around by calling @i{close} yourself.
 
+This @i{also} causes any reference types to be cleaned up - some of which may have been copied to various other states. In which case... Welcome to the terrifying land of @emph{Undefined Behaviour}.
+
 @subsection Multilua State
 
 The @code{multilua} state object is a @i{table}, with a bunch of methods attached to it, and a single value located at the key @code{"self"}.
@@ -75,3 +77,5 @@ This means if the programmer does something idiotic, like passing the wrong kind
 Which, unfortunately, means segmentation faults, memory corruption errors, and all sorts of other goodies are entirely possible.
 
 @code{multilua} cannot protect you against everything.
+
+It explicitly @emph{will not} protect you if you allow the originating state to clean up a reference value that you're using in another Lua state, including the host state.
