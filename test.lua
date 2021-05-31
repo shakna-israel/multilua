@@ -81,37 +81,27 @@ do
 	obj[#obj + 1] = "hello world"
 	assert(obj[#obj] == "string")
 
-	local should_fail
+	-- Push table reference
+	obj[#obj + 1] = {}
+	assert(obj[#obj] == 'table')
 
-	-- Cannot push tables
-	should_fail = function()
-		obj[#obj + 1] = {}
-	end
-	assert(pcall(should_fail) == false)
-
-	-- Cannot push Lua functions
-	should_fail = function()
-		obj[#obj + 1] = function() end
-	end
-	assert(pcall(should_fail) == false)
+	-- Push Lua function reference
+	obj[#obj + 1] = function() end
+	assert(obj[#obj] == 'function')
 
 	-- Pushing C Functions
 	obj[#obj + 1] = multilua.new
 	assert(obj[#obj] == "function")
 
-	-- Full userdata is an error
-	should_fail = function()
-		local f = io.open("test.lua", "r")
-		obj[#obj + 1] = f
-	end
-	assert(pcall(should_fail) == false)
+	-- Push a full userdata reference
+	local f = io.open("test.lua", "r")
+	obj[#obj + 1] = f
+	assert(obj[#obj] == 'userdata')
 
-	-- Thread is an error
-	should_fail = function()
-		local co = coroutine.create(function() end)
-		obj[#obj + 1] = co
-	end
-	assert(pcall(should_fail) == false)
+	-- Push a thread reference
+	local co = coroutine.create(function() end)
+	obj[#obj + 1] = co
+	assert(obj[#obj] == 'thread')
 
 	-- Pushing lightuserdata is allowed
 	obj[#obj + 1] = obj['self']

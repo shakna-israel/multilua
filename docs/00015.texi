@@ -44,7 +44,7 @@ assert(obj[-1] == 'string')
 
 Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack. String keys will continue to operate as expected.
 
-WARNING: If a value being passed cannot simply be copied, it will raise an error.
+@emph{WARNING}: If a value being passed cannot simply be copied, it will push a @emph{reference}.
 
 This can currently copy the current values:
 
@@ -57,6 +57,10 @@ This can currently copy the current values:
 @item @code{CFunction}
 @item @code{lightuserdata}
 @end itemize
+
+Other types will be sent as @emph{reference}s.
+
+@emph{WARNING}: Invalid indicies may raise errors.
 
 @cartouche
 @verbatim
@@ -76,7 +80,7 @@ The @code{metalua} state object can be called, with an argument of the index, to
 
 See also, @ref{Definitions, multilua.fetchable, multilua.fetchable}.
 
-WARNING: For Lua functions, tables, full userdata, threads, if the originating state is closed, and then they are attempted to be used, will result in Undefined Behaviour. This is because those values are @code{reference} types, as is normal in Lua.
+@emph{WARNING}: For Lua functions, tables, full userdata, threads, if the originating state is closed, and then they are attempted to be used, will result in @emph{Undefined Behaviour}. This is because those values are @code{reference} types, as is normal in Lua.
 
 @cartouche
 @verbatim

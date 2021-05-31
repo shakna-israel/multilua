@@ -330,7 +330,13 @@ static int multilua_newindex(lua_State* L) {
 				}
 				break;
 			case LUA_TTABLE:
-				return luaL_error(L, "Unsupported push type: table.");
+				lua_pushvalue(L, 3);
+				lua_xmove(L, current_state, 1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
+				return 1;
 			case LUA_TFUNCTION:
 				if(lua_iscfunction(L, 3)) {
 					func = lua_touserdata(L, 3);
@@ -340,13 +346,31 @@ static int multilua_newindex(lua_State* L) {
 						lua_pop(current_state, fromidx);
 					}
 				} else {
-					return luaL_error(L, "Unsupported push type: Lua function.");
+					lua_pushvalue(L, 3);
+					lua_xmove(L, current_state, 1);
+					if(fromidx != key) {
+						lua_copy(current_state, fromidx, key);
+						lua_pop(current_state, fromidx);
+					}
+					return 1;
 				}
 				break;
 			case LUA_TUSERDATA:
-				return luaL_error(L, "Unsupported push type: full userdata.");
+				lua_pushvalue(L, 3);
+				lua_xmove(L, current_state, 1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
+				return 1;
 			case LUA_TTHREAD:
-				return luaL_error(L, "Unsupported push type: thread.");
+				lua_pushvalue(L, 3);
+				lua_xmove(L, current_state, 1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
+				return 1;
 			case LUA_TLIGHTUSERDATA:
 				ud = lua_touserdata(L, 3);
 				lua_pushlightuserdata(current_state, ud);
@@ -356,7 +380,13 @@ static int multilua_newindex(lua_State* L) {
 				}
 				break;
 			default:
-				return luaL_error(L, "Unsupported push type: unknown.");
+				lua_pushvalue(L, 3);
+				lua_xmove(L, current_state, 1);
+				if(fromidx != key) {
+					lua_copy(current_state, fromidx, key);
+					lua_pop(current_state, fromidx);
+				}
+				return 1;
 		}
 
 		return 0;

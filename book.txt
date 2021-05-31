@@ -178,8 +178,8 @@ assert(obj[-1] == 'string')
 Lua’s new index operator has been overridden so that ‘integer’ keys will
 operate on the stack. String keys will continue to operate as expected.
 
-   WARNING: If a value being passed cannot simply be copied, it will
-raise an error.
+   _WARNING_: If a value being passed cannot simply be copied, it will
+push a _reference_.
 
    This can currently copy the current values:
 
@@ -190,6 +190,10 @@ raise an error.
    • ‘string’
    • ‘CFunction’
    • ‘lightuserdata’
+
+   Other types will be sent as _reference_s.
+
+   _WARNING_: Invalid indicies may raise errors.
 
 local multilua = require "multilua"
 
@@ -211,9 +215,9 @@ popped.
 
    See also, *note multilua.fetchable: Definitions.
 
-   WARNING: For Lua functions, tables, full userdata, threads, if the
+   _WARNING_: For Lua functions, tables, full userdata, threads, if the
 originating state is closed, and then they are attempted to be used,
-will result in Undefined Behaviour. This is because those values are
+will result in _Undefined Behaviour_. This is because those values are
 ‘reference’ types, as is normal in Lua.
 
 local multilua = require "multilua"
@@ -293,14 +297,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 228)
+* chapter, Definitions:                  Definitions.         (line 232)
 * chapter, Introduction:                 Introduction.        (line  19)
 * chapter, Metamethods:                  Metamethods.         (line 124)
-* function, multilua.close:              Definitions.         (line 249)
-* function, multilua.fetchable:          Definitions.         (line 272)
-* function, multilua.new:                Definitions.         (line 232)
-* multilua state:                        Definitions.         (line 241)
-* multilua.close:                        Definitions.         (line 249)
-* multilua.fetchable:                    Definitions.         (line 272)
-* multilua.new:                          Definitions.         (line 232)
+* function, multilua.close:              Definitions.         (line 253)
+* function, multilua.fetchable:          Definitions.         (line 276)
+* function, multilua.new:                Definitions.         (line 236)
+* multilua state:                        Definitions.         (line 245)
+* multilua.close:                        Definitions.         (line 253)
+* multilua.fetchable:                    Definitions.         (line 276)
+* multilua.new:                          Definitions.         (line 236)
 
