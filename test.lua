@@ -897,16 +897,31 @@ do
 	assert(obj:type(-1) == 'table')
 end
 
--- Can we even test `error`??
--- TODO: Test: error
+-- Test: error
 do
 	assert(type(multilua.error) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- Can we even test `error`??
--- TODO: Test: error meta
+-- Test: error meta
 do
 	assert(type(multilua.error) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.error) == "function")
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
 -- Can we even test `gc`??
@@ -921,14 +936,35 @@ do
 	assert(type(multilua.gc) == 'function')
 end
 
--- TODO: Test: getfield
+-- Test: getfield
 do
 	assert(type(multilua.getfield) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.newtable(obj)
+	multilua.pushstring(obj, "key")
+	multilua.pushstring(obj, "value")
+	multilua.rawset(obj, 1)
+
+	assert(multilua.getfield(obj, -1, "key") == 'string')
+	assert(obj(-1) == 'value')
 end
 
--- TODO: Test: getfield meta
+-- Test: getfield meta
 do
 	assert(type(multilua.getfield) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.getfield) == 'function')
+
+	obj:newtable()
+	obj:pushstring("key")
+	obj:pushstring("value")
+	obj:rawset(1)
+
+	assert(obj:getfield(-1, "key") == 'string')
+	assert(obj(-1) == 'value')
 end
 
 -- Test: luaversion

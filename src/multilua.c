@@ -2326,7 +2326,7 @@ static int multilua_rawset(lua_State* L) {
 	lua_checkstack(L, lua_gettop(L) + 2);
 
 	int bool_index = false;
-	int index = lua_tointegerx(L, 2, &bool_index);
+	lua_Integer index = lua_tointegerx(L, 2, &bool_index);
 	if(!bool_index) {
 		lua_pushnil(L);
 		return 1;
