@@ -198,9 +198,11 @@ This function, given a @code{multilua} @code{state}, closes the state.
 
 @funcsection{multilua.fetchable}
 
-@deffn Function multilua.fetchable <table:state> <integer:index> -> nil|boolean
+@deffn Function multilua.fetchable <table:state> [<integer:index>] -> nil|boolean
 
 Given a @code{multilua state} and a valid @code{index}, returns whether or not the value can be safely copied from @code{state} to the host Lua state.
+
+If no @code{index} is provided, defaults to @code{-1}.
 
 Returns:
 

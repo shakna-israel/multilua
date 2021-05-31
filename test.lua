@@ -198,14 +198,228 @@ do
 	assert(obj(-1) == obj.self)
 end
 
--- TODO: test fetchable
+-- Test fetchable
 do
 	assert(type(multilua.fetchable) == 'function')
+
+	local obj = multilua.new()
+
+	-- Testing: none (must come first)
+	assert(multilua.fetchable(obj, -1))
+
+	-- nil
+	multilua.pushnil(obj)
+	assert(multilua.fetchable(obj, -1))
+
+	-- integer
+	multilua.pushinteger(obj, 10)
+	assert(multilua.fetchable(obj, -1))
+
+	-- float
+	multilua:pushnumber(obj, 1.2)
+	assert(multilua.fetchable(obj, -1))
+
+	-- boolean
+	multilua.pushboolean(obj, false)
+	assert(multilua.fetchable(obj, -1))
+
+	-- string
+	multilua.pushstring(obj, "Hello")
+	assert(multilua.fetchable(obj, -1))
+
+	-- table
+	multilua.newtable(obj)
+	assert(multilua.fetchable(obj, -1) == false)
+
+	-- c function
+	multilua.pushcfunction(obj, multilua.new)
+	assert(multilua.fetchable(obj, -1))
+
+	-- lua function
+	multilua.dostring(obj, "return function() end")
+	assert(multilua.fetchable(obj, -1) == false)
+
+	multilua.openlibs(obj)
+
+	-- full userdata
+	multilua.dostring(obj, "return io.open('test.lua', 'r')")
+	assert(multilua.fetchable(obj, -1) == false)
+
+	-- thread
+	multilua.dostring(obj, "return coroutine.create(function() end)")
+	assert(multilua.fetchable(obj, -1) == false)
+
+	-- lightuserdata
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(multilua.fetchable(obj, -1))
 end
 
--- TODO: test fetchable meta
+-- Test fetchable meta
 do
 	assert(type(multilua.fetchable) == 'function')
+
+	local obj = multilua.new()
+
+	-- Testing: none (must come first)
+	assert(obj:fetchable(-1))
+
+	-- nil
+	multilua.pushnil(obj)
+	assert(obj:fetchable(-1))
+
+	-- integer
+	multilua.pushinteger(obj, 10)
+	assert(obj:fetchable(-1))
+
+	-- float
+	multilua:pushnumber(obj, 1.2)
+	assert(obj:fetchable(-1))
+
+	-- boolean
+	multilua.pushboolean(obj, false)
+	assert(obj:fetchable(-1))
+
+	-- string
+	multilua.pushstring(obj, "Hello")
+	assert(obj:fetchable(-1))
+
+	-- table
+	multilua.newtable(obj)
+	assert(obj:fetchable(-1) == false)
+
+	-- c function
+	multilua.pushcfunction(obj, multilua.new)
+	assert(obj:fetchable(-1))
+
+	-- lua function
+	multilua.dostring(obj, "return function() end")
+	assert(obj:fetchable(-1) == false)
+
+	multilua.openlibs(obj)
+
+	-- full userdata
+	multilua.dostring(obj, "return io.open('test.lua', 'r')")
+	assert(obj:fetchable(-1) == false)
+
+	-- thread
+	multilua.dostring(obj, "return coroutine.create(function() end)")
+	assert(obj:fetchable(-1) == false)
+
+	-- lightuserdata
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(obj:fetchable(-1))
+end
+
+-- Test fetchable without explicit index
+do
+	assert(type(multilua.fetchable) == 'function')
+
+	local obj = multilua.new()
+
+	-- Testing: none (must come first)
+	assert(multilua.fetchable(obj))
+
+	-- nil
+	multilua.pushnil(obj)
+	assert(multilua.fetchable(obj))
+
+	-- integer
+	multilua.pushinteger(obj, 10)
+	assert(multilua.fetchable(obj))
+
+	-- float
+	multilua:pushnumber(obj, 1.2)
+	assert(multilua.fetchable(obj))
+
+	-- boolean
+	multilua.pushboolean(obj, false)
+	assert(multilua.fetchable(obj))
+
+	-- string
+	multilua.pushstring(obj, "Hello")
+	assert(multilua.fetchable(obj))
+
+	-- table
+	multilua.newtable(obj)
+	assert(multilua.fetchable(obj) == false)
+
+	-- c function
+	multilua.pushcfunction(obj, multilua.new)
+	assert(multilua.fetchable(obj))
+
+	-- lua function
+	multilua.dostring(obj, "return function() end")
+	assert(multilua.fetchable(obj) == false)
+
+	multilua.openlibs(obj)
+
+	-- full userdata
+	multilua.dostring(obj, "return io.open('test.lua', 'r')")
+	assert(multilua.fetchable(obj) == false)
+
+	-- thread
+	multilua.dostring(obj, "return coroutine.create(function() end)")
+	assert(multilua.fetchable(obj) == false)
+
+	-- lightuserdata
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(multilua.fetchable(obj))
+end
+
+-- Test fetchable meta without explicit index
+do
+	assert(type(multilua.fetchable) == 'function')
+
+	local obj = multilua.new()
+
+	-- Testing: none (must come first)
+	assert(obj:fetchable())
+
+	-- nil
+	multilua.pushnil(obj)
+	assert(obj:fetchable())
+
+	-- integer
+	multilua.pushinteger(obj, 10)
+	assert(obj:fetchable())
+
+	-- float
+	multilua:pushnumber(obj, 1.2)
+	assert(obj:fetchable())
+
+	-- boolean
+	multilua.pushboolean(obj, false)
+	assert(obj:fetchable())
+
+	-- string
+	multilua.pushstring(obj, "Hello")
+	assert(obj:fetchable())
+
+	-- table
+	multilua.newtable(obj)
+	assert(obj:fetchable() == false)
+
+	-- c function
+	multilua.pushcfunction(obj, multilua.new)
+	assert(obj:fetchable())
+
+	-- lua function
+	multilua.dostring(obj, "return function() end")
+	assert(obj:fetchable() == false)
+
+	multilua.openlibs(obj)
+
+	-- full userdata
+	multilua.dostring(obj, "return io.open('test.lua', 'r')")
+	assert(obj:fetchable() == false)
+
+	-- thread
+	multilua.dostring(obj, "return coroutine.create(function() end)")
+	assert(obj:fetchable() == false)
+
+	-- lightuserdata
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(obj:fetchable())
 end
 
 -- Test openlibs

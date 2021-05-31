@@ -150,10 +150,16 @@ static int multilua_fetchable(lua_State* L) {
 	lua_checkstack(L, lua_gettop(L) + 3);
 
 	int bool_key = false;
-	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
-	if(!key) {
-		lua_pushnil(L);
-		return 1;
+	lua_Integer key;
+
+	if(lua_isnoneornil(L, 2)) {
+		key = -1;
+	} else {
+		key = lua_tointegerx(L, 2, &bool_key);
+		if(!key) {
+			lua_pushnil(L);
+			return 1;
+		}
 	}
 
 	lua_getfield(L, 1, "self");

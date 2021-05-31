@@ -278,12 +278,14 @@ assert(obj(-1) == 10)
 3.3 multilua.fetchable
 ======================
 
- -- Function: multilua.fetchable <table:state> <integer:index> ->
+ -- Function: multilua.fetchable <table:state> [<integer:index>] ->
           nil|boolean
 
      Given a ‘multilua state’ and a valid ‘index’, returns whether or
      not the value can be safely copied from ‘state’ to the host Lua
      state.
+
+     If no ‘index’ is provided, defaults to ‘-1’.
 
      Returns:
 
