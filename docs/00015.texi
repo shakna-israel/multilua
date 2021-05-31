@@ -76,23 +76,7 @@ The @code{metalua} state object can be called, with an argument of the index, to
 
 See also, @ref{Definitions, multilua.fetchable, multilua.fetchable}.
 
-WARNING: If a value being passed cannot simply be copied, it will raise an error.
-
-This can currently copy the current values:
-
-@itemize
-@item @code{nil}
-@item @code{integer}
-@item @code{number}
-@item @code{boolean}
-@item @code{string}
-@item @code{table}
-@item @code{CFunction}
-@item @code{Lua function}
-@item @code{lightuserdata}
-@end itemize
-
-WARNING: For Lua functions, tables, if the originating state is closed, and then they are attempted to be used, will result in Undefined Behaviour.
+WARNING: For Lua functions, tables, full userdata, threads, if the originating state is closed, and then they are attempted to be used, will result in Undefined Behaviour. This is because those values are @code{reference} types, as is normal in Lua.
 
 @cartouche
 @verbatim

@@ -157,8 +157,6 @@ do
 	obj[#obj + 1] = "Hello, World!"
 	assert(obj(-1) == "Hello, World!")
 
-	local should_fail
-
 	-- Can fetch table references:
 	obj:newtable()
 	assert(type(obj(-1)) == 'table')
@@ -171,21 +169,15 @@ do
 	obj:dostring("return function() end")
 	assert(type(obj(-1)) == 'function')
 
-	-- Getting a full userdata is an error
-	should_fail = function()
-		obj:openlibs()
-		obj:dostring("return io.open('test.lua', 'r')")
-		obj(-1)
-	end
-	assert(pcall(should_fail) == false)
+	-- Can get a full userdata reference
+	obj:openlibs()
+	obj:dostring("return io.open('test.lua', 'r')")
+	assert(type(obj(-1)) == 'userdata')
 
-	-- Getting a thread is an error
-	should_fail = function()
-		obj:openlibs()
-		obj:dostring("return coroutine.create(function() end)")
-		obj(-1)
-	end
-	assert(pcall(should_fail) == false)
+	-- Can get a thread reference
+	obj:openlibs()
+	obj:dostring("return coroutine.create(function() end)")
+	assert(type(obj(-1)) == 'thread')
 
 	-- Calling to get lightuserdata
 	obj[#obj + 1] = obj.self
@@ -221,25 +213,25 @@ do
 	multilua.pushstring(obj, "Hello")
 	assert(multilua.fetchable(obj, -1))
 
-	-- table
+	-- table (reference type)
 	multilua.newtable(obj)
-	assert(multilua.fetchable(obj, -1))
+	assert(multilua.fetchable(obj, -1) == false)
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
 	assert(multilua.fetchable(obj, -1))
 
-	-- lua function
+	-- lua function (reference type)
 	multilua.dostring(obj, "return function() end")
-	assert(multilua.fetchable(obj, -1))
+	assert(multilua.fetchable(obj, -1) == false)
 
 	multilua.openlibs(obj)
 
-	-- full userdata
+	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
 	assert(multilua.fetchable(obj, -1) == false)
 
-	-- thread
+	-- thread (reference type)
 	multilua.dostring(obj, "return coroutine.create(function() end)")
 	assert(multilua.fetchable(obj, -1) == false)
 
@@ -277,25 +269,25 @@ do
 	multilua.pushstring(obj, "Hello")
 	assert(obj:fetchable(-1))
 
-	-- table
+	-- table (reference type)
 	multilua.newtable(obj)
-	assert(obj:fetchable(-1))
+	assert(obj:fetchable(-1) == false)
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
 	assert(obj:fetchable(-1))
 
-	-- lua function
+	-- lua function (reference type)
 	multilua.dostring(obj, "return function() end")
-	assert(obj:fetchable(-1))
+	assert(obj:fetchable(-1) == false)
 
 	multilua.openlibs(obj)
 
-	-- full userdata
+	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
 	assert(obj:fetchable(-1) == false)
 
-	-- thread
+	-- thread (reference type)
 	multilua.dostring(obj, "return coroutine.create(function() end)")
 	assert(obj:fetchable(-1) == false)
 
@@ -333,25 +325,25 @@ do
 	multilua.pushstring(obj, "Hello")
 	assert(multilua.fetchable(obj))
 
-	-- table
+	-- table (reference type)
 	multilua.newtable(obj)
-	assert(multilua.fetchable(obj))
+	assert(multilua.fetchable(obj) == false)
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
 	assert(multilua.fetchable(obj))
 
-	-- lua function
+	-- lua function (reference type)
 	multilua.dostring(obj, "return function() end")
-	assert(multilua.fetchable(obj))
+	assert(multilua.fetchable(obj) == false)
 
 	multilua.openlibs(obj)
 
-	-- full userdata
+	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
 	assert(multilua.fetchable(obj) == false)
 
-	-- thread
+	-- thread (reference type)
 	multilua.dostring(obj, "return coroutine.create(function() end)")
 	assert(multilua.fetchable(obj) == false)
 
@@ -389,25 +381,25 @@ do
 	multilua.pushstring(obj, "Hello")
 	assert(obj:fetchable())
 
-	-- table
+	-- table (reference type)
 	multilua.newtable(obj)
-	assert(obj:fetchable())
+	assert(obj:fetchable() == false)
 
 	-- c function
 	multilua.pushcfunction(obj, multilua.new)
 	assert(obj:fetchable())
 
-	-- lua function
+	-- lua function (reference type)
 	multilua.dostring(obj, "return function() end")
-	assert(obj:fetchable())
+	assert(obj:fetchable() == false)
 
 	multilua.openlibs(obj)
 
-	-- full userdata
+	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
 	assert(obj:fetchable() == false)
 
-	-- thread
+	-- thread (reference type)
 	multilua.dostring(obj, "return coroutine.create(function() end)")
 	assert(obj:fetchable() == false)
 

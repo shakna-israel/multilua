@@ -211,24 +211,10 @@ popped.
 
    See also, *note multilua.fetchable: Definitions.
 
-   WARNING: If a value being passed cannot simply be copied, it will
-raise an error.
-
-   This can currently copy the current values:
-
-   • ‘nil’
-   • ‘integer’
-   • ‘number’
-   • ‘boolean’
-   • ‘string’
-   • ‘table’
-   • ‘CFunction’
-   • ‘Lua function’
-   • ‘lightuserdata’
-
-   WARNING: For Lua functions, tables, if the originating state is
-closed, and then they are attempted to be used, will result in Undefined
-Behaviour.
+   WARNING: For Lua functions, tables, full userdata, threads, if the
+originating state is closed, and then they are attempted to be used,
+will result in Undefined Behaviour. This is because those values are
+‘reference’ types, as is normal in Lua.
 
 local multilua = require "multilua"
 
@@ -288,7 +274,7 @@ assert(obj(-1) == 10)
           nil|boolean
 
      Given a ‘multilua state’ and a valid ‘index’, returns whether or
-     not the value can be safely copied from ‘state’ to the host Lua
+     not the value can be _safely_ copied from ‘state’ to the host Lua
      state.
 
      If no ‘index’ is provided, defaults to ‘-1’.
@@ -299,7 +285,7 @@ assert(obj(-1) == 10)
              • The ‘index’ may be invalid.
              • The ‘state’ may be invalid.
         • ‘false’ - The value cannot be safely copied. You will need to
-          manually deepcopy it.
+          manually deepcopy it, or you will receive only a reference.
         • ‘true’ - The value can be safely copied.
 
 Index
@@ -307,14 +293,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 242)
+* chapter, Definitions:                  Definitions.         (line 228)
 * chapter, Introduction:                 Introduction.        (line  19)
 * chapter, Metamethods:                  Metamethods.         (line 124)
-* function, multilua.close:              Definitions.         (line 263)
-* function, multilua.fetchable:          Definitions.         (line 286)
-* function, multilua.new:                Definitions.         (line 246)
-* multilua state:                        Definitions.         (line 255)
-* multilua.close:                        Definitions.         (line 263)
-* multilua.fetchable:                    Definitions.         (line 286)
-* multilua.new:                          Definitions.         (line 246)
+* function, multilua.close:              Definitions.         (line 249)
+* function, multilua.fetchable:          Definitions.         (line 272)
+* function, multilua.new:                Definitions.         (line 232)
+* multilua state:                        Definitions.         (line 241)
+* multilua.close:                        Definitions.         (line 249)
+* multilua.fetchable:                    Definitions.         (line 272)
+* multilua.new:                          Definitions.         (line 232)
 

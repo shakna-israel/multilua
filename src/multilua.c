@@ -132,15 +132,21 @@ static int multilua_metameth_call(lua_State* L) {
 					return 1;
 				}
 			case LUA_TUSERDATA:
-				return luaL_error(L, "Cannot copy a full userdata object.");
+				lua_pushvalue(current_state, key);
+				lua_xmove(current_state, L, 1);
+				return 1;
 			case LUA_TTHREAD:
-				return luaL_error(L, "Cannot copy a thread object.");
+				lua_pushvalue(current_state, key);
+				lua_xmove(current_state, L, 1);
+				return 1;
 			case LUA_TLIGHTUSERDATA:
 				ud = lua_touserdata(current_state, key);
 				lua_pushlightuserdata(L, ud);
 				return 1;
 			default:
-				return luaL_error(L, "Cannot copy an unknown object.");
+				lua_pushvalue(current_state, key);
+				lua_xmove(current_state, L, 1);
+				return 1;
 		}
 	}
 
@@ -198,11 +204,18 @@ static int multilua_fetchable(lua_State* L) {
 				lua_pushboolean(L, true);
 				return 1;
 			case LUA_TTABLE:
-				lua_pushboolean(L, true);
-				return 1;
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "table");
+				return 2;
 			case LUA_TFUNCTION:
-				lua_pushboolean(L, true);
-				return 1;
+				if(lua_iscfunction(current_state, key)) {
+					lua_pushboolean(L, true);
+					return 1;
+				} else {
+					lua_pushboolean(L, false);
+					lua_pushstring(L, "function");
+					return 2;
+				}
 			case LUA_TUSERDATA:
 				lua_pushboolean(L, false);
 				lua_pushstring(L, "userdata");
