@@ -33,6 +33,8 @@ Note: You don't _need_ to call `close`. The GC will also close it for you, if th
 
 Alpha. Unversioned.
 
+[![builds.sr.ht status](https://builds.sr.ht/~shakna/multilua.svg)](https://builds.sr.ht/~shakna/multilua?)
+
 Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shakna/multilua).
 
 It "works", but is undocumented, untested, and may be... Unpredictable.
