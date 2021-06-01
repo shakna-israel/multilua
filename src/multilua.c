@@ -64,6 +64,8 @@ static int multilua_metameth_call(lua_State* L) {
 	// 2 - index
 	lua_checkstack(L, lua_gettop(L) + 3);
 
+	// TODO: If index is a string, should we try and getglobal it?
+
 	int bool_key = false;
 	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
 	if(!key) {

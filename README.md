@@ -33,13 +33,13 @@ Note: You don't _need_ to call `close`. The GC will also close it for you, if th
 
 Alpha. Unversioned.
 
+Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shakna/multilua).
+
 It "works", but is undocumented, untested, and may be... Unpredictable.
 
 It doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
 
 Which makes this probably _unsafe_ unless you know exactly what you are doing.
-
-Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shakna/multilua).
 
 ---
 
@@ -47,7 +47,7 @@ Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shak
 
 The documentation is currently under significant development and _incredibly incomplete_.
 
-However, you can find a rendered form at `book.txt`.
+You can find a rendered form at `book.txt`.
 
 You can also generate pdf, epub, and html forms using [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
 

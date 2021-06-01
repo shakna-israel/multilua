@@ -1003,24 +1003,56 @@ do
 	assert(type(multilua.yield) == 'function')
 end
 
--- TODO: Test: getglobal
+-- Test: getglobal
 do
 	assert(type(multilua.getglobal) == 'function')
+
+	local obj = multilua.new()
+	multilua.pushinteger(obj, 10)
+	multilua.setglobal(obj, "hello")
+
+	multilua.getglobal(obj, "hello")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 10)
 end
 
--- TODO: Test: getglobal meta
+-- Test: getglobal meta
 do
 	assert(type(multilua.getglobal) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.getglobal) == 'function')
+
+	obj:pushinteger(10)
+	obj:setglobal("hello")
+
+	obj:getglobal("hello")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 10)
 end
 
--- TODO: Test: geti
+-- Test: geti
 do
 	assert(type(multilua.geti) == 'function')
+
+	local obj = multilua.new()
+	multilua.dostring(obj, "return {'a', 'b', 'c'}")
+
+	assert(multilua.geti(obj, -1, 2) == 'string')
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'b')
 end
 
--- TODO: Test: geti meta
+-- Test: geti meta
 do
 	assert(type(multilua.geti) == 'function')
+
+	local obj = multilua.new()
+	obj:dostring("return {'a', 'b', 'c'}")
+
+	assert(obj:geti(-1, 2) == 'string')
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'b')
 end
 
 -- TODO: Test: getmetatable
@@ -1033,14 +1065,33 @@ do
 	assert(type(multilua.getmetatable) == 'function')
 end
 
--- TODO: Test: gettable
+-- Test: gettable
 do
 	assert(type(multilua.gettable) == 'function')
+
+	local obj = multilua.new()
+
+	multilua.dostring(obj, "return {hello='world'}")
+	multilua.pushstring(obj, "hello")
+
+	assert(multilua.gettable(obj, -2) == 'string')
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
--- TODO: Test: gettable meta
+-- Test: gettable meta
 do
 	assert(type(multilua.gettable) == 'function')
+
+	local obj = multilua.new()
+	assert(type(obj.gettable) == 'function')
+
+	obj:dostring("return {hello='world'}")
+	obj:pushstring("hello")
+
+	assert(obj:gettable(-2) == 'string')
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
 -- TODO: Test: getuservalue
