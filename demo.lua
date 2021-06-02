@@ -19,21 +19,21 @@ do
 		if t == "nil" then
 			print(string.format("%d) <nil>", i))
 		elseif t == "number" then
-			print(string.format("%d) <%s><%d>", i, t, obj:tonumber(i)))
+			print(string.format("%d) <%s><%d>", i, t, obj(i)))
 		elseif t == "boolean" then
-			if obj:toboolean(i) then
+			if obj(i) then
 				print(string.format("%d) <%s><true>", i, t))
 			else
 				print(string.format("%d) <%s><false>", i, t))
 			end
 		elseif t == "string" then
-			print(string.format("%d) <%s><%q>", i, t, obj:tostring(i)))
+			print(string.format("%d) <%s><%q>", i, t, obj(i)))
 		else
-			print(string.format("%d) <%s><%s>", i, t, obj:topointer(i)))
+			print(string.format("%d) <%s><%s>", i, t, obj(i)))
 		end
 
 		i = i - 1
 	end
 
-	-- Note: No need to cleanup obj, it'll be GC'd.
+	obj:close()
 end
