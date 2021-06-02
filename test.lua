@@ -10,7 +10,7 @@ assert(multilua.version ~= nil)
 -- Test: creation
 do
 	assert(type(multilua.new) == 'function')
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -36,7 +36,7 @@ end
 -- Test: Multiple closes
 -- If this fails, you'll get a double-free!
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -48,7 +48,7 @@ end
 
 -- Test: metaclosing
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 	assert(obj:close() == nil)
@@ -94,7 +94,7 @@ end
 
 -- Test newindex metamethod
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Pushing numbers...
 	obj[#obj + 1] = 10
@@ -141,13 +141,13 @@ end
 
 -- Test tostring name
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(tostring(obj):sub(1, 9) == "multilua:")
 end
 
 -- Test copying values by call
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Calling on nothing to get nil
 	assert(obj(-1) == nil)
@@ -205,7 +205,7 @@ end
 do
 	assert(type(multilua.fetchable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Testing: none (must come first)
 	assert(multilua.fetchable(obj, -1))
@@ -261,7 +261,7 @@ end
 do
 	assert(type(multilua.fetchable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Testing: none (must come first)
 	assert(obj:fetchable(-1))
@@ -317,7 +317,7 @@ end
 do
 	assert(type(multilua.fetchable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Testing: none (must come first)
 	assert(multilua.fetchable(obj))
@@ -373,7 +373,7 @@ end
 do
 	assert(type(multilua.fetchable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Testing: none (must come first)
 	assert(obj:fetchable())
@@ -429,7 +429,7 @@ end
 do
 	assert(type(multilua.openlibs) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	multilua.openlibs(obj)
 
 	-- String Library now exists:
@@ -442,7 +442,7 @@ end
 do
 	assert(type(multilua.openlibs) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.openlibs) == 'function')
 	obj:openlibs()
 
@@ -456,7 +456,7 @@ end
 do
 	assert(type(multilua.gettop) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	for i = 1, 10 do
 		multilua.pushinteger(obj, i)
@@ -469,7 +469,7 @@ end
 do
 	assert(type(multilua.gettop) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.gettop) == 'function')
 
 	for i = 1, 10 do
@@ -483,7 +483,7 @@ end
 do
 	assert(type(multilua.gettop) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	for i = 1, 10 do
 		multilua.pushinteger(obj, i)
@@ -496,7 +496,7 @@ end
 do
 	assert(type(multilua.gettop) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	obj:pushinteger(10)
 	obj:pushstring("hello")
@@ -511,7 +511,7 @@ end
 do
 	assert(type(multilua.absindex) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Nothing on stack, should be 0.
 	assert(multilua.absindex(obj, -1) == 0)
@@ -526,7 +526,7 @@ end
 do
 	assert(type(multilua.absindex) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Nothing on stack, should be 0.
 	assert(obj:absindex(-1) == 0)
@@ -541,7 +541,7 @@ end
 do
 	assert(type(multilua.arith) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	-- Addition
 	multilua.pushinteger(obj, 1)
@@ -616,7 +616,7 @@ end
 do
 	assert(type(multilua.arith) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.arith) == 'function')
 
 	-- Addition
@@ -692,7 +692,7 @@ end
 do
 	assert(type(multilua.call) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.dostring(obj, "return function(a, b) return a + b end");
 	multilua.pushinteger(obj, 10)
@@ -705,7 +705,7 @@ end
 do
 	assert(type(multilua.call) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.call) == 'function')
 
 	obj:dostring("return function(a, b) return a + b end");
@@ -719,7 +719,7 @@ end
 do
 	assert(type(multilua.call) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.dostring(obj, "return function(a, b) return a + b end");
 	multilua.pushinteger(obj, 10)
@@ -732,7 +732,7 @@ end
 do
 	assert(type(multilua.call) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.call) == 'function')
 
 	obj:dostring("return function(a, b) return a + b end");
@@ -744,7 +744,7 @@ end
 
 -- Test: checkstack
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -756,7 +756,7 @@ end
 
 -- Test: checkstack meta
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -770,7 +770,7 @@ end
 do
 	assert(type(multilua.compare) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.pushinteger(obj, 10)
 	multilua.pushinteger(obj, 11)
@@ -788,7 +788,7 @@ end
 do
 	assert(type(multilua.compare) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.compare) == 'function')
 
 	obj:pushinteger(10)
@@ -807,7 +807,7 @@ end
 do
 	assert(type(multilua.concat) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.pushstring(obj, "h")
 	multilua.pushstring(obj, "e")
@@ -823,7 +823,7 @@ end
 do
 	assert(type(multilua.concat) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.concat) == 'function')
 
 	obj:pushstring("h")
@@ -840,7 +840,7 @@ end
 do
 	assert(type(multilua.copy) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.pushinteger(obj, 3)
 
@@ -852,7 +852,7 @@ end
 do
 	assert(type(multilua.copy) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.copy) == 'function')
 
 	obj:pushinteger(3)
@@ -865,7 +865,7 @@ end
 do
 	assert(type(multilua.createtable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.createtable(obj)
 	assert(multilua.type(obj, -1) == 'table')
@@ -884,7 +884,7 @@ end
 do
 	assert(type(multilua.createtable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.createtable) == 'function')
 
 	obj:createtable()
@@ -916,7 +916,7 @@ end
 do
 	assert(type(multilua.error) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.error) == "function")
 
 	--[[
@@ -943,7 +943,7 @@ end
 do
 	assert(type(multilua.getfield) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.newtable(obj)
 	multilua.pushstring(obj, "key")
@@ -958,7 +958,7 @@ end
 do
 	assert(type(multilua.getfield) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.getfield) == 'function')
 
 	obj:newtable()
@@ -972,7 +972,7 @@ end
 
 -- Test: luaversion
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -984,7 +984,7 @@ end
 
 -- Test: luaversion meta
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
@@ -1034,7 +1034,7 @@ end
 do
 	assert(type(multilua.getglobal) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	multilua.pushinteger(obj, 10)
 	multilua.setglobal(obj, "hello")
 
@@ -1047,7 +1047,7 @@ end
 do
 	assert(type(multilua.getglobal) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.getglobal) == 'function')
 
 	obj:pushinteger(10)
@@ -1062,7 +1062,7 @@ end
 do
 	assert(type(multilua.geti) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	multilua.dostring(obj, "return {'a', 'b', 'c'}")
 
 	assert(multilua.geti(obj, -1, 2) == 'string')
@@ -1074,7 +1074,7 @@ end
 do
 	assert(type(multilua.geti) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	obj:dostring("return {'a', 'b', 'c'}")
 
 	assert(obj:geti(-1, 2) == 'string')
@@ -1096,7 +1096,7 @@ end
 do
 	assert(type(multilua.gettable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.dostring(obj, "return {hello='world'}")
 	multilua.pushstring(obj, "hello")
@@ -1110,7 +1110,7 @@ end
 do
 	assert(type(multilua.gettable) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.gettable) == 'function')
 
 	obj:dostring("return {hello='world'}")
@@ -1141,21 +1141,35 @@ do
 	assert(type(multilua.insert) == 'function')
 end
 
--- TODO: Test: isboolean
+-- Test: isboolean
 do
 	assert(type(multilua.isboolean) == 'function')
+
+	local obj = assert(multilua.new())
+	multilua.pushboolean(obj, false)
+	assert(multilua.isboolean(obj, -1))
+	multilua.pushboolean(obj, true)
+	assert(multilua.isboolean(obj, -1))
 end
 
--- TODO: Test: isboolean meta
+-- Test: isboolean meta
 do
 	assert(type(multilua.isboolean) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(obj.isboolean) == 'function')
+
+	obj:pushboolean(false)
+	assert(obj:isboolean(-1))
+	obj:pushboolean(true)
+	assert(obj:isboolean(-1))
 end
 
 -- Test: iscfunction
 do
 	assert(type(multilua.iscfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.pushcfunction(obj, multilua.new)
 	assert(multilua.iscfunction(obj, -1))
@@ -1168,7 +1182,7 @@ end
 do
 	assert(type(multilua.iscfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.iscfunction) == 'function')
 
 	obj:pushcfunction(multilua.new)
@@ -1182,7 +1196,7 @@ end
 do
 	assert(type(multilua.isfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	multilua.dostring(obj, "return function() end")
 	assert(multilua.isfunction(obj, -1))
@@ -1192,21 +1206,38 @@ end
 do
 	assert(type(multilua.isfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.isfunction) == "function")
 
 	obj:dostring("return function() end")
 	assert(obj:isfunction(-1))
 end
 
--- TODO: Test: isinteger
+-- Test: isinteger
 do
 	assert(type(multilua.isinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.isinteger(obj, -1))
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.isinteger(obj, -1) == false)
 end
 
--- TODO: Test: isinteger meta
+-- Test: isinteger meta
 do
 	assert(type(multilua.isinteger) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(obj.isinteger) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:isinteger(-1))
+
+	obj:pushnumber(10)
+	assert(obj:isinteger(-1) == false)
 end
 
 -- TODO: Test: islightuserdata
@@ -1219,64 +1250,139 @@ do
 	assert(type(multilua.islightuserdata) == 'function')
 end
 
--- TODO: Test: isnil
+-- Test: isnil
 do
 	assert(type(multilua.isnil) == 'function')
+
+	local obj = assert(multilua.new())
+	multilua.pushnil(obj)
+	assert(multilua.isnil(obj, -1))
 end
 
--- TODO: Test: isnil meta
+-- Test: isnil meta
 do
 	assert(type(multilua.isnil) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isnil) == 'function')
+
+	obj:pushnil()
+	assert(obj:isnil(-1))
 end
 
--- TODO: Test: isnone
+-- Test: isnone
 do
 	assert(type(multilua.isnone) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.isnone(obj, 1000))
+	assert(multilua.isnone(obj, -1) == false)
 end
 
--- TODO: Test: isnone meta
+-- Test: isnone meta
 do
 	assert(type(multilua.isnone) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isnone) == 'function')
+
+	assert(obj:isnone(1000))
+	assert(obj:isnone(-1) == false)
 end
 
--- TODO: Test: isnoneornil
+-- Test: isnoneornil
 do
 	assert(type(multilua.isnoneornil) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.isnoneornil(obj, 1000))
+	assert(multilua.isnoneornil(obj, -1))
 end
 
--- TODO: Test: isnoneornil meta
+-- Test: isnoneornil meta
 do
 	assert(type(multilua.isnoneornil) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isnoneornil) == 'function')
+
+	assert(obj:isnoneornil(1000))
+	assert(obj:isnoneornil(-1))
 end
 
--- TODO: Test: isnumber
+-- Test: isnumber
 do
 	assert(type(multilua.isnumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.isnumber(obj, -1))
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.isnumber(obj, -1))	
 end
 
--- TODO: Test: isnumber meta
+-- Test: isnumber meta
 do
 	assert(type(multilua.isnumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isnumber) == 'function')
+
+	obj:pushnumber(10)
+	assert(obj:isnumber(-1))
+
+	obj:pushinteger(10)
+	assert(obj:isnumber(-1))	
 end
 
--- TODO: Test: isstring
+-- Test: isstring
 do
 	assert(type(multilua.isstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushstring(obj, "Hello, World!")
+	assert(multilua.isstring(obj, -1))
 end
 
--- TODO: Test: isstring meta
+-- Test: isstring meta
 do
 	assert(type(multilua.isstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isstring) == 'function')
+
+	obj:pushstring("Hello, World!")
+	assert(obj:isstring(-1))
 end
 
--- TODO: Test: istable
+-- Test: istable
 do
 	assert(type(multilua.istable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.newtable(obj)
+	assert(multilua.istable(obj, -1))
 end
 
--- TODO: Test: istable meta
+-- Test: istable meta
 do
 	assert(type(multilua.istable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.istable) == 'function')
+
+	obj:newtable()
+	assert(obj:istable(-1))
 end
 
 -- TODO: Test: isthread
@@ -1289,14 +1395,26 @@ do
 	assert(type(multilua.isthread) == 'function')
 end
 
--- TODO: Test: isuserdata
+-- Test: isuserdata
 do
 	assert(type(multilua.isuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(multilua.isuserdata(obj, -1))
 end
 
--- TODO: Test: isuserdata meta
+-- Test: isuserdata meta
 do
 	assert(type(multilua.isuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.isuserdata) == 'function')
+
+	obj:pushlightuserdata(obj.self)
+	assert(obj:isuserdata(-1))
 end
 
 -- TODO: Test: isyieldable
@@ -1309,24 +1427,50 @@ do
 	assert(type(multilua.isyieldable) == 'function')
 end
 
--- TODO: Test: len
+-- Test: len
 do
 	assert(type(multilua.len) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.pushstring(obj, "Hello, World!"))
+	assert(multilua.len(obj, -1))
+
+	assert(obj(-1) == 13)
 end
 
--- TODO: Test: len meta
+-- Test: len meta
 do
 	assert(type(multilua.len) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.len) == 'function')
+
+	assert(obj:pushstring("Hello, World!"))
+	assert(obj:len(-1))
+
+	assert(obj(-1) == 13)
 end
 
--- TODO: Test: newtable
+-- Test: newtable
 do
 	assert(type(multilua.newtable) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.newtable(obj))
+	assert(obj[-1] == 'table')
 end
 
--- TODO: Test: newtable meta
+-- Test: newtable meta
 do
 	assert(type(multilua.newtable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.newtable) == 'function')
+
+	assert(obj:newtable())
+	assert(obj[-1] == 'table')
 end
 
 -- TODO: Test: newthread
@@ -1339,14 +1483,24 @@ do
 	assert(type(multilua.newthread) == 'function')
 end
 
--- TODO: Test: newuserdata
+-- Test: newuserdata
 do
 	assert(type(multilua.newuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.newuserdata(obj, 100)) == 'userdata')
 end
 
--- TODO: Test: newuserdata meta
+-- Test: newuserdata meta
 do
 	assert(type(multilua.newuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.newuserdata) == 'function')
+
+	assert(type(obj:newuserdata(100)) == 'userdata')
 end
 
 -- TODO: Test: next
@@ -1369,104 +1523,268 @@ do
 	assert(type(multilua.pcall) == 'function')
 end
 
--- TODO: Test: pop
+-- Test: pop
 do
 	assert(type(multilua.pop) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushstring(obj, "Hi"))
+	assert(multilua.pushboolean(obj, true))
+	assert(multilua.pushinteger(obj, 10))
+
+	assert(multilua.pop(obj, 2))
+	assert(obj[-1] == 'string')
 end
 
--- TODO: Test: pop meta
+-- Test: pop meta
 do
 	assert(type(multilua.pop) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pop) == 'function')
+
+	assert(obj:pushstring("Hi"))
+	assert(obj:pushboolean(true))
+	assert(obj:pushinteger(10))
+
+	assert(obj:pop(2))
+	assert(obj[-1] == 'string')
 end
 
--- TODO: Test: pushboolean
+-- Test: pushboolean
 do
 	assert(type(multilua.pushboolean) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushboolean(obj, true))
+	assert(obj[-1] == 'boolean')
+	assert(obj(-1) == true)
+
+	assert(multilua.pushboolean(obj, false))
+	assert(obj[-1] == 'boolean')
+	assert(obj(-1) == false)
 end
 
--- TODO: Test: pushboolean meta
+-- Test: pushboolean meta
 do
 	assert(type(multilua.pushboolean) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushboolean) == 'function')
+
+	assert(obj:pushboolean(true))
+	assert(obj[-1] == 'boolean')
+	assert(obj(-1) == true)
+
+	assert(obj:pushboolean(false))
+	assert(obj[-1] == 'boolean')
+	assert(obj(-1) == false)
 end
 
--- TODO: Test: pushglobaltable
+-- Test: pushglobaltable
 do
 	assert(type(multilua.pushglobaltable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushglobaltable(obj))
+	assert(obj[-1] == 'table')
 end
 
--- TODO: Test: pushglobaltable meta
+-- Test: pushglobaltable meta
 do
 	assert(type(multilua.pushglobaltable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushglobaltable) == 'function')
+
+	assert(obj:pushglobaltable())
+	assert(obj[-1] == 'table')
 end
 
--- TODO: Test: pushinteger
+-- Test: pushinteger
 do
 	assert(type(multilua.pushinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 10))
+	assert(obj[-1] == 'number')
+	assert(multilua.isinteger(obj, -1))
+
+	assert(multilua.pushinteger(obj, "Nope") == nil)
 end
 
--- TODO: Test: pushinteger meta
+-- Test: pushinteger meta
 do
 	assert(type(multilua.pushinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushinteger) == 'function')
+
+	assert(obj:pushinteger(10))
+	assert(obj[-1] == 'number')
+	assert(obj:isinteger(-1))
+
+	assert(obj:pushinteger("Nope") == nil)
 end
 
--- TODO: Test: pushstring
+-- Test: pushstring
 do
 	assert(type(multilua.pushstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushstring(obj, "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello"))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello")
 end
 
--- TODO: Test: pushstring meta
+-- Test: pushstring meta
 do
 	assert(type(multilua.pushstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushstring) == 'function')
+
+	assert(obj:pushstring("helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello"))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello")
 end
 
--- TODO: Test: pushnstring
+-- Test: pushnstring
 do
 	assert(type(multilua.pushnstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushnstring(obj, "Hello, World", 5))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'Hello')
+
+	assert(multilua.pushnstring(obj, "Hello, World", 300))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'Hello, World')
 end
 
--- TODO: Test: pushnstring meta
+-- Test: pushnstring meta
 do
 	assert(type(multilua.pushnstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushnstring) == 'function')
+
+	assert(obj:pushnstring("Hello, World", 5))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'Hello')
+
+	assert(obj:pushnstring("Hello, World", 300))
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'Hello, World')
 end
 
--- TODO: Test: pushnil
+-- Test: pushnil
 do
 	assert(type(multilua.pushnil) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushnil(obj)
+	assert(multilua.isnil(obj, -1))
 end
 
--- TODO: Test: pushnil meta
+-- Test: pushnil meta
 do
 	assert(type(multilua.pushnil) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushnil) == 'function')
+
+	obj:pushnil()
+	assert(obj:isnil(-1))
 end
 
--- TODO: Test: pushnumber
+-- Test: pushnumber
 do
 	assert(type(multilua.pushnumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushnumber(obj, 10))
+	assert(obj[-1] == 'number')
+
+	assert(multilua.pushnumber(obj, "hi") == nil)
 end
 
--- TODO: Test: pushnumber meta
+-- Test: pushnumber meta
 do
 	assert(type(multilua.pushnumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushnumber) == 'function')
+
+	assert(obj:pushnumber(10))
+	assert(obj[-1] == 'number')
+
+	assert(obj:pushnumber("hi") == nil)
 end
 
--- TODO: Test: pushvalue
+-- Test: pushvalue
 do
 	assert(type(multilua.pushvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushstring(obj, "Hello, World!")
+	multilua.pushvalue(obj, -1)
+
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'string')
 end
 
--- TODO: Test: pushvalue meta
+-- Test: pushvalue meta
 do
 	assert(type(multilua.pushvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushvalue) == 'function')
+
+	obj:pushstring("Hello, World!")
+	obj:pushvalue(-1)
+
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'string')
 end
 
--- TODO: Test: pushlightuserdata
+-- Test: pushlightuserdata
 do
 	assert(type(multilua.pushlightuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushlightuserdata(obj, obj.self))
 end
 
--- TODO: Test: pushlightuserdata meta
+-- Test: pushlightuserdata meta
 do
 	assert(type(multilua.pushlightuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushlightuserdata) == 'function')
+
+	assert(obj:pushlightuserdata(obj.self))
 end
 
 -- TODO: Test: rawequal
@@ -2117,7 +2435,7 @@ end
 
 -- Test: refnil meta
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.refnil) == 'function')
 	assert(type(obj:refnil()) == 'number')
 
@@ -2132,7 +2450,7 @@ end
 
 -- Test: noref meta
 do
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 	assert(type(obj.noref) == 'function')
 	assert(type(obj:noref()) == 'number')
 
@@ -2253,7 +2571,7 @@ end
 do
 	assert(type(multilua.pushcfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	assert(multilua.pushcfunction(obj, multilua.new))
 	assert(multilua.iscfunction(obj, -1))
@@ -2263,7 +2581,7 @@ end
 do
 	assert(type(multilua.pushcfunction) == 'function')
 
-	local obj = multilua.new()
+	local obj = assert(multilua.new())
 
 	assert(obj:pushcfunction(multilua.new))
 	assert(obj:iscfunction(-1))
