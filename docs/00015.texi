@@ -6,9 +6,23 @@ These metamethods in no way restrict the power of what you can do - they simple 
 
 ---
 
+@section Library Call
+
+Calling the library object is a short hand for calling @code{multilua.new}.
+
+@cartouche
+@verbatim
+local multilua = require "multilua"
+
+local obj = multilua()
+@end verbatim
+@end cartouche
+
+---
+
 @section Length Operator
 
-Lua's length operator has been overridden to match @code{multilua.gettop}, that is, it'll return the current size of the stack for the given object.
+Lua's length operator has been overridden to match @code{multilua.gettop}, that is, it'll return the current size of the stack for the given multilua state object.
 
 @cartouche
 @verbatim
@@ -24,7 +38,7 @@ assert(#obj == obj:gettop())
 
 @section Index Operator
 
-Lua's index fetching has been overridden so that @code{integer} keys will return the type found at that position on the stack. String keys will continue to operate as expected.
+Lua's index fetching has been overridden so that @code{integer} keys will return the type found at that position on the stack, for a given multilua state object. String keys will continue to operate as expected.
 
 @cartouche
 @verbatim
@@ -42,7 +56,7 @@ assert(obj[-1] == 'string')
 
 @section New Index Operator
 
-Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack. String keys will continue to operate as expected.
+Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack, for a given multilua state object. String keys will continue to operate as expected.
 
 @emph{WARNING}: If a value being passed cannot simply be copied, it will push a @emph{reference}.
 

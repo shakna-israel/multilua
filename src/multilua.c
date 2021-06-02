@@ -499,14 +499,18 @@ static int multilua_close(lua_State* L) {
 		if(current_state != L) {
 			lua_close(current_state);
 		}
-	}
-	// Don't need obj.self anymore:
-	lua_pop(L, 1);
 
-	// Set self to nil:
-	lua_pushstring(L, "self");
-	lua_pushnil(L);
-	lua_rawset(L, 1);
+		// Don't need obj.self anymore:
+		lua_pop(L, 1);
+
+		// Only disappear if not host Lua state:
+		if(current_state != L) {
+			// Set self to nil:
+			lua_pushstring(L, "self");
+			lua_pushnil(L);
+			lua_rawset(L, 1);
+		}
+	}
 
 	// To not break return semantics:
 	lua_pushnil(L);
@@ -5657,6 +5661,14 @@ LUAMOD_API int luaopen_multilua(lua_State* L) {
 	// Set the library version
 	lua_pushstring(L, MULTILUA_LIB);
 	lua_setfield(L, -2, "version");
+
+	// Calling the library table should call new:
+	lua_pushcfunction(L, multilua_new);
+	lua_setfield(L, -2, "__call");
+
+	// Set the library to it's own metatable
+	lua_pushvalue(L, -1);
+	lua_setmetatable(L, -2);
 
 	return 1;
 }

@@ -20,6 +20,19 @@ do
 	assert(obj.self == nil)
 end
 
+-- Test: creation meta
+do
+	assert(type(multilua.new) == 'function')
+	local obj = multilua()
+	assert(type(obj) == 'table')
+	assert(type(obj.self) == 'userdata')
+
+	-- Test: closing
+	assert(type(multilua.close) == 'function')
+	assert(type(multilua.close(obj)) == 'nil')
+	assert(obj.self == nil)
+end
+
 -- Test: Multiple closes
 -- If this fails, you'll get a double-free!
 do
@@ -39,6 +52,20 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 	assert(obj:close() == nil)
+end
+
+-- Test: Closing current state is a no-op
+do
+	local obj = multilua.current()
+	multilua.close(obj)
+	assert(obj.self)
+end
+
+-- Test: Closing current state is a no-op meta
+do
+	local obj = multilua.current()
+	obj:close()
+	assert(obj.self)
 end
 
 -- Test multiple states can exist

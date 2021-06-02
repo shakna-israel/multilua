@@ -6,10 +6,11 @@
   1.1.4 Multilua State
   1.1.5 Safety
 2 Metamethods
-2.1 Length Operator
-2.2 Index Operator
-2.3 New Index Operator
-2.4 Call Operator
+2.1 Library Call
+2.2 Length Operator
+2.3 Index Operator
+2.4 New Index Operator
+2.5 Call Operator
 3 Definitions
 3.1 multilua.new
 3.2 multilua.close
@@ -160,12 +161,26 @@ they simple abstract away some of the fiddlier bits of the API.
                                  — — —
 
 
-2.1 Length Operator
+2.1 Library Call
+================
+
+Calling the library object is a short hand for calling ‘multilua.new’.
+
+local multilua = require "multilua"
+
+local obj = multilua()
+
+
+
+                                 — — —
+
+
+2.2 Length Operator
 ===================
 
 Lua’s length operator has been overridden to match ‘multilua.gettop’,
 that is, it’ll return the current size of the stack for the given
-object.
+multilua state object.
 
 local multilua = require "multilua"
 
@@ -178,12 +193,12 @@ assert(#obj == obj:gettop())
                                  — — —
 
 
-2.2 Index Operator
+2.3 Index Operator
 ==================
 
 Lua’s index fetching has been overridden so that ‘integer’ keys will
-return the type found at that position on the stack. String keys will
-continue to operate as expected.
+return the type found at that position on the stack, for a given
+multilua state object. String keys will continue to operate as expected.
 
 local multilua = require "multilua"
 
@@ -198,11 +213,12 @@ assert(obj[-1] == 'string')
                                  — — —
 
 
-2.3 New Index Operator
+2.4 New Index Operator
 ======================
 
 Lua’s new index operator has been overridden so that ‘integer’ keys will
-operate on the stack. String keys will continue to operate as expected.
+operate on the stack, for a given multilua state object. String keys
+will continue to operate as expected.
 
    _WARNING_: If a value being passed cannot simply be copied, it will
 push a _reference_.
@@ -232,7 +248,7 @@ obj[#obj + 1] = 10
                                  — — —
 
 
-2.4 Call Operator
+2.5 Call Operator
 =================
 
 The ‘metalua’ state object can be called, with an argument of the index,
@@ -323,14 +339,14 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 258)
-* chapter, Introduction:                 Introduction.        (line  19)
-* chapter, Metamethods:                  Metamethods.         (line 150)
-* function, multilua.close:              Definitions.         (line 279)
-* function, multilua.fetchable:          Definitions.         (line 302)
-* function, multilua.new:                Definitions.         (line 262)
-* multilua state:                        Definitions.         (line 271)
-* multilua.close:                        Definitions.         (line 279)
-* multilua.fetchable:                    Definitions.         (line 302)
-* multilua.new:                          Definitions.         (line 262)
+* chapter, Definitions:                  Definitions.         (line 274)
+* chapter, Introduction:                 Introduction.        (line  20)
+* chapter, Metamethods:                  Metamethods.         (line 151)
+* function, multilua.close:              Definitions.         (line 295)
+* function, multilua.fetchable:          Definitions.         (line 318)
+* function, multilua.new:                Definitions.         (line 278)
+* multilua state:                        Definitions.         (line 287)
+* multilua.close:                        Definitions.         (line 295)
+* multilua.fetchable:                    Definitions.         (line 318)
+* multilua.new:                          Definitions.         (line 278)
 
