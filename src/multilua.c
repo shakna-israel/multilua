@@ -567,6 +567,8 @@ static int multilua_openlibs(lua_State* L) {
 		lua_checkstack(current_state, 10 * 2);
 
 		luaL_openlibs(current_state);
+		lua_pushboolean(L, true);
+		return 1;
 	}
 	// Don't need obj.self anymore:
 	lua_pop(L, 1);

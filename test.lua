@@ -187,12 +187,12 @@ do
 	assert(type(obj(-1)) == 'function')
 
 	-- Can get a full userdata reference
-	obj:openlibs()
+	assert(obj:openlibs())
 	obj:dostring("return io.open('test.lua', 'r')")
 	assert(type(obj(-1)) == 'userdata')
 
 	-- Can get a thread reference
-	obj:openlibs()
+	assert(obj:openlibs())
 	obj:dostring("return coroutine.create(function() end)")
 	assert(type(obj(-1)) == 'thread')
 
@@ -242,7 +242,7 @@ do
 	multilua.dostring(obj, "return function() end")
 	assert(multilua.fetchable(obj, -1) == false)
 
-	multilua.openlibs(obj)
+	assert(multilua.openlibs(obj))
 
 	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
@@ -298,7 +298,7 @@ do
 	multilua.dostring(obj, "return function() end")
 	assert(obj:fetchable(-1) == false)
 
-	multilua.openlibs(obj)
+	assert(multilua.openlibs(obj))
 
 	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
@@ -354,7 +354,7 @@ do
 	multilua.dostring(obj, "return function() end")
 	assert(multilua.fetchable(obj) == false)
 
-	multilua.openlibs(obj)
+	assert(multilua.openlibs(obj))
 
 	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
@@ -410,7 +410,7 @@ do
 	multilua.dostring(obj, "return function() end")
 	assert(obj:fetchable() == false)
 
-	multilua.openlibs(obj)
+	assert(multilua.openlibs(obj))
 
 	-- full userdata (reference type)
 	multilua.dostring(obj, "return io.open('test.lua', 'r')")
@@ -430,7 +430,7 @@ do
 	assert(type(multilua.openlibs) == 'function')
 
 	local obj = assert(multilua.new())
-	multilua.openlibs(obj)
+	assert(multilua.openlibs(obj))
 
 	-- String Library now exists:
 	multilua.getglobal(obj, "string")
@@ -444,7 +444,7 @@ do
 
 	local obj = assert(multilua.new())
 	assert(type(obj.openlibs) == 'function')
-	obj:openlibs()
+	assert(obj:openlibs())
 
 	-- String Library now exists:
 	obj:getglobal("string")
