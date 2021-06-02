@@ -19,6 +19,9 @@ test: clean all
 clean:
 	-rm multilua.o
 	-rm multilua.so
+
+.PHONY: cleandoc
+cleandoc:
 	-rm book.pdf
 	-rm book.html
 	-rm book.epub
