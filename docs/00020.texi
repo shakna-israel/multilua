@@ -20,7 +20,7 @@ Returns:
 
 @funcsection{multilua.close}
 
-@deffn Function multilua.close <table:state> -> nil
+@deffn Function multilua.close <table:state> -> boolean|nil
 
 This function, given a @code{multilua} @code{state}, closes the state.
 
@@ -31,6 +31,13 @@ This function, given a @code{multilua} @code{state}, closes the state.
 @i{WARNING}: If the @code{state} is the host Lua's @code{state}, this function is a no-op.
 
 @i{Note}: Whilst the @code{state} attempts to prove that it is closed, use after closing should be considered a @i{code smell}.
+
+Returns:
+
+@itemize
+@item @code{true} - if the state was successfully closed.
+@item @code{nil} - if the state could not be closed.
+@end itemize
 
 @end deffn
 

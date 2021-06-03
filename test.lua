@@ -16,7 +16,7 @@ do
 
 	-- Test: closing
 	assert(type(multilua.close) == 'function')
-	assert(type(multilua.close(obj)) == 'nil')
+	assert(type(multilua.close(obj)) ~= 'nil')
 	assert(obj.self == nil)
 end
 
@@ -29,7 +29,7 @@ do
 
 	-- Test: closing
 	assert(type(multilua.close) == 'function')
-	assert(type(multilua.close(obj)) == 'nil')
+	assert(type(multilua.close(obj)) ~= 'nil')
 	assert(obj.self == nil)
 end
 
@@ -40,7 +40,7 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
-	assert(type(multilua.close(obj)) == 'nil')
+	assert(type(multilua.close(obj)) ~= 'nil')
 	assert(obj.self == nil)
 	assert(type(multilua.close(obj)) == 'nil')
 	assert(obj.self == nil)
@@ -51,7 +51,7 @@ do
 	local obj = assert(multilua.new())
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
-	assert(obj:close() == nil)
+	assert(obj:close() ~= nil)
 end
 
 -- Test: Closing current state is a no-op
@@ -1857,64 +1857,236 @@ do
 	assert(type(multilua.rawsetp) == 'function')
 end
 
--- TODO: Test: remove
+-- Test: remove
 do
 	assert(type(multilua.remove) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.pushstring(obj, "Hello"))
+	assert(multilua.pushboolean(obj, true))
+
+	assert(multilua.remove(obj, 2))
+
+	assert(obj[-1] == 'boolean')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'nil')
 end
 
--- TODO: Test: remove meta
+-- Test: remove meta
 do
 	assert(type(multilua.remove) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.remove) == 'function')
+
+	assert(obj:pushinteger(1))
+	assert(obj:pushstring("Hello"))
+	assert(obj:pushboolean(true))
+
+	assert(obj:remove(2))
+
+	assert(obj[-1] == 'boolean')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'nil')
 end
 
--- TODO: Test: replace
+-- Test: replace
 do
 	assert(type(multilua.replace) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.pushstring(obj, "Hello"))
+	assert(multilua.pushboolean(obj, true))
+
+	assert(multilua.replace(obj, 3))
+
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'nil')
 end
 
--- TODO: Test: replace meta
+-- Test: replace meta
 do
 	assert(type(multilua.replace) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.replace) == 'function')
+
+	assert(obj:pushinteger(1))
+	assert(obj:pushstring("Hello"))
+	assert(obj:pushboolean(true))
+
+	assert(obj:replace(3))
+
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'nil')
 end
 
--- TODO: Test: rotate
+-- Test: rotate
 do
 	assert(type(multilua.rotate) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.pushstring(obj, "Hello"))
+	assert(multilua.pushboolean(obj, true))
+
+	assert(multilua.rotate(obj, 1, -1))
+
+	assert(obj[-1] == 'number')
+	assert(obj[-2] == 'boolean')
+	assert(obj[-3] == 'string')
 end
 
--- TODO: Test: rotate meta
+-- Test: rotate meta
 do
 	assert(type(multilua.rotate) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.rotate) == 'function')
+
+	assert(obj:pushinteger(1))
+	assert(obj:pushstring("Hello"))
+	assert(obj:pushboolean(true))
+
+	assert(obj:rotate(1, -1))
+
+	assert(obj[-1] == 'number')
+	assert(obj[-2] == 'boolean')
+	assert(obj[-3] == 'string')
 end
 
--- TODO: Test: setfield
+-- Test: setfield
 do
 	assert(type(multilua.setfield) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newtable(obj))
+	assert(multilua.pushinteger(obj, 10))
+	assert(multilua.setfield(obj, -2, "hello"))
+
+	assert(multilua.getfield(obj, -1, "hello"))
+	assert(obj(-1) == 10)
+
+	assert(obj:close())
 end
 
--- TODO: Test: setfield meta
+-- Test: setfield meta
 do
 	assert(type(multilua.setfield) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.setfield) == 'function')
+
+	assert(obj:newtable())
+	assert(obj:pushinteger(10))
+	assert(obj:setfield(-2, "hello"))
+
+	assert(obj:getfield(-1, "hello"))
+	assert(obj(-1) == 10)
+
+	assert(obj:close())
 end
 
--- TODO: Test: setglobal
+-- Test: setglobal
 do
 	assert(type(multilua.setglobal) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 10))
+	assert(multilua.setglobal(obj, "nim"))
+
+	assert(multilua.getglobal(obj, "nim"))
+	assert(obj(-1) == 10)
+
+	assert(obj:close())
 end
 
--- TODO: Test: setglobal meta
+-- Test: setglobal meta
 do
 	assert(type(multilua.setglobal) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.setglobal) == 'function')
+
+	assert(obj:pushinteger(10))
+	assert(obj:setglobal("nim"))
+
+	assert(obj:getglobal("nim"))
+	assert(obj(-1) == 10)
+
+	assert(obj:close())
 end
 
--- TODO: Test: seti
+-- Test: seti
 do
 	assert(type(multilua.seti) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newtable(obj))
+
+	assert(multilua.pushstring(obj, "Hi"))
+	assert(multilua.seti(obj, -2, 1))
+
+	assert(multilua.pushstring(obj, "Overwrite"))
+	assert(multilua.seti(obj, -2, 1))
+
+	assert(multilua.pushstring(obj, "Other"))
+	assert(multilua.seti(obj, -2, 2))
+
+	assert(multilua.geti(obj, -1, 1) == 'string')
+	assert(obj(-1) == 'Overwrite')
+	assert(multilua.pop(obj, 1))
+
+	assert(multilua.geti(obj, -1, 2) == 'string')
+	assert(obj(-1) == 'Other')
+	assert(multilua.pop(obj, 1))
+
+	assert(obj:close())
 end
 
--- TODO: Test: seti meta
+-- Test: seti meta
 do
 	assert(type(multilua.seti) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.seti) == 'function')
+
+	assert(obj:newtable())
+
+	assert(obj:pushstring("Hi"))
+	assert(obj:seti(-2, 1))
+
+	assert(obj:pushstring("Overwrite"))
+	assert(obj:seti(-2, 1))
+
+	assert(obj:pushstring("Other"))
+	assert(obj:seti(-2, 2))
+
+	assert(obj:geti(-1, 1) == 'string')
+	assert(obj(-1) == 'Overwrite')
+	assert(obj:pop(1))
+
+	assert(obj:geti(-1, 2) == 'string')
+	assert(obj(-1) == 'Other')
+	assert(obj:pop(1))
+
+	assert(obj:close())
 end
 
 -- TODO: Test: setmetatable

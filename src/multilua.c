@@ -509,7 +509,14 @@ static int multilua_close(lua_State* L) {
 			lua_pushstring(L, "self");
 			lua_pushnil(L);
 			lua_rawset(L, 1);
+
+			lua_pushboolean(L, true);
+			return 1;
+		} else {
+			lua_pushnil(L);
+			return 1;
 		}
+
 	}
 
 	// To not break return semantics:

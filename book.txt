@@ -293,7 +293,7 @@ assert(obj(-1) == 10)
 3.2 multilua.close
 ==================
 
- -- Function: multilua.close <table:state> -> nil
+ -- Function: multilua.close <table:state> -> boolean|nil
 
      This function, given a ‘multilua’ ‘state’, closes the state.
 
@@ -307,6 +307,11 @@ assert(obj(-1) == 10)
 
      Note: Whilst the ‘state’ attempts to prove that it is closed, use
      after closing should be considered a code smell.
+
+     Returns:
+
+        • ‘true’ - if the state was successfully closed.
+        • ‘nil’ - if the state could not be closed.
 
 
 
@@ -343,10 +348,10 @@ Index
 * chapter, Introduction:                 Introduction.        (line  20)
 * chapter, Metamethods:                  Metamethods.         (line 151)
 * function, multilua.close:              Definitions.         (line 295)
-* function, multilua.fetchable:          Definitions.         (line 318)
+* function, multilua.fetchable:          Definitions.         (line 323)
 * function, multilua.new:                Definitions.         (line 278)
 * multilua state:                        Definitions.         (line 287)
 * multilua.close:                        Definitions.         (line 295)
-* multilua.fetchable:                    Definitions.         (line 318)
+* multilua.fetchable:                    Definitions.         (line 323)
 * multilua.new:                          Definitions.         (line 278)
 
