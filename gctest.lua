@@ -1,5 +1,6 @@
 local multilua = require "multilua"
 
-for i = multilua.mininteger(), multilua.maxinteger() do
+for i = 1, 300000 do
 	local obj = multilua.new()
+	collectgarbage('collect')
 end
