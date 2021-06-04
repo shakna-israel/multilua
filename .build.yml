@@ -14,4 +14,4 @@ tasks:
   - test_gc: |
      cd multilua
      lua5.3 -v
-     make gctest
+     make testgc
