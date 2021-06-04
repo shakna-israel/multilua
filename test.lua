@@ -3296,6 +3296,15 @@ do
 	assert(type(multilua.checkoption) == 'function')
 end
 
+-- Test: maxinteger/mininteger
+do
+	assert(type(multilua.maxinteger) == 'function')
+	assert(type(multilua.mininteger) == 'function')
+
+	assert(type(multilua.maxinteger()) == 'number')
+	assert(type(multilua.mininteger()) == 'number')
+end
+
 -- Test self-library manipulation...
 do
 	-- Test: Creation

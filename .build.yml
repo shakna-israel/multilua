@@ -10,3 +10,8 @@ tasks:
      cd multilua
      lua5.3 -v
      make test
+
+  - test_gc: |
+     cd multilua
+     lua5.3 -v
+     make gctest

@@ -163,6 +163,8 @@ static const struct luaL_Reg multilua [] = {
 	{"sethook", multilua_sethook},
 	{"checkoption", multilua_checkoption},
 	{"fetchable", multilua_fetchable},
+	{"maxinteger", multilua_maxinteger},
+	{"mininteger", multilua_mininteger},
 	{NULL, NULL},
 };
 

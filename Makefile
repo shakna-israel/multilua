@@ -15,6 +15,10 @@ doc:
 test: clean all
 	lua5.3 test.lua
 
+.PHONY: testgc
+testgc: clean all
+	lua5.3 gctest.lua
+
 .PHONY: clean
 clean:
 	-rm multilua.o

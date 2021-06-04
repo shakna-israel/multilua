@@ -5675,6 +5675,16 @@ static int multilua_checkoption(lua_State* L) {
 	return 1;
 }
 
+static int multilua_maxinteger(lua_State* L) {
+	lua_pushinteger(L, LUA_MAXINTEGER);
+	return 1;
+}
+
+static int multilua_mininteger(lua_State* L) {
+	lua_pushinteger(L, LUA_MININTEGER);
+	return 1;
+}
+
 // These are slightly harder to wrap:
 // TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
 // TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
