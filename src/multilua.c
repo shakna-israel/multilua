@@ -454,6 +454,14 @@ static int multilua_current(lua_State* L) {
 	return 1;
 }
 
+static int multilua_self_close(lua_State* L) {
+	lua_State* current_state = lua_touserdata(L, 1);
+	if(current_state != L) {
+		lua_close(current_state);
+	}
+	return 0;
+}
+
 static int multilua_new(lua_State* L) {
 	lua_checkstack(L, lua_gettop(L) + 8);
 
@@ -478,6 +486,17 @@ static int multilua_new(lua_State* L) {
 
 	// Push our actual value:
 	lua_pushlightuserdata(L, new_state);
+
+	// Create the metatable for the self value:
+	lua_newtable(L);
+	// Create the finaliser
+	lua_pushstring(L, "__gc");
+	lua_pushcfunction(L, multilua_self_close);
+	lua_rawset(L, -3);
+	// Install the metatable
+	lua_setmetatable(L, -2);
+
+	// Set our metatable-enabled userdata:
 	lua_setfield(L, -2, "self");
 
 	lua_pushcfunction(L, multilua_newindex);
@@ -1325,12 +1344,11 @@ static int multilua_getuservalue(lua_State* L) {
 	}
 
 	lua_getfield(L, 1, "self");
-
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 		lua_checkstack(current_state, 4);
 
-		int type = lua_getuservalue(L, index);
+		int type = lua_getuservalue(current_state, index);
 		lua_pushstring(L, lua_typename(L, type));
 		return 1;
 	}

@@ -2,10 +2,10 @@ LUALIB=`pkg-config --libs --cflags lua5.3`
 INCLUDE=-Iinclude
 
 all: multilua.o
-	$(CC) multilua.o -shared -o multilua.so
+	$(CC) -g multilua.o -shared -o multilua.so
 
 multilua.o:
-	$(CC) $(LUALIB) $(INCLUDE) -c -fPIC -o multilua.o src/multilua.c
+	$(CC) -g $(LUALIB) $(INCLUDE) -c -fPIC -o multilua.o src/multilua.c
 
 .PHONY: doc
 doc:

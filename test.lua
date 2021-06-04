@@ -14,10 +14,20 @@ do
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
 
+	-- Test: self has a metatable
+	local t = assert(getmetatable(obj.self))
+	assert(t['__gc'])
+
 	-- Test: closing
 	assert(type(multilua.close) == 'function')
 	assert(type(multilua.close(obj)) ~= 'nil')
 	assert(obj.self == nil)
+end
+
+-- Test: GC
+do
+	local obj = assert(multilua.new())
+	getmetatable(obj.self)['__gc'](obj.self)
 end
 
 -- Test: creation meta
@@ -26,6 +36,9 @@ do
 	local obj = multilua()
 	assert(type(obj) == 'table')
 	assert(type(obj.self) == 'userdata')
+
+	-- Test: self has a metatable
+	assert(getmetatable(obj.self))
 
 	-- Test: closing
 	assert(type(multilua.close) == 'function')
@@ -1213,14 +1226,44 @@ do
 	assert(type(multilua.getuservalue) == 'function')
 end
 
--- TODO: Test: insert
+-- Test: insert
 do
 	assert(type(multilua.insert) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.pushinteger(obj, 2))
+	assert(multilua.pushinteger(obj, 3))
+
+	assert(multilua.insert(obj, -2))
+
+	assert(obj(-1) == 2)
+	assert(obj(-2) == 3)
+	assert(obj(-3) == 1)
+
+	assert(obj:close())
 end
 
--- TODO: Test: insert meta
+-- Test: insert meta
 do
 	assert(type(multilua.insert) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.insert) == 'function')
+
+	assert(obj:pushinteger(1))
+	assert(obj:pushinteger(2))
+	assert(obj:pushinteger(3))
+
+	assert(obj:insert(-2))
+
+	assert(obj(-1) == 2)
+	assert(obj(-2) == 3)
+	assert(obj(-3) == 1)
+
+	assert(obj:close())
 end
 
 -- Test: isboolean
@@ -1338,14 +1381,32 @@ do
 	assert(obj:close())
 end
 
--- TODO: Test: islightuserdata
+-- Test: islightuserdata
 do
 	assert(type(multilua.islightuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushlightuserdata(obj, obj.self))
+
+	assert(multilua.islightuserdata(obj, -1))
+
+	assert(obj:close())
 end
 
--- TODO: Test: islightuserdata meta
+-- Test: islightuserdata meta
 do
 	assert(type(multilua.islightuserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.islightuserdata) == 'function')
+
+	assert(obj:pushlightuserdata(obj.self))
+
+	assert(obj:islightuserdata(-1))
+
+	assert(obj:close())
 end
 
 -- Test: isnil
