@@ -11,74 +11,31 @@ assert(multilua.version ~= nil)
 do
 	assert(type(multilua.new) == 'function')
 	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	-- Test: self has a metatable
-	local t = assert(getmetatable(obj.self))
+	local t = assert(getmetatable(obj))
 	assert(t['__gc'])
 
 	-- Test: closing
-	assert(type(multilua.close) == 'function')
-	assert(type(multilua.close(obj)) ~= 'nil')
-	assert(obj.self == nil)
-end
-
--- Test: GC
-do
-	local obj = assert(multilua.new())
-	getmetatable(obj.self)['__gc'](obj.self)
+	obj = nil
+	collectgarbage('collect')
 end
 
 -- Test: creation meta
 do
 	assert(type(multilua.new) == 'function')
 	local obj = multilua()
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	-- Test: self has a metatable
-	assert(getmetatable(obj.self))
+	assert(getmetatable(obj))
 
 	-- Test: closing
-	assert(type(multilua.close) == 'function')
-	assert(type(multilua.close(obj)) ~= 'nil')
-	assert(obj.self == nil)
-end
-
--- Test: Multiple closes
--- If this fails, you'll get a double-free!
-do
-	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
-	assert(type(obj.self) == 'userdata')
-
-	assert(type(multilua.close(obj)) ~= 'nil')
-	assert(obj.self == nil)
-	assert(type(multilua.close(obj)) == 'nil')
-	assert(obj.self == nil)
-end
-
--- Test: metaclosing
-do
-	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
-	assert(type(obj.self) == 'userdata')
-	assert(obj:close() ~= nil)
-end
-
--- Test: Closing current state is a no-op
-do
-	local obj = multilua.current()
-	assert(multilua.close(obj) == nil)
-	assert(obj.self)
-end
-
--- Test: Closing current state is a no-op meta
-do
-	local obj = multilua.current()
-	assert(obj:close() == nil)
-	assert(obj.self)
+	obj = nil
+	collectgarbage('collect')
 end
 
 -- Test multiple states can exist
@@ -88,9 +45,6 @@ do
 	local obj2 = multilua.new()
 
 	assert(obj1.self ~= obj2.self)
-
-	assert(obj1:close())
-	assert(obj2:close())
 end
 
 -- Test equivalents
@@ -100,9 +54,6 @@ do
 
 	assert(obj1 == obj1)
 	assert(obj1 ~= obj2)
-
-	assert(obj1:close())
-	assert(obj2:close())
 end
 
 -- Test newindex metamethod
@@ -150,8 +101,6 @@ do
 	-- Can still modify fields:
 	obj['hello'] = 'world'
 	assert(obj['hello'] == 'world')
-
-	assert(obj:close())
 end
 
 -- Test tostring name
@@ -159,7 +108,7 @@ do
 	local obj = assert(multilua.new())
 	assert(tostring(obj):sub(1, 9) == "multilua:")
 
-	assert(obj:close())
+	
 end
 
 -- Test copying values by call
@@ -217,7 +166,7 @@ do
 	obj[#obj + 1] = obj.self
 	assert(obj(-1) == obj.self)
 
-	assert(obj:close())
+	
 end
 
 -- Test fetchable
@@ -275,7 +224,7 @@ do
 	multilua.pushlightuserdata(obj, obj.self)
 	assert(multilua.fetchable(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test fetchable meta
@@ -333,7 +282,7 @@ do
 	multilua.pushlightuserdata(obj, obj.self)
 	assert(obj:fetchable(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test fetchable without explicit index
@@ -391,7 +340,7 @@ do
 	multilua.pushlightuserdata(obj, obj.self)
 	assert(multilua.fetchable(obj))
 
-	assert(obj:close())
+	
 end
 
 -- Test fetchable meta without explicit index
@@ -449,7 +398,7 @@ do
 	multilua.pushlightuserdata(obj, obj.self)
 	assert(obj:fetchable())
 
-	assert(obj:close())
+	
 end
 
 -- Test openlibs
@@ -464,7 +413,7 @@ do
 	t = multilua.type(obj, -1)
 	assert(t == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: openlibs meta
@@ -480,7 +429,7 @@ do
 	t = obj:type(-1)
 	assert(t == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: gettop
@@ -495,7 +444,7 @@ do
 
 	assert(multilua.gettop(obj) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: gettop meta
@@ -511,7 +460,7 @@ do
 
 	assert(obj:gettop() == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: #
@@ -526,7 +475,7 @@ do
 
 	assert(#obj == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: []
@@ -543,7 +492,7 @@ do
 	assert(obj[2] == "string")
 	assert(obj[3] == "boolean")
 
-	assert(obj:close())
+	
 end
 
 -- Test: absindex
@@ -560,7 +509,7 @@ do
 	-- Number on stack, should be 0.
 	assert(multilua.absindex(obj, -1) == 1)
 
-	assert(obj:close())
+	
 end
 
 -- Test: absindex meta
@@ -577,7 +526,7 @@ do
 	-- Number on stack, should be 0.
 	assert(obj:absindex(-1) == 1)
 
-	assert(obj:close())
+	
 end
 
 -- Test: arith
@@ -654,7 +603,7 @@ do
 	multilua.pushinteger(obj, 3)
 	assert(multilua.arith(obj, "~|") == 6.0)
 
-	assert(obj:close())
+	
 end
 
 -- Test: arith meta
@@ -732,7 +681,7 @@ do
 	obj:pushinteger(3)
 	assert(obj:arith("~|") == 6.0)
 
-	assert(obj:close())
+	
 end
 
 -- Test: call
@@ -747,7 +696,7 @@ do
 	assert(multilua.call(obj, 2, 1))
 	assert(obj(-1) == 20)
 
-	assert(obj:close())
+	
 end
 
 -- Test: call meta
@@ -763,7 +712,7 @@ do
 	assert(obj:call(2, 1))
 	assert(obj(-1) == 20)
 
-	assert(obj:close())
+	
 end
 
 -- Test: call with optional return count
@@ -778,7 +727,7 @@ do
 	assert(multilua.call(obj, 2))
 	assert(obj(-1) == 20)
 
-	assert(obj:close())
+	
 end
 
 -- Test: call meta with optional return count
@@ -794,31 +743,31 @@ do
 	assert(obj:call(2))
 	assert(obj(-1) == 20)
 
-	assert(obj:close())
+	
 end
 
 -- Test: checkstack
 do
 	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	assert(type(multilua.checkstack) == 'function')
 	assert(multilua.checkstack(obj, 2) == true)
 
-	assert(obj:close())
+	
 end
 
 -- Test: checkstack meta
 do
 	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	assert(type(multilua.checkstack) == 'function')
 	assert(obj:checkstack(2) == true)
 
-	assert(obj:close())
+	
 end
 
 -- Test: compare
@@ -838,7 +787,7 @@ do
 	assert(multilua.compare(obj, -2, -1, "<") == true)
 	assert(multilua.compare(obj, -2, -1, "<=") == true)
 
-	assert(obj:close())
+	
 end
 
 -- Test: compare meta
@@ -859,7 +808,7 @@ do
 	assert(obj:compare(-2, -1, "<") == true)
 	assert(obj:compare(-2, -1, "<=") == true)
 
-	assert(obj:close())
+	
 end
 
 -- Test: concat
@@ -877,7 +826,7 @@ do
 	assert(multilua.concat(obj, 5))
 	assert(multilua.tostring(obj, -1) == "hello")
 
-	assert(obj:close())
+	
 end
 
 -- Test: concat meta
@@ -896,7 +845,7 @@ do
 	assert(obj:concat(5))
 	assert(obj:tostring(-1) == "hello")
 
-	assert(obj:close())
+	
 end
 
 -- Test: copy
@@ -910,7 +859,7 @@ do
 	assert(multilua.copy(obj, -1, -2))
 	assert(multilua.tointeger(obj, -2) == 3)
 
-	assert(obj:close())
+	
 end
 
 -- Test: copy meta
@@ -925,7 +874,7 @@ do
 	assert(obj:copy(-1, -2))
 	assert(obj:tointeger(-2) == 3)
 
-	assert(obj:close())
+	
 end
 
 -- Test: createtable
@@ -946,7 +895,7 @@ do
 	multilua.createtable(obj, 10, 10)
 	assert(multilua.type(obj, -1) == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: createtable meta
@@ -968,7 +917,7 @@ do
 	obj:createtable(10, 10)
 	assert(obj:type(-1) == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: error
@@ -997,7 +946,7 @@ do
 
 	]]--
 
-	assert(obj:close())
+	
 end
 
 -- Can we even test `gc`??
@@ -1026,7 +975,7 @@ do
 	assert(multilua.getfield(obj, -1, "key") == 'string')
 	assert(obj(-1) == 'value')
 
-	assert(obj:close())
+	
 end
 
 -- Test: getfield meta
@@ -1044,31 +993,31 @@ do
 	assert(obj:getfield(-1, "key") == 'string')
 	assert(obj(-1) == 'value')
 
-	assert(obj:close())
+	
 end
 
 -- Test: luaversion
 do
 	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	assert(type(multilua.luaversion) == 'function')
 	assert(multilua.luaversion(obj) == 503.0)
 
-	assert(obj:close())
+	
 end
 
 -- Test: luaversion meta
 do
 	local obj = assert(multilua.new())
-	assert(type(obj) == 'table')
+	assert(type(obj) == 'userdata')
 	assert(type(obj.self) == 'userdata')
 
 	assert(type(multilua.luaversion) == 'function')
 	assert(obj:luaversion() == 503.0)
 
-	assert(obj:close())
+	
 end
 
 -- Test: xmove
@@ -1082,9 +1031,6 @@ do
 	multilua.xmove(obj_a, obj_b, 1)
 
 	assert(obj_b[-1] == 'function')
-
-	assert(obj_b:close())
-	assert(obj_a:close())
 end
 
 -- Test: xmove meta
@@ -1098,9 +1044,6 @@ do
 	obj_a:xmove(obj_b, 1)
 
 	assert(obj_b[-1] == 'function')
-
-	assert(obj_b:close())
-	assert(obj_a:close())
 end
 
 -- TODO: Test: yield
@@ -1125,7 +1068,7 @@ do
 	assert(obj[-1] == 'number')
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: getglobal meta
@@ -1142,7 +1085,7 @@ do
 	assert(obj[-1] == 'number')
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: geti
@@ -1156,7 +1099,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'b')
 
-	assert(obj:close())
+	
 end
 
 -- Test: geti meta
@@ -1170,7 +1113,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'b')
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: getmetatable
@@ -1196,7 +1139,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'world')
 
-	assert(obj:close())
+	
 end
 
 -- Test: gettable meta
@@ -1213,7 +1156,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'world')
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: getuservalue
@@ -1242,7 +1185,7 @@ do
 	assert(obj(-2) == 3)
 	assert(obj(-3) == 1)
 
-	assert(obj:close())
+	
 end
 
 -- Test: insert meta
@@ -1263,7 +1206,7 @@ do
 	assert(obj(-2) == 3)
 	assert(obj(-3) == 1)
 
-	assert(obj:close())
+	
 end
 
 -- Test: isboolean
@@ -1276,7 +1219,7 @@ do
 	multilua.pushboolean(obj, true)
 	assert(multilua.isboolean(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isboolean meta
@@ -1291,7 +1234,7 @@ do
 	obj:pushboolean(true)
 	assert(obj:isboolean(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: iscfunction
@@ -1306,7 +1249,7 @@ do
 	multilua.pushinteger(obj, 10)
 	assert(multilua.iscfunction(obj, -1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: iscfunction meta
@@ -1322,7 +1265,7 @@ do
 	obj:pushinteger(10)
 	assert(obj:iscfunction(-1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: isfunction
@@ -1334,7 +1277,7 @@ do
 	multilua.dostring(obj, "return function() end")
 	assert(multilua.isfunction(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isfunction meta
@@ -1347,7 +1290,7 @@ do
 	obj:dostring("return function() end")
 	assert(obj:isfunction(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isinteger
@@ -1362,7 +1305,7 @@ do
 	multilua.pushnumber(obj, 10)
 	assert(multilua.isinteger(obj, -1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: isinteger meta
@@ -1378,7 +1321,7 @@ do
 	obj:pushnumber(10)
 	assert(obj:isinteger(-1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: islightuserdata
@@ -1391,7 +1334,7 @@ do
 
 	assert(multilua.islightuserdata(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: islightuserdata meta
@@ -1406,7 +1349,7 @@ do
 
 	assert(obj:islightuserdata(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnil
@@ -1417,7 +1360,7 @@ do
 	multilua.pushnil(obj)
 	assert(multilua.isnil(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnil meta
@@ -1431,7 +1374,7 @@ do
 	obj:pushnil()
 	assert(obj:isnil(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnone
@@ -1442,7 +1385,7 @@ do
 	assert(multilua.isnone(obj, 1000))
 	assert(multilua.isnone(obj, -1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnone meta
@@ -1456,7 +1399,7 @@ do
 	assert(obj:isnone(1000))
 	assert(obj:isnone(-1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnoneornil
@@ -1467,7 +1410,7 @@ do
 	assert(multilua.isnoneornil(obj, 1000))
 	assert(multilua.isnoneornil(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnoneornil meta
@@ -1481,7 +1424,7 @@ do
 	assert(obj:isnoneornil(1000))
 	assert(obj:isnoneornil(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnumber
@@ -1496,7 +1439,7 @@ do
 	multilua.pushinteger(obj, 10)
 	assert(multilua.isnumber(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isnumber meta
@@ -1513,7 +1456,7 @@ do
 	obj:pushinteger(10)
 	assert(obj:isnumber(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isstring
@@ -1525,7 +1468,7 @@ do
 	multilua.pushstring(obj, "Hello, World!")
 	assert(multilua.isstring(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isstring meta
@@ -1539,7 +1482,7 @@ do
 	obj:pushstring("Hello, World!")
 	assert(obj:isstring(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: istable
@@ -1551,7 +1494,7 @@ do
 	multilua.newtable(obj)
 	assert(multilua.istable(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: istable meta
@@ -1565,7 +1508,7 @@ do
 	obj:newtable()
 	assert(obj:istable(-1))
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: isthread
@@ -1587,7 +1530,7 @@ do
 	multilua.pushlightuserdata(obj, obj.self)
 	assert(multilua.isuserdata(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: isuserdata meta
@@ -1601,7 +1544,7 @@ do
 	obj:pushlightuserdata(obj.self)
 	assert(obj:isuserdata(-1))
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: isyieldable
@@ -1624,7 +1567,7 @@ do
 
 	assert(obj(-1) == 13)
 
-	assert(obj:close())
+	
 end
 
 -- Test: len meta
@@ -1640,7 +1583,7 @@ do
 
 	assert(obj(-1) == 13)
 
-	assert(obj:close())
+	
 end
 
 -- Test: newtable
@@ -1651,7 +1594,7 @@ do
 	assert(multilua.newtable(obj))
 	assert(obj[-1] == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: newtable meta
@@ -1665,7 +1608,7 @@ do
 	assert(obj:newtable())
 	assert(obj[-1] == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: newthread
@@ -1686,7 +1629,7 @@ do
 
 	assert(type(multilua.newuserdata(obj, 100)) == 'userdata')
 
-	assert(obj:close())
+	
 end
 
 -- Test: newuserdata meta
@@ -1699,7 +1642,7 @@ do
 
 	assert(type(obj:newuserdata(100)) == 'userdata')
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: next
@@ -1735,7 +1678,7 @@ do
 	assert(multilua.pop(obj, 2))
 	assert(obj[-1] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pop meta
@@ -1753,7 +1696,7 @@ do
 	assert(obj:pop(2))
 	assert(obj[-1] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushboolean
@@ -1770,7 +1713,7 @@ do
 	assert(obj[-1] == 'boolean')
 	assert(obj(-1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushboolean meta
@@ -1789,7 +1732,7 @@ do
 	assert(obj[-1] == 'boolean')
 	assert(obj(-1) == false)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushglobaltable
@@ -1801,7 +1744,7 @@ do
 	assert(multilua.pushglobaltable(obj))
 	assert(obj[-1] == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushglobaltable meta
@@ -1815,7 +1758,7 @@ do
 	assert(obj:pushglobaltable())
 	assert(obj[-1] == 'table')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushinteger
@@ -1830,7 +1773,7 @@ do
 
 	assert(multilua.pushinteger(obj, "Nope") == nil)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushinteger meta
@@ -1847,7 +1790,7 @@ do
 
 	assert(obj:pushinteger("Nope") == nil)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushstring
@@ -1860,7 +1803,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello")
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushstring meta
@@ -1875,7 +1818,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789+hello")
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnstring
@@ -1892,7 +1835,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'Hello, World')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnstring meta
@@ -1911,7 +1854,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj(-1) == 'Hello, World')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnil
@@ -1923,7 +1866,7 @@ do
 	multilua.pushnil(obj)
 	assert(multilua.isnil(obj, -1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnil meta
@@ -1937,7 +1880,7 @@ do
 	obj:pushnil()
 	assert(obj:isnil(-1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnumber
@@ -1951,7 +1894,7 @@ do
 
 	assert(multilua.pushnumber(obj, "hi") == nil)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushnumber meta
@@ -1967,7 +1910,7 @@ do
 
 	assert(obj:pushnumber("hi") == nil)
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushvalue
@@ -1982,7 +1925,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj[-2] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushvalue meta
@@ -1999,7 +1942,7 @@ do
 	assert(obj[-1] == 'string')
 	assert(obj[-2] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushlightuserdata
@@ -2010,7 +1953,7 @@ do
 
 	assert(multilua.pushlightuserdata(obj, obj.self))
 
-	assert(obj:close())
+	
 end
 
 -- Test: pushlightuserdata meta
@@ -2023,7 +1966,7 @@ do
 
 	assert(obj:pushlightuserdata(obj.self))
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: rawequal
@@ -2112,7 +2055,7 @@ do
 	assert(obj[-2] == 'number')
 	assert(obj[-3] == 'nil')
 
-	assert(obj:close())
+	
 end
 
 -- Test: remove meta
@@ -2133,7 +2076,7 @@ do
 	assert(obj[-2] == 'number')
 	assert(obj[-3] == 'nil')
 
-	assert(obj:close())
+	
 end
 
 -- Test: replace
@@ -2152,7 +2095,7 @@ do
 	assert(obj[-2] == 'number')
 	assert(obj[-3] == 'nil')
 
-	assert(obj:close())
+	
 end
 
 -- Test: replace meta
@@ -2173,7 +2116,7 @@ do
 	assert(obj[-2] == 'number')
 	assert(obj[-3] == 'nil')
 
-	assert(obj:close())
+	
 end
 
 -- Test: rotate
@@ -2192,7 +2135,7 @@ do
 	assert(obj[-2] == 'boolean')
 	assert(obj[-3] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: rotate meta
@@ -2213,7 +2156,7 @@ do
 	assert(obj[-2] == 'boolean')
 	assert(obj[-3] == 'string')
 
-	assert(obj:close())
+	
 end
 
 -- Test: setfield
@@ -2229,7 +2172,7 @@ do
 	assert(multilua.getfield(obj, -1, "hello"))
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: setfield meta
@@ -2247,7 +2190,7 @@ do
 	assert(obj:getfield(-1, "hello"))
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: setglobal
@@ -2262,7 +2205,7 @@ do
 	assert(multilua.getglobal(obj, "nim"))
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: setglobal meta
@@ -2279,7 +2222,7 @@ do
 	assert(obj:getglobal("nim"))
 	assert(obj(-1) == 10)
 
-	assert(obj:close())
+	
 end
 
 -- Test: seti
@@ -2307,7 +2250,7 @@ do
 	assert(obj(-1) == 'Other')
 	assert(multilua.pop(obj, 1))
 
-	assert(obj:close())
+	
 end
 
 -- Test: seti meta
@@ -2337,7 +2280,7 @@ do
 	assert(obj(-1) == 'Other')
 	assert(obj:pop(1))
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: setmetatable
@@ -2374,7 +2317,7 @@ do
 	assert(multilua.settop(obj, 0))
 	assert(multilua.gettop(obj) == 0)
 
-	assert(obj:close())
+	
 end
 
 -- Test: settop meta
@@ -2393,7 +2336,7 @@ do
 	assert(obj:settop(0))
 	assert(obj:gettop() == 0)
 
-	assert(obj:close())
+	
 end
 
 -- TODO: Test: setuservalue
@@ -2887,8 +2830,6 @@ do
 	local obj = assert(multilua.new())
 	assert(type(obj.refnil) == 'function')
 	assert(type(obj:refnil()) == 'number')
-
-	obj:close()
 end
 
 -- Test: noref
@@ -2902,8 +2843,6 @@ do
 	local obj = assert(multilua.new())
 	assert(type(obj.noref) == 'function')
 	assert(type(obj:noref()) == 'number')
-
-	obj:close()
 end
 
 -- TODO: Test: lsetmetatable
@@ -3303,23 +3242,4 @@ do
 
 	assert(type(multilua.maxinteger()) == 'number')
 	assert(type(multilua.mininteger()) == 'number')
-end
-
--- Test self-library manipulation...
-do
-	-- Test: Creation
-	local obj = multilua.current()
-	assert(type(obj) == 'table')
-	assert(type(obj.self) == 'userdata')
-
-	-- Closing the current state is ignored:
-	-- (This will segfault if it fails...)
-	assert(multilua.close(obj) == nil)
-
-	-- Closing the current state is ignored:
-	-- (This will segfault if it fails...)
-	obj = multilua.current()
-	assert(type(obj) == 'table')
-	assert(type(obj.self) == 'userdata')
-	assert(obj:close() == nil)
 end

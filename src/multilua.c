@@ -1,9 +1,8 @@
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-
 #include <multilua.h>
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
 
 void util_installfuncs(lua_State* L) {
@@ -17,46 +16,196 @@ void util_installfuncs(lua_State* L) {
 		if(multilua[position].func == NULL) {
 			break;
 		} else {
+			lua_pushstring(L, multilua[position].name);
 			lua_pushcfunction(L, multilua[position].func);
-			lua_setfield(L, -2, multilua[position].name);
+			lua_rawset(L, -3);
 		}
 
 		position++;
 	}
 }
 
-void util_installmeta(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 6);
+static int multilua_close(lua_State* L) {
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		
+		if(current_state != L) {
+			lua_close(current_state);
+			lua_pushboolean(L, true);
+			return 1;
+		}
+	}
 
-	// Create the comparator:
-	lua_getmetatable(L, -1);
-	lua_pushcfunction(L, multilua_equal);
-	lua_setfield(L, -2, "__eq");
+	lua_pushnil(L);
+	return 1;
+}
 
-	// Show the stack size with #:
-	lua_getmetatable(L, -1);
-	lua_pushcfunction(L, multilua_gettop);
-	lua_setfield(L, -2, "__len");
+static int multilua_pairs(lua_State* L) {
+	lua_checkstack(L, 5);
 
-	// Allow getting type by index:
-	lua_getmetatable(L, -1);
-	lua_pushcfunction(L, multilua_type);
-	lua_setfield(L, -2, "__index");
+	lua_getglobal(L, "pairs");
+	lua_getmetatable(L, 1);
+	lua_call(L, 1, 3);
+	return 3;
+}
 
-	// Allow copying stack values by call:
-	lua_getmetatable(L, -1);
-	lua_pushcfunction(L, multilua_metameth_call);
-	lua_setfield(L, -2, "__call");
+static int multilua_index(lua_State* L) {
+	if(lua_isinteger(L, 2)) {
+		// Return stack type
+
+		// Get the state...
+		lua_getmetatable(L, 1);
+		lua_pushstring(L, "self");
+		lua_rawget(L, -2);
+
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* current_state = lua_touserdata(L, -1);
+
+			int t = lua_type(current_state, lua_tointeger(L, 2));
+			lua_pushstring(L, lua_typename(L, t));
+			return 1;
+		}
+
+		lua_pushnil(L);
+		return 1;
+	} else {
+		// Return table key from metatable
+		lua_getmetatable(L, 1);
+		lua_pushvalue(L, 2);
+		lua_rawget(L, -2);
+		return 1;
+	}
+}
+
+static int multilua_new(lua_State* L) {
+	lua_checkstack(L, 7);
+
+	// Pushes the base object onto the stack
+	// Lua will consistently GC this object.
+	void* base = lua_newuserdata(L, 1);
+
+	// Create the metatable for the self value:
+	lua_newtable(L);
+
+	util_installfuncs(L);
+
+	// Create the finaliser
+	lua_pushstring(L, "__gc");
+	lua_pushcfunction(L, multilua_close);
+	lua_rawset(L, -3);
+
+	// Set indexing to the metatable
+	lua_pushstring(L, "__index");
+	lua_pushcfunction(L, multilua_index);
+	lua_rawset(L, -3);
+
+	// Fix "pairs"
+	lua_pushstring(L, "__pairs");
+	lua_pushcfunction(L, multilua_pairs);
+	lua_rawset(L, -3);
 
 	// Supply a name for tostring:
-	lua_getmetatable(L, -1);
+	lua_pushstring(L, "__name");
 	lua_pushstring(L, "multilua");
-	lua_setfield(L, -2, "__name");
+	lua_rawset(L, -3);
 
-	// Create the automatic closer:
-	lua_getmetatable(L, -1);
-	lua_pushcfunction(L, multilua_close);
-	lua_setfield(L, -2, "__gc");
+	// Get stack by #:
+	lua_pushstring(L, "__len");
+	lua_pushcfunction(L, multilua_gettop);
+	lua_rawset(L, -3);
+
+	// Pushing to stack by index method:
+	lua_pushstring(L, "__newindex");
+	lua_pushcfunction(L, multilua_newindex);
+	lua_rawset(L, -3);
+
+	// Allow grabbing by call:
+	lua_pushstring(L, "__call");
+	lua_pushcfunction(L, multilua_metameth_call);
+	lua_rawset(L, -3);
+
+	// TODO: __eq
+
+	// Create the self object...
+	lua_State* new_state = luaL_newstate();
+
+	// Memory allocation failure:
+	if(!new_state) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	// Expose the state pointer:
+	lua_pushstring(L, "self");
+	lua_pushlightuserdata(L, new_state);
+	lua_rawset(L, -3);
+
+	// Install the metatable
+	lua_setmetatable(L, -2);
+
+	return 1;
+}
+
+static int multilua_dumpstack(lua_State* L) {
+	lua_checkstack(L, lua_gettop(L) + 2);
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		int i = lua_gettop(current_state);
+		while(i) {
+			int t = lua_type(current_state, i);
+			switch(t) {
+				case LUA_TSTRING:
+					printf("%d:`%s'\n", i, lua_tostring(current_state, i));
+					break;
+				case LUA_TBOOLEAN:
+					printf("%d: %s\n",i,lua_toboolean(current_state, i) ? "true" : "false");
+					break;
+				case LUA_TNUMBER:
+					printf("%d: %g\n",  i, lua_tonumber(current_state, i));
+					break;
+				default:
+					printf("%d: %s\n", i, lua_typename(current_state, t));
+					break;
+			}
+			i--;
+		}
+
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	// Don't need obj.self anymore:
+	lua_pop(L, 1);
+
+	// To not break return semantics:
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openlibs(lua_State* L) {
+	lua_checkstack(L, lua_gettop(L) + 2);
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+
+		// Assumption: Ten standard libraries...
+		lua_checkstack(current_state, 10 * 2);
+
+		luaL_openlibs(current_state);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	// Don't need obj.self anymore:
+	lua_pop(L, 1);
+
+	// To not break return semantics:
+	lua_pushnil(L);
+	return 1;
 }
 
 static int multilua_metameth_call(lua_State* L) {
@@ -156,93 +305,6 @@ static int multilua_metameth_call(lua_State* L) {
 	return 1;
 }
 
-static int multilua_fetchable(lua_State* L) {
-	// 1 - multilua state
-	// 2 - index
-	lua_checkstack(L, lua_gettop(L) + 3);
-
-	int bool_key = false;
-	lua_Integer key;
-
-	if(lua_isnoneornil(L, 2)) {
-		key = -1;
-	} else {
-		key = lua_tointegerx(L, 2, &bool_key);
-		if(!key) {
-			lua_pushnil(L);
-			return 1;
-		}
-	}
-
-	lua_getfield(L, 1, "self");
-	if(lua_islightuserdata(L, -1)) {
-		lua_State* current_state = lua_touserdata(L, -1);
-
-		// Convert to a positive num...
-		key = lua_absindex(current_state, key);
-		
-		int last_valid = lua_absindex(current_state, -1);
-		if(key > last_valid) {
-			lua_pushnil(L);
-			return 1;
-		}
-
-		// Find the right push function:
-		int t = lua_type(current_state, key);
-		switch(t) {
-			case LUA_TNONE:
-				lua_pushboolean(L, true);
-				return 1;
-			case LUA_TNIL:
-				lua_pushboolean(L, true);
-				return 1;
-			case LUA_TNUMBER:
-				lua_pushboolean(L, true);
-				return 1;
-			case LUA_TBOOLEAN:
-				lua_pushboolean(L, true);
-				return 1;
-			case LUA_TSTRING:
-				lua_pushboolean(L, true);
-				return 1;
-			case LUA_TTABLE:
-				lua_pushboolean(L, false);
-				lua_pushstring(L, "table");
-				return 2;
-			case LUA_TFUNCTION:
-				if(lua_iscfunction(current_state, key)) {
-					lua_pushboolean(L, true);
-					return 1;
-				} else {
-					lua_pushboolean(L, false);
-					lua_pushstring(L, "function");
-					return 2;
-				}
-			case LUA_TUSERDATA:
-				lua_pushboolean(L, false);
-				lua_pushstring(L, "userdata");
-				return 2;
-			case LUA_TTHREAD:
-				lua_pushboolean(L, false);
-				lua_pushstring(L, "thread");
-				return 2;
-			case LUA_TLIGHTUSERDATA:
-				lua_pushboolean(L, true);
-				return 1;
-			default:
-				lua_pushboolean(L, false);
-				lua_pushstring(L, "unknown");
-				return 2;
-		}
-
-		lua_pushnil(L);
-		return 1;
-	}
-
-	lua_pushnil(L);
-	return 1;
-}
-
 static int multilua_newindex(lua_State* L) {
 	// 1 - multilua state
 	// 2 - key
@@ -252,18 +314,12 @@ static int multilua_newindex(lua_State* L) {
 	int bool_key = false;
 	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
 	if(!bool_key) {
-		
 		// Not a integer key, fallback to "regular" behaviour.
-		const char* str_key = lua_tostring(L, 3);
-
-		// Probably not trying to access table or stack.
-		if(!str_key) {
-			return luaL_error(L, "Expected a integer or string index.");
-		}
-
-		lua_copy(L, 2, -1);
-		lua_pushstring(L, str_key);
-		lua_rawset(L, 1);
+		
+		lua_getmetatable(L, 1);
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, 3);
+		lua_rawset(L, -3);
 		return 1;
 	}
 
@@ -398,208 +454,89 @@ static int multilua_newindex(lua_State* L) {
 	return 0;
 }
 
-static int multilua_equal(lua_State* L) {
-	// 1 - multilua stateA
-	// 2 - multilua stateB
+static int multilua_fetchable(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	lua_checkstack(L, lua_gettop(L) + 3);
 
-	lua_checkstack(L, lua_gettop(L) + 2);
+	int bool_key = false;
+	lua_Integer key;
+
+	if(lua_isnoneornil(L, 2)) {
+		key = -1;
+	} else {
+		key = lua_tointegerx(L, 2, &bool_key);
+		if(!key) {
+			lua_pushnil(L);
+			return 1;
+		}
+	}
 
 	lua_getfield(L, 1, "self");
-
 	if(lua_islightuserdata(L, -1)) {
-		lua_State* first_state = lua_touserdata(L, -1);
+		lua_State* current_state = lua_touserdata(L, -1);
 
-		lua_getfield(L, 2, "self");
-		if(lua_islightuserdata(L, -1)) {
-			lua_State* second_state = lua_touserdata(L, -1);
+		// Convert to a positive num...
+		key = lua_absindex(current_state, key);
+		
+		int last_valid = lua_absindex(current_state, -1);
+		if(key > last_valid) {
+			lua_pushnil(L);
+			return 1;
+		}
 
-			if(first_state == second_state) {
+		// Find the right push function:
+		int t = lua_type(current_state, key);
+		switch(t) {
+			case LUA_TNONE:
 				lua_pushboolean(L, true);
-			} else {
+				return 1;
+			case LUA_TNIL:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TNUMBER:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TBOOLEAN:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TSTRING:
+				lua_pushboolean(L, true);
+				return 1;
+			case LUA_TTABLE:
 				lua_pushboolean(L, false);
-			}
-			return 1;
+				lua_pushstring(L, "table");
+				return 2;
+			case LUA_TFUNCTION:
+				if(lua_iscfunction(current_state, key)) {
+					lua_pushboolean(L, true);
+					return 1;
+				} else {
+					lua_pushboolean(L, false);
+					lua_pushstring(L, "function");
+					return 2;
+				}
+			case LUA_TUSERDATA:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "userdata");
+				return 2;
+			case LUA_TTHREAD:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "thread");
+				return 2;
+			case LUA_TLIGHTUSERDATA:
+				lua_pushboolean(L, true);
+				return 1;
+			default:
+				lua_pushboolean(L, false);
+				lua_pushstring(L, "unknown");
+				return 2;
 		}
 
 		lua_pushnil(L);
 		return 1;
 	}
 
-	lua_pushnil(L);
-	return 1;
-}
-
-static int multilua_current(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 8);
-
-	// Otherwise, create our table:
-	lua_newtable(L);
-
-	// Create the meta/table...
-	lua_newtable(L);
-	lua_pushvalue(L, -1);
-	lua_setmetatable(L, -2);
-
-	util_installfuncs(L);
-
-	util_installmeta(L);
-
-	// Push our actual value:
-	lua_pushlightuserdata(L, L);
-	lua_setfield(L, -2, "self");
-
-	lua_pushcfunction(L, multilua_newindex);
-	lua_setfield(L, -2, "__newindex");
-
-	return 1;
-}
-
-static int multilua_self_close(lua_State* L) {
-	lua_State* current_state = lua_touserdata(L, 1);
-	if(current_state != L) {
-		lua_close(current_state);
-	}
-	return 0;
-}
-
-static int multilua_new(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 8);
-
-	lua_State* new_state = luaL_newstate();
-
-	// Memory allocation failure:
-	if(!new_state) {
-		lua_pushnil(L);
-		return 1;
-	}
-
-	lua_checkstack(new_state, 2);
-
-	// Create the meta/table...
-	lua_newtable(L);
-	lua_copy(L, -1, -2);
-	lua_setmetatable(L, -2);
-
-	util_installfuncs(L);
-
-	util_installmeta(L);
-
-	// Push our actual value:
-	lua_pushlightuserdata(L, new_state);
-
-	// Create the metatable for the self value:
-	lua_newtable(L);
-	// Create the finaliser
-	lua_pushstring(L, "__gc");
-	lua_pushcfunction(L, multilua_self_close);
-	lua_rawset(L, -3);
-	// Install the metatable
-	lua_setmetatable(L, -2);
-
-	// Set our metatable-enabled userdata:
-	lua_setfield(L, -2, "self");
-
-	lua_pushcfunction(L, multilua_newindex);
-	lua_setfield(L, -2, "__newindex");
-
-	return 1;
-}
-
-static int multilua_close(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 2);
-
-	lua_getfield(L, 1, "self");
-
-	// Allow it to be closed multiple times (safely):
-	if(lua_islightuserdata(L, -1)) {
-		lua_State* current_state = lua_touserdata(L, -1);
-
-		// Don't close the host Lua pointer!
-		if(current_state != L) {
-			lua_close(current_state);
-		}
-
-		// Don't need obj.self anymore:
-		lua_pop(L, 1);
-
-		// Only disappear if not host Lua state:
-		if(current_state != L) {
-			// Set self to nil:
-			lua_pushstring(L, "self");
-			lua_pushnil(L);
-			lua_rawset(L, 1);
-
-			lua_pushboolean(L, true);
-			return 1;
-		} else {
-			lua_pushnil(L);
-			return 1;
-		}
-
-	}
-
-	// To not break return semantics:
-	lua_pushnil(L);
-	return 1;
-}
-
-static int multilua_dumpstack(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 2);
-	lua_getfield(L, 1, "self");
-
-	if(lua_islightuserdata(L, -1)) {
-		lua_State* current_state = lua_touserdata(L, -1);
-
-		int i = lua_gettop(current_state);
-		while(i) {
-			int t = lua_type(current_state, i);
-			switch(t) {
-				case LUA_TSTRING:
-					printf("%d:`%s'\n", i, lua_tostring(current_state, i));
-					break;
-				case LUA_TBOOLEAN:
-					printf("%d: %s\n",i,lua_toboolean(current_state, i) ? "true" : "false");
-					break;
-				case LUA_TNUMBER:
-					printf("%d: %g\n",  i, lua_tonumber(current_state, i));
-					break;
-				default:
-					printf("%d: %s\n", i, lua_typename(current_state, t));
-					break;
-			}
-			i--;
-		}
-
-		lua_pushboolean(L, true);
-		return 1;
-	}
-	// Don't need obj.self anymore:
-	lua_pop(L, 1);
-
-	// To not break return semantics:
-	lua_pushnil(L);
-	return 1;
-}
-
-static int multilua_openlibs(lua_State* L) {
-	lua_checkstack(L, lua_gettop(L) + 2);
-
-	lua_getfield(L, 1, "self");
-
-	if(lua_islightuserdata(L, -1)) {
-		lua_State* current_state = lua_touserdata(L, -1);
-
-		// Assumption: Ten standard libraries...
-		lua_checkstack(current_state, 10 * 2);
-
-		luaL_openlibs(current_state);
-		lua_pushboolean(L, true);
-		return 1;
-	}
-	// Don't need obj.self anymore:
-	lua_pop(L, 1);
-
-	// To not break return semantics:
 	lua_pushnil(L);
 	return 1;
 }
@@ -5684,13 +5621,6 @@ static int multilua_mininteger(lua_State* L) {
 	lua_pushinteger(L, LUA_MININTEGER);
 	return 1;
 }
-
-// These are slightly harder to wrap:
-// TODO: int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar);
-// TODO: int lua_getstack (lua_State *L, int level, lua_Debug *ar);
-
-// TODO: const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n);
-// TODO: const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n);
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	luaL_newlib(L, multilua);

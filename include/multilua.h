@@ -5,12 +5,12 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+#include <stdbool.h>
+
 static int multilua_dumpstack(lua_State* L);
 static int multilua_new(lua_State* L);
-static int multilua_close(lua_State* L);
 static int multilua_openlibs(lua_State* L);
 static int multilua_absindex(lua_State* L);
-static int multilua_current(lua_State* L);
 static int multilua_arith(lua_State* L);
 static int multilua_call(lua_State* L);
 static int multilua_checkstack(lua_State* L);
