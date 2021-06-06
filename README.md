@@ -23,7 +23,7 @@ e.g.
 
 	L:close()
 
-Note: You can have as many Lua states as you want. The memory overhead is surprisingly small, and states don't interact with each other.
+You can have as many Lua states as you want. The memory overhead is surprisingly small.
 
 Note: You don't _need_ to call `close`. The GC will also close it for you, if the object goes out of scope.
 
@@ -31,25 +31,23 @@ Note: You don't _need_ to call `close`. The GC will also close it for you, if th
 
 ## Status
 
-Alpha. Unversioned.
-
 [![builds.sr.ht status](https://builds.sr.ht/~shakna/multilua.svg)](https://builds.sr.ht/~shakna/multilua?)
+
+Alpha. Unversioned.
 
 Bugs should be reported to the official [Issue Tracker](https://todo.sr.ht/~shakna/multilua).
 
-It "works", but is undocumented, untested, and may be... Unpredictable.
+It "works", but is only partially documented, and not fully tested.
 
-It doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places.
-
-Which makes this probably _unsafe_ unless you know exactly what you are doing.
+It doesn't quite obey all the conventions of the C-API, because it isn't sensible to in some places. (Such as using strings instead of enums).
 
 ---
 
 ## Documentation
 
-The documentation is currently under significant development and _incredibly incomplete_.
+The documentation is currently under significant development and _incomplete_.
 
-You can find a rendered form at `book.txt`.
+You can find a rendered form at [`book.txt`](https://git.sr.ht/~shakna/multilua/blob/master/book.txt).
 
 You can also generate pdf, epub, and html forms using [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
 
@@ -73,17 +71,29 @@ Place the resulting `multilua.so` somewhere in `LUA_CPATH`. (Which, by default, 
 
 + C99 compatible C compiler.
 
-### Documentation Dependencies (Optional)
+On Debian/Ubuntu/etc:
 
-Generating the documentation also requires [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
+	apt-get install build-essential pkg-config lua5.3-dev
 
-	make doc
+On Alpine:
+
+	apk add lua5.3 lua5.3-dev make
+
+On Arch:
+
+	pacman -S lua53 pkgconf make gcc
 
 ### Testing
 
 Testing has no additional dependencies.
 
 	make test
+
+### Documentation Dependencies (Optional)
+
+Generating the documentation also requires [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).
+
+	make doc
 
 ---
 
