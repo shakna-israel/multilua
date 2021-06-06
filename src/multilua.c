@@ -205,6 +205,21 @@ static int multilua_dumpstack(lua_State* L) {
 	return 1;
 }
 
+// TODO: Manually open individual Lua libraries:
+// luaopen_base
+// luaopen_package
+// luaopen_coroutine
+// luaopen_table
+// luaopen_io
+// luaopen_os
+// luaopen_string
+// luaopen_math
+// luaopen_utf8
+// luaopen_debug
+//#ifdef LUA_COMPAT_BITLIB
+//  luaopen_bit32
+//#endif
+
 static int multilua_openlibs(lua_State* L) {
 	lua_checkstack(L, lua_gettop(L) + 2);
 
@@ -643,15 +658,11 @@ static int multilua_arith(lua_State* L) {
 				lua_arith(current_state, LUA_OPSHR);
 				break;
 			case '~':
-				if(length == 2 && op[1] == '!') {
-					lua_arith(current_state, LUA_OPBNOT);
-				} else
 				if(length == 2 && op[1] == '|') {
 					lua_arith(current_state, LUA_OPBXOR);
 				} else
 				{
-					lua_pushnil(L);
-					return 1;
+					lua_arith(current_state, LUA_OPBNOT);
 				}
 				break;
 			default:

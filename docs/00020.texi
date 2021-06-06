@@ -2,7 +2,7 @@
 
 @funcsection{multilua.new}
 
-@deffn Function multilua.new -> nil|table
+@deffn Function multilua.new -> nil|userdata
 
 This function attempts to create a fresh @code{multilua} state object.
 
@@ -10,8 +10,10 @@ Returns:
 
 @itemize
 @item @code{nil} - Something went wrong. Probably a memory error.
-@item @code{table} - The @code{multilua} state object.
+@item @code{userdata} - The @code{multilua} state object.
 @end itemize
+
+The @code{userdata} object should have a @code{metatable}.
 
 @cindex multilua state
 @end deffn
@@ -20,7 +22,7 @@ Returns:
 
 @funcsection{multilua.close}
 
-@deffn Function multilua.close <table:state> -> boolean|nil
+@deffn Function multilua.close <userdata:state> -> boolean|nil
 
 This function, given a @code{multilua} @code{state}, closes the state.
 
@@ -43,11 +45,208 @@ Returns:
 
 ---
 
-@comment TODO: multilua.dump
-@comment TODO: multilua.current
-@comment TODO: multilua.openlibs
-@comment TODO: multilua.absindex
-@comment TODO: multilua.arith
+@funcsection{multilua.dump}
+
+@deffn Function multilua.dump <userdata:state> -> boolean|nil
+
+This function, given a valid @code{multilua} @code{state}, attempts to dump the current @code{stack} to @code{stdout} of the terminal.
+
+@i{WARNING}: This function is primarily meant for debugging. The output format is meant for human consumption, and is not guaranteed in any way, shape, or form.
+
+Returns:
+
+@itemize
+@item @code{true} - if the dump successfully took place.
+@item @code{nil} - if the state was somehow invalid.
+@end itemize
+
+@end deffn
+
+---
+
+@funcsection{multilua.openlibs}
+
+@deffn Function multilua.openlibs <userdata:state> -> boolean|nil
+
+This function, given a valid @code{multilua} @code{state}, attempts to open all standard Lua libraries into the given @code{state}.
+
+Returns:
+
+@itemize
+@item @code{true} - if the open successfully took place.
+@item @code{nil} - if the state was somehow invalid.
+@end itemize
+
+@end deffn
+
+---
+
+@funcsection{multilua.absindex}
+
+@deffn Function multilua.absindex <userdata:state> <integer:index> -> integer|nil
+
+This function, given a valid @code{multilua} @code{state}, attempts to convert @code{index} from a relative position (such as @code{-1}), to the absolute position.
+
+Returns:
+
+@itemize
+@item @code{integer} - The absolute position equivalent to the relative position given.
+@item @code{nil}
+	@itemize
+	@item If the @code{state} was somehow invalid.
+	@item If the @code{index} was somehow invalid.
+	@end itemize
+@end itemize
+
+@end deffn
+
+---
+
+@funcsection{multilua.arith}
+
+@deffn Function multilua.arith <userdata:state> <string:operator> -> number|nil
+
+This function, given a valid @code{multilua} @code{state}, performs an arithmetic or bitwise operation on the one or two values at the top of the @code{stack} for the given @code{state}.
+
+In the case of an invalid @code{multilua} @code{state}, returns @code{nil}.
+
+@emph{WARNING}: In the case of an @code{operator} not listed below, @i{Undefined Behaviour} results.
+
+If the @code{operator} is:
+
+@itemize
+@item @code{"+"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs addition on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"-"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs subtraction on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"-u"}
+	@itemize
+	@item Pops one numeric value from the @code{state}'s @code{stack}, and performs negation on the value.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"*"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs multiplication on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"/"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs floating point division on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"//"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs floor division on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"%"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a modulo operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"^"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a exponention operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"&"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a bitwise @i{AND} operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"|"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a bitwise @i{OR} operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"<"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a bitwise @i{LEFT SHIFT} operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{">"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a bitwise @i{RIGHT SHIFT} operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"~"}
+	@itemize
+	@item Pops two numeric values from the @code{state}'s @code{stack}, and performs a bitwise @i{XOR} (exclusive @i{OR}) operation on them.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@item @code{"~|"}
+	@itemize
+	@item Pops one numeric value from the @code{state}'s @code{stack}, and performs a bitwise @i{NOT} operation on it.
+	@item The result is pushed to the @code{state}'s @code{stack}.
+	@item If the result is an @code{integer} or @code{float}, then it is returned by the function.
+		@itemize
+		@item Otherwise, @code{nil} is returned.
+		@end itemize
+	@end itemize
+@end itemize
+
+@end deffn
+
+---
+
 @comment TODO: multilua.call
 @comment TODO: multilua.checkstack
 @comment TODO: multilua.compare
@@ -202,10 +401,9 @@ Returns:
 @comment TODO: multilua.sethook
 @comment TODO: multilua.checkoption
 
-
 @funcsection{multilua.fetchable}
 
-@deffn Function multilua.fetchable <table:state> [<integer:index>] -> nil|boolean
+@deffn Function multilua.fetchable <userdata:state> [<integer:index>] -> nil|boolean
 
 Given a @code{multilua state} and a valid @code{index}, returns whether or not the value can be @emph{safely} copied from @code{state} to the host Lua state.
 

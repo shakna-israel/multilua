@@ -38,7 +38,7 @@ assert(#obj == obj:gettop())
 
 @section Index Operator
 
-Lua's index fetching has been overridden so that @code{integer} keys will return the type found at that position on the stack, for a given multilua state object. String keys will continue to operate as expected.
+Lua's index fetching has been overridden so that @code{integer} keys will return the type found at that position on the stack, for a given multilua state object. String keys will continue to operate as expected. Other types of keys are not accepted.
 
 @cartouche
 @verbatim
@@ -56,7 +56,7 @@ assert(obj[-1] == 'string')
 
 @section New Index Operator
 
-Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack, for a given multilua state object. String keys will continue to operate as expected.
+Lua's new index operator has been overridden so that @code{integer} keys will operate on the stack, for a given multilua state object. String keys will continue to operate as expected. Other types of keys are not accepted.
 
 @emph{WARNING}: If a value being passed cannot simply be copied, it will push a @emph{reference}.
 
@@ -74,7 +74,7 @@ This can currently copy the current values:
 
 Other types will be sent as @emph{reference}s.
 
-@emph{WARNING}: Invalid indicies may raise errors.
+@emph{WARNING}: Invalid indicies @i{may} raise errors.
 
 @cartouche
 @verbatim

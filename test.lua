@@ -619,16 +619,16 @@ do
 	-- Bitwise Leftshift
 	multilua.pushinteger(obj, 5)
 	multilua.pushinteger(obj, 3)
-	assert(multilua.arith(obj, "<<") == 40.0)
+	assert(multilua.arith(obj, "<") == 40.0)
 
 	-- Bitwise Rightshift
 	multilua.pushinteger(obj, 5)
 	multilua.pushinteger(obj, 3)
-	assert(multilua.arith(obj, ">>") == 0.0)
+	assert(multilua.arith(obj, ">") == 0.0)
 
 	-- Bitwise NOT
 	multilua.pushinteger(obj, -2)
-	assert(multilua.arith(obj, "~!") == 1.0)
+	assert(multilua.arith(obj, "~") == 1.0)
 
 	-- Bitwise XOR
 	multilua.pushinteger(obj, 5)

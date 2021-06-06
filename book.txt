@@ -14,7 +14,11 @@
 3 Definitions
 3.1 multilua.new
 3.2 multilua.close
-3.3 multilua.fetchable
+3.3 multilua.dump
+3.4 multilua.openlibs
+3.5 multilua.absindex
+3.6 multilua.arith
+3.7 multilua.fetchable
 Index
 1 Introduction
 **************
@@ -71,28 +75,32 @@ errors, ‘multilua’ will call ‘lua_checkstack’ for you automatically.
    Whilst the overhead does not tend to be significant, there is some
 overhead, and the programmer may care about that.
 
+   There is also a couple bytes (literally) reserved for the object
+state, which adds to the memory overhead.
+
 1.1.3 Cleaning Up
 -----------------
 
 ‘multilua’ states are Garbage-Collected values.
 
-   This means that whilst you can and should cleanup a state when you
-don’t need it anymore, by calling the close method, the host Lua’s
-Garbage Collector will also call this method when it feels the need to
-get rid of a ‘multilua’ state.
+   This means that whilst you can cleanup a state when you don’t need it
+anymore, by calling the close method, the host Lua’s Garbage Collector
+will also call this method when it feels the need to get rid of a
+‘multilua’ state.
 
    Like all GC collections, this may have performance ramifications for
 your program - which you can work around by calling close yourself.
 
    This also causes any reference types to be cleaned up - some of which
-may have been copied to various other states. In which case... Welcome
-to the terrifying land of _Undefined Behaviour_.
+may have been borrowed by various other states. In which case... Welcome
+to the terrifying land of _Undefined Behaviour_. (There’s a reason we
+call them reference types!)
 
 1.1.4 Multilua State
 --------------------
 
-The ‘multilua’ state object is a table, with a bunch of methods attached
-to it, and a single value located at the key ‘"self"’.
+The ‘multilua’ state object is a userdata, with a bunch of methods
+attached to it, and a single value located at the key ‘"self"’.
 
    This ‘"self"’ value is a lightuserdata value. If the programmer feels
 the need to modify or play with this in any way, shape, or form, then
@@ -106,7 +114,7 @@ than average intelligence, then the "self" value is actually what it
 seems like - a C-pointer to a lua_State.
 
    Note: In the case of an invalid ‘multilua’ state (such as one that
-has been closed), then "self" may actually be ‘nil’.
+has been manually closed), then "self" may actually be ‘nil’.
 
 1.1.5 Safety
 ------------
@@ -140,6 +148,7 @@ obj[#obj + 1] = {hello = "world"}
 collectgarbage("collect")
 
 t = obj(-1)
+print(#t)
 
    There is no way for ‘obj’ to know that the host Lua has
 garbage-collected the original table value. And no way for the host Lua
@@ -199,6 +208,7 @@ assert(#obj == obj:gettop())
 Lua’s index fetching has been overridden so that ‘integer’ keys will
 return the type found at that position on the stack, for a given
 multilua state object. String keys will continue to operate as expected.
+Other types of keys are not accepted.
 
 local multilua = require "multilua"
 
@@ -218,7 +228,8 @@ assert(obj[-1] == 'string')
 
 Lua’s new index operator has been overridden so that ‘integer’ keys will
 operate on the stack, for a given multilua state object. String keys
-will continue to operate as expected.
+will continue to operate as expected. Other types of keys are not
+accepted.
 
    _WARNING_: If a value being passed cannot simply be copied, it will
 push a _reference_.
@@ -276,14 +287,16 @@ assert(obj(-1) == 10)
 3.1 multilua.new
 ================
 
- -- Function: multilua.new -> nil|table
+ -- Function: multilua.new -> nil|userdata
 
      This function attempts to create a fresh ‘multilua’ state object.
 
      Returns:
 
         • ‘nil’ - Something went wrong. Probably a memory error.
-        • ‘table’ - The ‘multilua’ state object.
+        • ‘userdata’ - The ‘multilua’ state object.
+
+     The ‘userdata’ object should have a ‘metatable’.
 
 
 
@@ -293,7 +306,7 @@ assert(obj(-1) == 10)
 3.2 multilua.close
 ==================
 
- -- Function: multilua.close <table:state> -> boolean|nil
+ -- Function: multilua.close <userdata:state> -> boolean|nil
 
      This function, given a ‘multilua’ ‘state’, closes the state.
 
@@ -318,10 +331,194 @@ assert(obj(-1) == 10)
                                  — — —
 
 
-3.3 multilua.fetchable
+3.3 multilua.dump
+=================
+
+ -- Function: multilua.dump <userdata:state> -> boolean|nil
+
+     This function, given a valid ‘multilua’ ‘state’, attempts to dump
+     the current ‘stack’ to ‘stdout’ of the terminal.
+
+     WARNING: This function is primarily meant for debugging. The output
+     format is meant for human consumption, and is not guaranteed in any
+     way, shape, or form.
+
+     Returns:
+
+        • ‘true’ - if the dump successfully took place.
+        • ‘nil’ - if the state was somehow invalid.
+
+
+
+                                 — — —
+
+
+3.4 multilua.openlibs
+=====================
+
+ -- Function: multilua.openlibs <userdata:state> -> boolean|nil
+
+     This function, given a valid ‘multilua’ ‘state’, attempts to open
+     all standard Lua libraries into the given ‘state’.
+
+     Returns:
+
+        • ‘true’ - if the open successfully took place.
+        • ‘nil’ - if the state was somehow invalid.
+
+
+
+                                 — — —
+
+
+3.5 multilua.absindex
+=====================
+
+ -- Function: multilua.absindex <userdata:state> <integer:index> ->
+          integer|nil
+
+     This function, given a valid ‘multilua’ ‘state’, attempts to
+     convert ‘index’ from a relative position (such as ‘-1’), to the
+     absolute position.
+
+     Returns:
+
+        • ‘integer’ - The absolute position equivalent to the relative
+          position given.
+        • ‘nil’
+             • If the ‘state’ was somehow invalid.
+             • If the ‘index’ was somehow invalid.
+
+
+
+                                 — — —
+
+
+3.6 multilua.arith
+==================
+
+ -- Function: multilua.arith <userdata:state> <string:operator> ->
+          number|nil
+
+     This function, given a valid ‘multilua’ ‘state’, performs an
+     arithmetic or bitwise operation on the one or two values at the top
+     of the ‘stack’ for the given ‘state’.
+
+     In the case of an invalid ‘multilua’ ‘state’, returns ‘nil’.
+
+     _WARNING_: In the case of an ‘operator’ not listed below, Undefined
+     Behaviour results.
+
+     If the ‘operator’ is:
+
+        • ‘"+"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs addition on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"-"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs subtraction on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"-u"’
+             • Pops one numeric value from the ‘state’’s ‘stack’, and
+               performs negation on the value.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"*"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs multiplication on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"/"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs floating point division on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"//"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs floor division on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’, then it is returned by the
+               function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"%"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a modulo operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"^"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a exponention operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"&"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a bitwise AND operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"|"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a bitwise OR operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"<"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a bitwise LEFT SHIFT operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘">"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a bitwise RIGHT SHIFT operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"~"’
+             • Pops two numeric values from the ‘state’’s ‘stack’, and
+               performs a bitwise XOR (exclusive OR) operation on them.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+        • ‘"~|"’
+             • Pops one numeric value from the ‘state’’s ‘stack’, and
+               performs a bitwise NOT operation on it.
+             • The result is pushed to the ‘state’’s ‘stack’.
+             • If the result is an ‘integer’ or ‘float’, then it is
+               returned by the function.
+                  • Otherwise, ‘nil’ is returned.
+
+
+
+                                 — — —
+
+
+3.7 multilua.fetchable
 ======================
 
- -- Function: multilua.fetchable <table:state> [<integer:index>] ->
+ -- Function: multilua.fetchable <userdata:state> [<integer:index>] ->
           nil|boolean
 
      Given a ‘multilua state’ and a valid ‘index’, returns whether or
@@ -344,14 +541,22 @@ Index
 
 * Menu:
 
-* chapter, Definitions:                  Definitions.         (line 274)
-* chapter, Introduction:                 Introduction.        (line  20)
-* chapter, Metamethods:                  Metamethods.         (line 151)
-* function, multilua.close:              Definitions.         (line 295)
-* function, multilua.fetchable:          Definitions.         (line 323)
-* function, multilua.new:                Definitions.         (line 278)
-* multilua state:                        Definitions.         (line 287)
-* multilua.close:                        Definitions.         (line 295)
-* multilua.fetchable:                    Definitions.         (line 323)
-* multilua.new:                          Definitions.         (line 278)
+* chapter, Definitions:                  Definitions.         (line 285)
+* chapter, Introduction:                 Introduction.        (line  24)
+* chapter, Metamethods:                  Metamethods.         (line 160)
+* function, multilua.absindex:           Definitions.         (line 376)
+* function, multilua.arith:              Definitions.         (line 399)
+* function, multilua.close:              Definitions.         (line 308)
+* function, multilua.dump:               Definitions.         (line 336)
+* function, multilua.fetchable:          Definitions.         (line 520)
+* function, multilua.new:                Definitions.         (line 289)
+* function, multilua.openlibs:           Definitions.         (line 358)
+* multilua state:                        Definitions.         (line 300)
+* multilua.absindex:                     Definitions.         (line 376)
+* multilua.arith:                        Definitions.         (line 399)
+* multilua.close:                        Definitions.         (line 308)
+* multilua.dump:                         Definitions.         (line 336)
+* multilua.fetchable:                    Definitions.         (line 520)
+* multilua.new:                          Definitions.         (line 289)
+* multilua.openlibs:                     Definitions.         (line 358)
 
