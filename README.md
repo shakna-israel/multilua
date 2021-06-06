@@ -1,6 +1,6 @@
 # multilua
 
-A Lua 5.3 library for accessing the C-API.
+A Lua 5.3 library for accessing Lua's C-API.
 
 ---
 
