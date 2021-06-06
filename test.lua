@@ -54,6 +54,22 @@ do
 	assert(type(obj.self) == 'nil')
 end
 
+-- Test: Manual closing meta
+do
+	assert(type(multilua.new) == 'function')
+	local obj = multilua()
+	assert(type(obj) == 'userdata')
+	assert(type(obj.self) == 'userdata')
+
+	-- First close
+	assert(obj:close())
+	assert(type(obj.self) == 'nil')
+
+	-- Second close
+	assert(obj:close() == nil)
+	assert(type(obj.self) == 'nil')
+end
+
 -- Test multiple states can exist
 -- simultaneously
 do
@@ -1929,6 +1945,36 @@ do
 	
 end
 
+-- Test: pushfloat
+do
+	assert(type(multilua.pushfloat) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushfloat(obj, 10))
+	assert(obj[-1] == 'number')
+
+	assert(multilua.pushfloat(obj, "hi") == nil)
+
+	
+end
+
+-- Test: pushfloat meta
+do
+	assert(type(multilua.pushfloat) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushfloat) == 'function')
+
+	assert(obj:pushfloat(10))
+	assert(obj[-1] == 'number')
+
+	assert(obj:pushfloat("hi") == nil)
+
+	
+end
+
 -- Test: pushvalue
 do
 	assert(type(multilua.pushvalue) == 'function')
@@ -2375,64 +2421,286 @@ do
 	assert(type(multilua.status) == 'function')
 end
 
--- TODO: Test: toboolean
+-- Test: toboolean
 do
 	assert(type(multilua.toboolean) == 'function')
+
+	local obj = assert(multilua.new())
+	multilua.pushboolean(obj, true)
+
+	local x = multilua.toboolean(obj, -1)
+	assert(x == true)
+
+	multilua.pushboolean(obj, false)
+
+	x = multilua.toboolean(obj, -1)
+	assert(x == false)
 end
 
--- TODO: Test: toboolean meta
+-- Test: toboolean meta
 do
 	assert(type(multilua.toboolean) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(obj.toboolean) == 'function')
+
+	obj:pushboolean(true)
+
+	local x = obj:toboolean(-1)
+	assert(x == true)
+
+	obj:pushboolean(false)
+
+	x = obj:toboolean(-1)
+	assert(x == false)
 end
 
--- TODO: Test: tointeger
+-- Test: tointeger
 do
 	assert(type(multilua.tointeger) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.pushinteger(obj, 10))
+
+	assert(multilua.tointeger(obj, -1) == 10)
+
+	assert(math.type(multilua.tointeger(obj, -1)) == 'integer')
 end
 
--- TODO: Test: tointeger meta
+-- Test: tointeger meta
 do
 	assert(type(multilua.tointeger) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(obj.tointeger) == 'function')
+
+	assert(obj:pushinteger(10))
+
+	assert(obj:tointeger(-1) == 10)
+
+	assert(math.type(obj:tointeger(-1)) == 'integer')
 end
 
--- TODO: Test: tointegerx
+-- Test: tointegerx
 do
 	assert(type(multilua.tointegerx) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.pushinteger(obj, 10))
+
+	assert(multilua.tointegerx(obj, -1) == 10)
+
+	assert(math.type(multilua.tointegerx(obj, -1)) == 'integer')
+
+	multilua.pushstring(obj, "This")
+	assert(multilua.tointegerx(obj, -1) == nil)
 end
 
--- TODO: Test: tointegerx meta
+-- Test: tointegerx meta
 do
 	assert(type(multilua.tointegerx) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(obj.tointegerx) == 'function')
+
+	assert(obj:pushinteger(10))
+
+	assert(obj:tointegerx(-1) == 10)
+
+	assert(math.type(obj:tointegerx(-1)) == 'integer')
+
+	obj:pushstring("This")
+	assert(obj:tointegerx(-1) == nil)
 end
 
--- TODO: Test: tostring
+-- Test: tostring
 do
 	assert(type(multilua.tostring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushstring(obj, "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789hello")
+	assert(multilua.tostring(obj, -1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789hello")
+
+	multilua.pushinteger(obj, 100)
+	assert(multilua.tostring(obj, -1) == "100")
+
+	multilua.pushnumber(obj, 100)
+	assert(multilua.tostring(obj, -1) == "100.0")
 end
 
--- TODO: Test: tostring meta
+-- Test: tostring meta
 do
 	assert(type(multilua.tostring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tostring) == 'function')
+
+	obj:pushstring("helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789hello")
+	assert(obj:tostring(-1) == "helloöâîí¬®úøøãöâîí¬®®¯áóäæçèêëì»ñ÷åòôùõõéïðÛÝÜ±²³´µ¶·¸¹°­½0123456789hello")
+
+	obj:pushinteger(100)
+	assert(obj:tostring(-1) == "100")
+
+	obj:pushnumber(100)
+	assert(obj:tostring(-1) == "100.0")
 end
 
--- TODO: Test: tonumber
+-- Test: tonumber
 do
 	assert(type(multilua.tonumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.tonumber(obj, -1) == 10.0)
+	assert(math.type(multilua.tonumber(obj, -1)) == 'float')
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.tonumber(obj, -1) == 10.0)
+	assert(math.type(multilua.tonumber(obj, -1)) == 'float')
 end
 
--- TODO: Test: tonumber meta
+-- Test: tonumber meta
 do
 	assert(type(multilua.tonumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tonumber) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:tonumber(-1) == 10.0)
+	assert(math.type(obj:tonumber(-1)) == 'float')
+
+	obj:pushnumber(10)
+	assert(obj:tonumber(-1) == 10.0)
+	assert(math.type(obj:tonumber(-1)) == 'float')
 end
 
--- TODO: Test: tonumberx
+-- Test: tonumberx
 do
 	assert(type(multilua.tonumberx) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.tonumberx(obj, -1) == 10.0)
+	assert(math.type(multilua.tonumberx(obj, -1)) == 'float')
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.tonumberx(obj, -1) == 10.0)
+	assert(math.type(multilua.tonumberx(obj, -1)) == 'float')
+
+	multilua.pushstring(obj, "10")
+	assert(multilua.tonumberx(obj, -1) == 10.0)
+	assert(math.type(multilua.tonumberx(obj, -1)) == 'float')
+
+	multilua.pushstring(obj, "a10")
+	assert(multilua.tonumberx(obj, -1) == nil)
 end
 
--- TODO: Test: tonumberx meta
+-- Test: tonumberx meta
 do
 	assert(type(multilua.tonumberx) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tonumberx) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:tonumberx(-1) == 10.0)
+	assert(math.type(obj:tonumberx(-1)) == 'float')
+
+	obj:pushnumber(10)
+	assert(obj:tonumberx(-1) == 10.0)
+	assert(math.type(obj:tonumberx(-1)) == 'float')
+
+	obj:pushstring("10")
+	assert(obj:tonumberx(-1) == 10.0)
+	assert(math.type(obj:tonumberx(-1)) == 'float')
+
+	obj:pushstring("a10")
+	assert(obj:tonumberx(-1) == nil)
+end
+
+-- Test: tofloat
+do
+	assert(type(multilua.tofloat) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.tofloat(obj, -1) == 10.0)
+	assert(math.type(multilua.tofloat(obj, -1)) == 'float')
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.tofloat(obj, -1) == 10.0)
+	assert(math.type(multilua.tofloat(obj, -1)) == 'float')
+end
+
+-- Test: tofloat meta
+do
+	assert(type(multilua.tofloat) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tofloat) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:tofloat(-1) == 10.0)
+	assert(math.type(obj:tofloat(-1)) == 'float')
+
+	obj:pushnumber(10)
+	assert(obj:tofloat(-1) == 10.0)
+	assert(math.type(obj:tofloat(-1)) == 'float')
+end
+
+-- Test: tofloatx
+do
+	assert(type(multilua.tofloatx) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.tofloatx(obj, -1) == 10.0)
+	assert(math.type(multilua.tofloatx(obj, -1)) == 'float')
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.tofloatx(obj, -1) == 10.0)
+	assert(math.type(multilua.tofloatx(obj, -1)) == 'float')
+
+	multilua.pushstring(obj, "10")
+	assert(multilua.tofloatx(obj, -1) == 10.0)
+	assert(math.type(multilua.tofloatx(obj, -1)) == 'float')
+
+	multilua.pushstring(obj, "a10")
+	assert(multilua.tofloatx(obj, -1) == nil)
+end
+
+-- Test: tofloatx meta
+do
+	assert(type(multilua.tofloatx) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tofloatx) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:tofloatx(-1) == 10.0)
+	assert(math.type(obj:tofloatx(-1)) == 'float')
+
+	obj:pushnumber(10)
+	assert(obj:tofloatx(-1) == 10.0)
+	assert(math.type(obj:tofloatx(-1)) == 'float')
+
+	obj:pushstring("10")
+	assert(obj:tofloatx(-1) == 10.0)
+	assert(math.type(obj:tofloatx(-1)) == 'float')
+
+	obj:pushstring("a10")
+	assert(obj:tofloatx(-1) == nil)
 end
 
 -- TODO: Test: topointer
@@ -2465,14 +2733,90 @@ do
 	assert(type(multilua.touserdata) == 'function')
 end
 
--- TODO: Test: type
+-- Test: type
 do
 	assert(type(multilua.type) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.pushinteger(obj, 10)
+	assert(multilua.type(obj, -1) == 'number')
+
+	multilua.pushnumber(obj, 10)
+	assert(multilua.type(obj, -1) == 'number')
+
+	multilua.pushfloat(obj, 10)
+	assert(multilua.type(obj, -1) == 'number')
+
+	multilua.pushstring(obj, "Hello")
+	assert(multilua.type(obj, -1) == 'string')
+
+	multilua.pushboolean(obj, true)
+	assert(multilua.type(obj, -1) == 'boolean')
+	multilua.pushboolean(obj, false)
+	assert(multilua.type(obj, -1) == 'boolean')
+
+	multilua.pushnil(obj)
+	assert(multilua.type(obj, -1) == 'nil')
+
+	multilua.pushcfunction(obj, multilua.new)
+	assert(multilua.type(obj, -1) == 'function')
+
+	multilua.dostring(obj, "return function() end")
+	assert(multilua.type(obj, -1) == 'function')
+
+	multilua.pushlightuserdata(obj, obj.self)
+	assert(multilua.type(obj, -1) == 'userdata')
+
+	multilua.newuserdata(obj, 1)
+	assert(multilua.type(obj, -1) == 'userdata')
+
+	multilua.newtable(obj)
+	assert(multilua.type(obj, -1) == 'table')
 end
 
--- TODO: Test: type meta
+-- Test: type meta
 do
 	assert(type(multilua.type) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.type) == 'function')
+
+	obj:pushinteger(10)
+	assert(obj:type(-1) == 'number')
+
+	obj:pushnumber(10)
+	assert(obj:type(-1) == 'number')
+
+	obj:pushfloat(10)
+	assert(obj:type(-1) == 'number')
+
+	obj:pushstring("Hello")
+	assert(obj:type(-1) == 'string')
+
+	obj:pushboolean(true)
+	assert(obj:type(-1) == 'boolean')
+	obj:pushboolean(false)
+	assert(obj:type(-1) == 'boolean')
+
+	obj:pushnil()
+	assert(obj:type(-1) == 'nil')
+
+	obj:pushcfunction(multilua.new)
+	assert(obj:type(-1) == 'function')
+
+	obj:dostring("return function() end")
+	assert(obj:type(-1) == 'function')
+
+	obj:pushlightuserdata(obj.self)
+	assert(obj:type(-1) == 'userdata')
+
+	obj:newuserdata(1)
+	assert(obj:type(-1) == 'userdata')
+
+	obj:newtable()
+	assert(obj:type(-1) == 'table')
 end
 
 -- TODO: Test: gethookcount
@@ -2535,24 +2879,60 @@ do
 	assert(type(multilua.upvaluejoin) == 'function')
 end
 
--- TODO: Test: argcheck
+-- Test: argcheck
 do
 	assert(type(multilua.argcheck) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: argcheck meta
+-- Test: argcheck meta
 do
 	assert(type(multilua.argcheck) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.argcheck) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: argerror
+-- Test: argerror
 do
 	assert(type(multilua.argerror) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: argerror meta
+-- Test: argerror meta
 do
 	assert(type(multilua.argerror) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.argerror) == 'function')	
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
 -- TODO: Test: callmeta
@@ -2565,84 +2945,228 @@ do
 	assert(type(multilua.callmeta) == 'function')
 end
 
--- TODO: Test: checkany
+-- Test: checkany
 do
 	assert(type(multilua.checkany) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkany meta
+-- Test: checkany meta
 do
 	assert(type(multilua.checkany) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkany) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkinteger
+-- Test: checkinteger
 do
 	assert(type(multilua.checkinteger) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkinteger meta
+-- Test: checkinteger meta
 do
 	assert(type(multilua.checkinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkinteger) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkstring
+-- Test: checkstring
 do
 	assert(type(multilua.checkstring) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkstring meta
+-- Test: checkstring meta
 do
 	assert(type(multilua.checkstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkstring) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checknumber
+-- Test: checknumber
 do
 	assert(type(multilua.checknumber) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checknumber meta
+-- Test: checknumber meta
 do
 	assert(type(multilua.checknumber) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checknumber) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: lcheckstack
+-- Test: lcheckstack
 do
 	assert(type(multilua.lcheckstack) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: lcheckstack meta
+-- Test: lcheckstack meta
 do
 	assert(type(multilua.lcheckstack) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.lcheckstack) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checktype
+-- Test: checktype
 do
 	assert(type(multilua.checktype) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checktype meta
+-- Test: checktype meta
 do
 	assert(type(multilua.checktype) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checktype) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkudata
+-- Test: checkudata
 do
 	assert(type(multilua.checkudata) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkudata meta
+-- Test: checkudata meta
 do
 	assert(type(multilua.checkudata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkudata) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkversion
+-- Test: checkversion
 do
 	assert(type(multilua.checkversion) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkversion meta
+-- Test: checkversion meta
 do
 	assert(type(multilua.checkversion) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkversion) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
 -- TODO: Test: dofile
@@ -2655,14 +3179,32 @@ do
 	assert(type(multilua.dofile) == 'function')
 end
 
--- TODO: Test: dostring
+-- Test: dostring
 do
 	assert(type(multilua.dostring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, "return function() end"))
+	assert(multilua.type(obj, -1) == 'function')
+
+	assert(multilua.dostring(obj, "return (function() return 2 end)()"))
+	assert(multilua.type(obj, -1) == 'number')
 end
 
--- TODO: Test: dostring meta
+-- Test: dostring meta
 do
 	assert(type(multilua.dostring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.dostring) == 'function')
+
+	assert(multilua.dostring(obj, "return function() end"))
+	assert(multilua.type(obj, -1) == 'function')
+
+	assert(multilua.dostring(obj, "return (function() return 2 end)()"))
+	assert(multilua.type(obj, -1) == 'number')
 end
 
 -- TODO: Test: execresult
@@ -3241,14 +3783,32 @@ do
 	assert(type(multilua.sethook) == 'function')
 end
 
--- TODO: Test: checkoption
+-- Test: checkoption
 do
 	assert(type(multilua.checkoption) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
--- TODO: Test: checkoption meta
+-- Test: checkoption meta
 do
 	assert(type(multilua.checkoption) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.checkoption) == 'function')
+
+	--[[
+
+	This function _cannot_ be tested, as it raises an error
+	in non-host Lua, which cannot be caught by pcall.
+
+	]]--
 end
 
 -- Test: maxinteger/mininteger
