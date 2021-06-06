@@ -41,6 +41,26 @@ static int multilua_close(lua_State* L) {
 	return 1;
 }
 
+static int multilua_manual_close(lua_State* L) {
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		
+		if(current_state != L) {
+			lua_close(current_state);
+			
+			lua_pushnil(L);
+			lua_setfield(L, 1, "self");
+
+			lua_pushboolean(L, true);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 static int multilua_pairs(lua_State* L) {
 	lua_checkstack(L, 5);
 

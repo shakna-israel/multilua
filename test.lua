@@ -38,6 +38,22 @@ do
 	collectgarbage('collect')
 end
 
+-- Test: Manual closing
+do
+	assert(type(multilua.new) == 'function')
+	local obj = multilua()
+	assert(type(obj) == 'userdata')
+	assert(type(obj.self) == 'userdata')
+
+	-- First close
+	assert(multilua.close(obj))
+	assert(type(obj.self) == 'nil')
+
+	-- Second close
+	assert(multilua.close(obj) == nil)
+	assert(type(obj.self) == 'nil')
+end
+
 -- Test multiple states can exist
 -- simultaneously
 do

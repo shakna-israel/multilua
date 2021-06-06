@@ -4,6 +4,7 @@
 static const struct luaL_Reg multilua [] = {
 	{"dump", multilua_dumpstack},
 	{"new", multilua_new},
+	{"close", multilua_manual_close},
 	{"openlibs", multilua_openlibs},
 	{"absindex", multilua_absindex},
 	{"arith", multilua_arith},
