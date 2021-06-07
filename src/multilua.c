@@ -3708,7 +3708,7 @@ static int multilua_execresult(lua_State* L) {
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
-		lua_checkstack(current_state, LUA_MINSTACK + 5);
+		lua_checkstack(current_state, 5);
 
 		luaL_execresult(current_state, stat);
 		lua_pushboolean(L, true);
@@ -3741,7 +3741,7 @@ static int multilua_fileresult(lua_State* L) {
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
-		lua_checkstack(current_state, LUA_MINSTACK + 5);
+		lua_checkstack(current_state, 5);
 
 		luaL_fileresult(current_state, stat, filename);
 		lua_pushboolean(L, true);

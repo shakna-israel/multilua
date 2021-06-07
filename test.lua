@@ -3287,14 +3287,44 @@ do
 	]]--
 end
 
--- TODO: Test: dofile
+-- Test: dofile
 do
 	assert(type(multilua.dofile) == 'function')
+
+	local fname = os.tmpname()
+	local f = assert(io.open(fname, "w"))
+	f:write("return 4")
+	f:flush()
+	f:close()
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dofile(obj, fname))
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 4)
+
+	os.remove(fname)
 end
 
--- TODO: Test: dofile meta
+-- Test: dofile meta
 do
 	assert(type(multilua.dofile) == 'function')
+
+	local fname = os.tmpname()
+	local f = assert(io.open(fname, "w"))
+	f:write("return 4")
+	f:flush()
+	f:close()
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.dofile) == 'function')
+
+	assert(obj:dofile(fname))
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 4)
+
+	os.remove(fname)
 end
 
 -- Test: dostring
@@ -3325,24 +3355,96 @@ do
 	assert(multilua.type(obj, -1) == 'number')
 end
 
--- TODO: Test: execresult
+-- Test: execresult
 do
 	assert(type(multilua.execresult) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.execresult(obj, 0) == true)
+	assert(obj(-1) == 0)
+	assert(obj(-2) == "exit")
+	assert(obj(-3) == true)
+
+	assert(multilua.execresult(obj, 1) == true)
+	assert(obj(-1) == 1)
+	assert(obj(-2) == "signal")
+	assert(obj(-3) == nil)
+
+	assert(multilua.execresult(obj, -1) == true)
+	assert(obj(-1) == 2)
+	assert(obj(-2) == "No such file or directory")
+	assert(obj(-3) == nil)
 end
 
--- TODO: Test: execresult meta
+-- Test: execresult meta
 do
 	assert(type(multilua.execresult) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.execresult) == 'function')
+
+	assert(obj:execresult(0) == true)
+	assert(obj(-1) == 0)
+	assert(obj(-2) == "exit")
+	assert(obj(-3) == true)
+
+	assert(obj:execresult(1) == true)
+	assert(obj(-1) == 1)
+	assert(obj(-2) == "signal")
+	assert(obj(-3) == nil)
+
+	assert(obj:execresult(-1) == true)
+	assert(obj(-1) == 2)
+	assert(obj(-2) == "No such file or directory")
+	assert(obj(-3) == nil)
 end
 
--- TODO: Test: fileresult
+-- Test: fileresult
 do
 	assert(type(multilua.fileresult) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.fileresult(obj, 0, "test.lua"))
+	assert(obj(-1) == 2)
+	assert(obj(-2) == "test.lua: No such file or directory")
+	assert(obj(-3) == nil)
+
+	assert(multilua.fileresult(obj, 1, "test.lua"))
+	assert(obj(-1) == true)
+	assert(obj(-2) == 2)
+	assert(obj(-3) == "test.lua: No such file or directory")
+
+	assert(multilua.fileresult(obj, -1, "test.lua"))
+	assert(obj(-1) == true)
+	assert(obj(-2) == true)
+	assert(obj(-3) == 2)
 end
 
--- TODO: Test: fileresult meta
+-- Test: fileresult meta
 do
 	assert(type(multilua.fileresult) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.fileresult) == 'function')
+
+	assert(obj:fileresult(0, "test.lua"))
+	assert(obj(-1) == 2)
+	assert(obj(-2) == "test.lua: No such file or directory")
+	assert(obj(-3) == nil)
+
+	assert(obj:fileresult(1, "test.lua"))
+	assert(obj(-1) == true)
+	assert(obj(-2) == 2)
+	assert(obj(-3) == "test.lua: No such file or directory")
+
+	assert(obj:fileresult(-1, "test.lua"))
+	assert(obj(-1) == true)
+	assert(obj(-2) == true)
+	assert(obj(-3) == 2)
 end
 
 -- TODO: Test: getmetafield
