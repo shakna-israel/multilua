@@ -1687,14 +1687,132 @@ do
 	assert(type(multilua.next) == 'function')
 end
 
--- TODO: Test: pcall
+-- Test: pcall
 do
 	assert(type(multilua.pcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.dostring(obj, "return function() return error(\"Raises!\") end")
+	local status, message = multilua.pcall(obj, 0, nil, 0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	multilua.dostring(obj, "return function() return 2 end")
+	status, message = multilua.pcall(obj, 0, nil, 0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 2)
+
+	multilua.dostring(obj, "return function(a) return 2 + a end")
+	multilua.pushinteger(obj, 10)
+	status, message = multilua.pcall(obj, 1, nil, 0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 12)
+
+	multilua.dostring(obj, "return function(a) return error(\"Raises\") end")
+	multilua.pushinteger(obj, 10)
+	status, message = multilua.pcall(obj, 1, nil, 0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	multilua.dostring(obj, "return function() return error(\"Raises!\") end")
+	local status, message = multilua.pcall(obj, 0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	multilua.dostring(obj, "return function() return 2 end")
+	status, message = multilua.pcall(obj, 0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 2)
+
+	multilua.dostring(obj, "return function(a) return 2 + a end")
+	multilua.pushinteger(obj, 10)
+	status, message = multilua.pcall(obj, 1)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 12)
+
+	multilua.dostring(obj, "return function(a) return error(\"Raises\") end")
+	multilua.pushinteger(obj, 10)
+	status, message = multilua.pcall(obj, 1)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
 end
 
--- TODO: Test: pcall meta
+-- Test: pcall meta
 do
 	assert(type(multilua.pcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pcall) == 'function')
+
+	obj:dostring("return function() return error(\"Raises!\") end")
+	local status, message = obj:pcall(0, nil, 0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	obj:dostring("return function() return 2 end")
+	status, message = obj:pcall(0, nil, 0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 2)
+
+	obj:dostring("return function(a) return 2 + a end")
+	obj:pushinteger(10)
+	status, message = obj:pcall(1, nil, 0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 12)
+
+	obj:dostring("return function(a) return error(\"Raises\") end")
+	obj:pushinteger(10)
+	status, message = obj:pcall(1, nil, 0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	obj:dostring("return function() return error(\"Raises!\") end")
+	local status, message = obj:pcall(0)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
+
+	obj:dostring("return function() return 2 end")
+	status, message = obj:pcall(0)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 2)
+
+	obj:dostring("return function(a) return 2 + a end")
+	obj:pushinteger(10)
+	status, message = obj:pcall(1)
+	assert(status == true)
+	assert(message == "ok")
+	assert(obj[-1] == 'number')
+	assert(obj(-1) == 12)
+
+	obj:dostring("return function(a) return error(\"Raises\") end")
+	obj:pushinteger(10)
+	status, message = obj:pcall(1)
+	assert(status == nil)
+	assert(message == "runtime")
+	assert(obj[-1] == 'string')
 end
 
 -- Test: pop
