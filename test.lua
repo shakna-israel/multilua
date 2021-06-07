@@ -3366,15 +3366,10 @@ do
 	assert(obj(-2) == "exit")
 	assert(obj(-3) == true)
 
-	assert(multilua.execresult(obj, 1) == true)
-	assert(obj(-1) == 1)
-	assert(obj(-2) == "signal")
-	assert(obj(-3) == nil)
-
-	assert(multilua.execresult(obj, -1) == true)
-	assert(obj(-1) == 2)
-	assert(obj(-2) == "No such file or directory")
-	assert(obj(-3) == nil)
+	--[[
+		As this is testing platform specific stuff,
+		it cannot be properly tested.
+	]]
 end
 
 -- Test: execresult meta
@@ -3390,15 +3385,10 @@ do
 	assert(obj(-2) == "exit")
 	assert(obj(-3) == true)
 
-	assert(obj:execresult(1) == true)
-	assert(obj(-1) == 1)
-	assert(obj(-2) == "signal")
-	assert(obj(-3) == nil)
-
-	assert(obj:execresult(-1) == true)
-	assert(obj(-1) == 2)
-	assert(obj(-2) == "No such file or directory")
-	assert(obj(-3) == nil)
+	--[[
+		As this is testing platform specific stuff,
+		it cannot be properly tested.
+	]]
 end
 
 -- Test: fileresult
@@ -3412,15 +3402,10 @@ do
 	assert(obj(-2) == "test.lua: No such file or directory")
 	assert(obj(-3) == nil)
 
-	assert(multilua.fileresult(obj, 1, "test.lua"))
-	assert(obj(-1) == true)
-	assert(obj(-2) == 2)
-	assert(obj(-3) == "test.lua: No such file or directory")
-
-	assert(multilua.fileresult(obj, -1, "test.lua"))
-	assert(obj(-1) == true)
-	assert(obj(-2) == true)
-	assert(obj(-3) == 2)
+	--[[
+		As this is testing platform specific stuff,
+		it cannot be properly tested.
+	]]
 end
 
 -- Test: fileresult meta
@@ -3436,15 +3421,10 @@ do
 	assert(obj(-2) == "test.lua: No such file or directory")
 	assert(obj(-3) == nil)
 
-	assert(obj:fileresult(1, "test.lua"))
-	assert(obj(-1) == true)
-	assert(obj(-2) == 2)
-	assert(obj(-3) == "test.lua: No such file or directory")
-
-	assert(obj:fileresult(-1, "test.lua"))
-	assert(obj(-1) == true)
-	assert(obj(-2) == true)
-	assert(obj(-3) == 2)
+	--[[
+		As this is testing platform specific stuff,
+		it cannot be properly tested.
+	]]
 end
 
 -- TODO: Test: getmetafield
