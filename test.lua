@@ -3398,9 +3398,6 @@ do
 	local obj = assert(multilua.new())
 
 	assert(multilua.fileresult(obj, 0, "test.lua"))
-	assert(obj(-1) == 2)
-	assert(obj(-2) == "test.lua: No such file or directory")
-	assert(obj(-3) == nil)
 
 	--[[
 		As this is testing platform specific stuff,
@@ -3417,9 +3414,6 @@ do
 	assert(type(obj.fileresult) == 'function')
 
 	assert(obj:fileresult(0, "test.lua"))
-	assert(obj(-1) == 2)
-	assert(obj(-2) == "test.lua: No such file or directory")
-	assert(obj(-3) == nil)
 
 	--[[
 		As this is testing platform specific stuff,
