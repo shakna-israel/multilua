@@ -175,6 +175,18 @@ static int multilua_manual_close(lua_State* L);
 static int multilua_registryindex(lua_State* L);
 static int multilua_ridx_mainthread(lua_State* L);
 static int multilua_ridx_globals(lua_State* L);
+static int multilua_openbase(lua_State* L);
+static int multilua_openpackage(lua_State* L);
+static int multilua_opencoroutine(lua_State* L);
+static int multilua_opentable(lua_State* L);
+static int multilua_openio(lua_State* L);
+static int multilua_openos(lua_State* L);
+static int multilua_openstring(lua_State* L);
+static int multilua_openmath(lua_State* L);
+static int multilua_openutf8(lua_State* L);
+static int multilua_opendebug(lua_State* L);
+static int multilua_openbit32(lua_State* L);
+static int multilua_bitlib(lua_State* L);
 
 #include <multilua_registry.h>
 

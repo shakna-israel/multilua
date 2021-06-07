@@ -170,6 +170,18 @@ static const struct luaL_Reg multilua [] = {
 	{"registryindex", multilua_registryindex},
 	{"ridx_mainthread", multilua_ridx_mainthread},
 	{"ridx_globals", multilua_ridx_globals},
+	{"openbase", multilua_openbase},
+	{"openpackage", multilua_openpackage},
+	{"opencoroutine", multilua_opencoroutine},
+	{"opentable", multilua_opentable},
+	{"openio", multilua_openio},
+	{"openos", multilua_openos},
+	{"openstring", multilua_openstring},
+	{"openmath", multilua_openmath},
+	{"openutf8", multilua_openutf8},
+	{"opendebug", multilua_opendebug},
+	{"openbit32", multilua_openbit32},
+	{"bitlib", multilua_bitlib},
 	{NULL, NULL},
 };
 

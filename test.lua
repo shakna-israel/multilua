@@ -433,6 +433,116 @@ do
 	
 end
 
+-- TODO: Test: openbase
+do
+	assert(type(multilua.openbase) == 'function')
+end
+
+-- TODO: Test: openbase meta
+do
+	assert(type(multilua.openbase) == 'function')
+end
+
+-- TODO: Test: openpackage
+do
+	assert(type(multilua.openpackage) == 'function')
+end
+
+-- TODO: Test: openpackage meta
+do
+	assert(type(multilua.openpackage) == 'function')
+end
+
+-- TODO: Test: opencoroutine
+do
+	assert(type(multilua.opencoroutine) == 'function')
+end
+
+-- TODO: Test: opencoroutine meta
+do
+	assert(type(multilua.opencoroutine) == 'function')
+end
+
+-- TODO: Test: openio
+do
+	assert(type(multilua.openio) == 'function')
+end
+
+-- TODO: Test: openio meta
+do
+	assert(type(multilua.openio) == 'function')
+end
+
+-- TODO: Test: openos
+do
+	assert(type(multilua.openos) == 'function')
+end
+
+-- TODO: Test: openos meta
+do
+	assert(type(multilua.openos) == 'function')
+end
+
+-- TODO: Test: openstring
+do
+	assert(type(multilua.openstring) == 'function')
+end
+
+-- TODO: Test: openstring meta
+do
+	assert(type(multilua.openstring) == 'function')
+end
+
+-- TODO: Test: openmath
+do
+	assert(type(multilua.openmath) == 'function')
+end
+
+-- TODO: Test: openmath meta
+do
+	assert(type(multilua.openmath) == 'function')
+end
+
+-- TODO: Test: openutf8
+do
+	assert(type(multilua.openutf8) == 'function')
+end
+
+-- TODO: Test: openutf8 meta
+do
+	assert(type(multilua.openutf8) == 'function')
+end
+
+-- TODO: Test: opendebug
+do
+	assert(type(multilua.opendebug) == 'function')
+end
+
+-- TODO: Test: opendebug meta
+do
+	assert(type(multilua.opendebug) == 'function')
+end
+
+-- TODO: Test: bitlib
+do
+	assert(type(multilua.bitlib) == 'function')
+end
+
+-- TODO: Test: bitlib meta
+do
+	assert(type(multilua.bitlib) == 'function')
+end
+
+-- TODO: Test: openbit32
+do
+	assert(type(multilua.openbit32) == 'function')
+end
+
+-- TODO: Test: openbit32 meta
+do
+	assert(type(multilua.openbit32) == 'function')
+end
+
 -- Test openlibs
 do
 	assert(type(multilua.openlibs) == 'function')

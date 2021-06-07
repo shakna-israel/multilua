@@ -81,6 +81,20 @@ Returns:
 
 ---
 
+@comment TODO: multilua.openbase
+@comment TODO: multilua.openpackage
+@comment TODO: multilua.opencoroutine
+@comment TODO: multilua.openio
+@comment TODO: multilua.openos
+@comment TODO: multilua.openstring
+@comment TODO: multilua.openmath
+@comment TODO: multilua.openutf8
+@comment TODO: multilua.opendebug
+@comment TODO: multilua.bitlib
+@comment TODO: multilua.openbit32
+
+---
+
 @funcsection{multilua.absindex}
 
 @deffn Function multilua.absindex <userdata:state> <integer:index> -> integer|nil

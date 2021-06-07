@@ -371,6 +371,11 @@ assert(obj(-1) == 10)
                                  — — —
 
 
+
+
+                                 — — —
+
+
 3.5 multilua.absindex
 =====================
 
@@ -544,19 +549,19 @@ Index
 * chapter, Definitions:                  Definitions.         (line 285)
 * chapter, Introduction:                 Introduction.        (line  24)
 * chapter, Metamethods:                  Metamethods.         (line 160)
-* function, multilua.absindex:           Definitions.         (line 376)
-* function, multilua.arith:              Definitions.         (line 399)
+* function, multilua.absindex:           Definitions.         (line 381)
+* function, multilua.arith:              Definitions.         (line 404)
 * function, multilua.close:              Definitions.         (line 308)
 * function, multilua.dump:               Definitions.         (line 336)
-* function, multilua.fetchable:          Definitions.         (line 520)
+* function, multilua.fetchable:          Definitions.         (line 525)
 * function, multilua.new:                Definitions.         (line 289)
 * function, multilua.openlibs:           Definitions.         (line 358)
 * multilua state:                        Definitions.         (line 300)
-* multilua.absindex:                     Definitions.         (line 376)
-* multilua.arith:                        Definitions.         (line 399)
+* multilua.absindex:                     Definitions.         (line 381)
+* multilua.arith:                        Definitions.         (line 404)
 * multilua.close:                        Definitions.         (line 308)
 * multilua.dump:                         Definitions.         (line 336)
-* multilua.fetchable:                    Definitions.         (line 520)
+* multilua.fetchable:                    Definitions.         (line 525)
 * multilua.new:                          Definitions.         (line 289)
 * multilua.openlibs:                     Definitions.         (line 358)
 

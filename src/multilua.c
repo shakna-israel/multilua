@@ -205,21 +205,6 @@ static int multilua_dumpstack(lua_State* L) {
 	return 1;
 }
 
-// TODO: Manually open individual Lua libraries:
-// luaopen_base
-// luaopen_package
-// luaopen_coroutine
-// luaopen_table
-// luaopen_io
-// luaopen_os
-// luaopen_string
-// luaopen_math
-// luaopen_utf8
-// luaopen_debug
-//#ifdef LUA_COMPAT_BITLIB
-//  luaopen_bit32
-//#endif
-
 static int multilua_openlibs(lua_State* L) {
 	lua_checkstack(L, lua_gettop(L) + 2);
 
@@ -5675,6 +5660,246 @@ static int multilua_mininteger(lua_State* L) {
 	lua_pushinteger(L, LUA_MININTEGER);
 	return 1;
 }
+
+static int multilua_openbase(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_base);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openpackage(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_package);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_opencoroutine(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_coroutine);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_opentable(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_table);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openio(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_io);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openos(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_os);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openstring(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_string);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openmath(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_math);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openutf8(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_utf8);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_opendebug(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		lua_pushcfunction(current_state, luaopen_debug);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_openbit32(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		#ifdef LUA_COMPAT_BITLIB
+		lua_pushcfunction(current_state, luaopen_bit32);
+		#else
+		lua_pushnil(current_state);
+		#endif
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_bitlib(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	#ifdef LUA_COMPAT_BITLIB
+	lua_pushboolean(L, true);
+	#else
+	lua_pushboolean(L, false);
+	#endif
+	
+	return 1;
+}
+
+// TODO: Stuff from lua.h that may be helpful:
+// TODO: LUA_VERSION_MAJOR
+// TODO: LUA_VERSION_MINOR
+// TODO: LUA_VERSION_RELEASE
+// TODO: LUA_VERSION
+// TODO: LUA_RELEASE
+// TODO: LUA_COPYRIGHT
+// TODO: LUA_AUTHORS
+// TODO: LUA_SIGNATURE
+// TODO: LUA_MULTRET
+// TODO: lua_upvalueindex
+// TODO: LUA_MINSTACK
+// TODO: LUA_RIDX_LAST
+// TODO: LUA_USER_H
+// TODO: LUA_HOOKCALL
+// TODO: LUA_HOOKRET
+// TODO: LUA_HOOKLINE
+// TODO: LUA_HOOKCOUNT
+// TODO: LUA_HOOKTAILCALL
+// TODO: LUA_MASKCALL
+// TODO: LUA_MASKRET
+// TODO: LUA_MASKLINE
+// TODO: LUA_MASKCOUNT
+
+// TODO: if LUA_COMPAT_APIINTCASTS defined:
+// TODO: lua_pushunsigned(L,n)
+// TODO: lua_tounsignedx(L,i,is)
+// TODO: lua_tounsigned(L,i)
+
+// TODO: Harder than usual to wrap:
+// TODO: struct lua_Debug -> table
+// TODO: struct lua_Debug <- table
+// TODO: lua_getlocal
+// TODO: lua_setlocal
+// TODO: lua_getstack
+// TODO: lua_getinfo
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	luaL_newlib(L, multilua);
