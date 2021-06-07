@@ -167,6 +167,9 @@ static const struct luaL_Reg multilua [] = {
 	{"fetchable", multilua_fetchable},
 	{"maxinteger", multilua_maxinteger},
 	{"mininteger", multilua_mininteger},
+	{"registryindex", multilua_registryindex},
+	{"ridx_mainthread", multilua_ridx_mainthread},
+	{"ridx_globals", multilua_ridx_globals},
 	{NULL, NULL},
 };
 

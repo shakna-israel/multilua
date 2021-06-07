@@ -172,6 +172,9 @@ static int multilua_fetchable(lua_State* L);
 static int multilua_maxinteger(lua_State* L);
 static int multilua_mininteger(lua_State* L);
 static int multilua_manual_close(lua_State* L);
+static int multilua_registryindex(lua_State* L);
+static int multilua_ridx_mainthread(lua_State* L);
+static int multilua_ridx_globals(lua_State* L);
 
 #include <multilua_registry.h>
 

@@ -3587,14 +3587,98 @@ do
 	assert(type(multilua.optnumber) == 'function')
 end
 
--- TODO: Test: ref
+-- Test: registryindex
 do
-	assert(type(multilua.ref) == 'function')
+	assert(type(multilua.registryindex) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(multilua.registryindex(obj)) == 'number')
 end
 
--- TODO: Test: ref meta
+-- Test: registryindex meta
+do
+	assert(type(multilua.registryindex) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.registryindex) == 'function')
+
+	assert(type(obj:registryindex()) == 'number')
+end
+
+-- TODO: Test: ridx_mainthread
+do
+	assert(type(multilua.ridx_mainthread) == 'function')
+end
+
+-- TODO: Test: ridx_mainthread meta
+do
+	assert(type(multilua.ridx_mainthread) == 'function')
+end
+
+-- TODO: Test: ridx_globals
+do
+	assert(type(multilua.ridx_globals) == 'function')
+end
+
+-- TODO: Test: ridx_globals meta
+do
+	assert(type(multilua.ridx_globals) == 'function')
+end
+
+-- Test: ref
 do
 	assert(type(multilua.ref) == 'function')
+
+	local obj = assert(multilua.new())
+	local ref = nil
+	local prevref = nil
+
+	assert(multilua.pushinteger(obj, 12))
+	ref = multilua.ref(obj, multilua.registryindex(obj))
+	assert(type(ref) == 'number')
+	assert(ref ~= multilua.noref())
+	prevref = ref
+
+	assert(multilua.pushinteger(obj, 12))
+	ref = multilua.ref(obj, multilua.registryindex(obj))
+	assert(type(ref) == 'number')
+	assert(ref ~= multilua.noref())
+	assert(prevref < ref)
+
+	assert(multilua.pushnil(obj))
+	ref = multilua.ref(obj, multilua.registryindex(obj))
+	assert(ref == multilua.refnil())
+	assert(ref ~= multilua.noref())
+end
+
+-- Test: ref meta
+do
+	assert(type(multilua.ref) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.ref) == 'function')
+
+	local ref = nil
+	local prevref = nil
+
+	assert(obj:pushinteger(12))
+	ref = obj:ref(obj:registryindex())
+	assert(type(ref) == 'number')
+	assert(ref ~= multilua.noref())
+	prevref = ref
+
+	assert(obj:pushinteger(12))
+	ref = obj:ref(obj:registryindex())
+	assert(type(ref) == 'number')
+	assert(ref ~= multilua.noref())
+	assert(prevref < ref)
+
+	assert(obj:pushnil())
+	ref = obj:ref(obj:registryindex())
+	assert(ref == obj:refnil())
+	assert(ref ~= obj:noref())
 end
 
 -- Test: refnil

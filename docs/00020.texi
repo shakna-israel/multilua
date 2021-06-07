@@ -362,11 +362,14 @@ If the @code{operator} is:
 @comment TODO: multilua.ref
 @comment TODO: multilua.refnil
 @comment TODO: multilua.noref
+@comment TODO: multilua.unref
+@comment TODO: multilua.registryindex
+@comment TODO: multilua.ridx_mainthread
+@comment TODO: multilua.ridx_globals
 @comment TODO: multilua.lsetmetatable
 @comment TODO: multilua.testudata
 @comment TODO: multilua.ltostring
 @comment TODO: multilua.traceback
-@comment TODO: multilua.unref
 @comment TODO: multilua.where
 @comment TODO: multilua.resume
 @comment TODO: multilua.rawgetp

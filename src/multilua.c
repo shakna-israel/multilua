@@ -4343,6 +4343,24 @@ static int multilua_noref(lua_State* L) {
 	return 1;
 }
 
+static int multilua_registryindex(lua_State* L) {
+	lua_checkstack(L, lua_gettop(L) + 2);
+	lua_pushinteger(L, LUA_REGISTRYINDEX);
+	return 1;
+}
+
+static int multilua_ridx_mainthread(lua_State* L) {
+	lua_checkstack(L, lua_gettop(L) + 2);
+	lua_pushinteger(L, LUA_RIDX_MAINTHREAD);
+	return 1;
+}
+
+static int multilua_ridx_globals(lua_State* L) {
+	lua_checkstack(L, lua_gettop(L) + 2);
+	lua_pushinteger(L, LUA_RIDX_GLOBALS);
+	return 1;
+}
+
 static int multilua_lsetmetatable(lua_State* L) {
 	// 1 - multilua state
 	// 2 - table_name
