@@ -380,6 +380,7 @@ If the @code{operator} is:
 @comment TODO: multilua.registryindex
 @comment TODO: multilua.ridx_mainthread
 @comment TODO: multilua.ridx_globals
+@comment TODO: multilua.ridx_last
 @comment TODO: multilua.lsetmetatable
 @comment TODO: multilua.testudata
 @comment TODO: multilua.ltostring
@@ -417,6 +418,17 @@ If the @code{operator} is:
 @comment TODO: multilua.gethook
 @comment TODO: multilua.sethook
 @comment TODO: multilua.checkoption
+@comment TODO: multilua.version_major
+@comment TODO: multilua.version_minor
+@comment TODO: multilua.version_release
+@comment TODO: multilua.version_string
+@comment TODO: multilua.release_string
+@comment TODO: multilua.luacopyright
+@comment TODO: multilua.luaauthors
+@comment TODO: multilua.signature
+@comment TODO: multilua.multret
+@comment TODO: multilua.minstack
+@comment TODO: multilua.user_header
 
 @funcsection{multilua.fetchable}
 

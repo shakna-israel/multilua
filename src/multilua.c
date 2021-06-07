@@ -5864,20 +5864,97 @@ static int multilua_bitlib(lua_State* L) {
 	return 1;
 }
 
+static int multilua_version_major(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_VERSION_MAJOR);
+	return 1;
+}
+
+static int multilua_version_minor(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_VERSION_MINOR);
+	return 1;
+}
+
+static int multilua_version_release(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_VERSION_RELEASE);
+	return 1;
+}
+
+static int multilua_lua_version_string(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_VERSION);
+	return 1;
+}
+
+static int multilua_release_string(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_RELEASE);
+	return 1;
+}
+
+static int multilua_luacopyright(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_COPYRIGHT);
+	return 1;
+}
+
+static int multilua_luaauthors(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_AUTHORS);
+	return 1;
+}
+
+static int multilua_signature(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushstring(L, LUA_SIGNATURE);
+	return 1;
+}
+
+static int multilua_multret(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MULTRET);
+	return 1;
+}
+
+static int multilua_minstack(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MINSTACK);
+	return 1;
+}
+
+static int multilua_ridx_last(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_RIDX_LAST);
+	return 1;
+}
+
+static int multilua_user_header(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	#ifdef LUA_USER_H
+	lua_pushstring(L, LUA_USER_H);
+	#else
+	lua_pushnil(L);
+	#endif
+
+	return 1;
+}
+
 // TODO: Stuff from lua.h that may be helpful:
-// TODO: LUA_VERSION_MAJOR
-// TODO: LUA_VERSION_MINOR
-// TODO: LUA_VERSION_RELEASE
-// TODO: LUA_VERSION
-// TODO: LUA_RELEASE
-// TODO: LUA_COPYRIGHT
-// TODO: LUA_AUTHORS
-// TODO: LUA_SIGNATURE
-// TODO: LUA_MULTRET
 // TODO: lua_upvalueindex
-// TODO: LUA_MINSTACK
-// TODO: LUA_RIDX_LAST
-// TODO: LUA_USER_H
 // TODO: LUA_HOOKCALL
 // TODO: LUA_HOOKRET
 // TODO: LUA_HOOKLINE

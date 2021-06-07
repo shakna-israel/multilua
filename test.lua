@@ -4207,3 +4207,123 @@ do
 	assert(type(multilua.maxinteger()) == 'number')
 	assert(type(multilua.mininteger()) == 'number')
 end
+
+-- TODO: Test: version_major
+do
+	assert(type(multilua.version_major) == 'function')
+end
+
+-- TODO: Test: version_major meta
+do
+	assert(type(multilua.version_major) == 'function')
+end
+
+-- TODO: Test: version_minor
+do
+	assert(type(multilua.version_minor) == 'function')
+end
+
+-- TODO: Test: version_minor meta
+do
+	assert(type(multilua.version_minor) == 'function')
+end
+
+-- TODO: Test: version_release
+do
+	assert(type(multilua.version_release) == 'function')
+end
+
+-- TODO: Test: version_release meta
+do
+	assert(type(multilua.version_release) == 'function')
+end
+
+-- TODO: Test: version_string
+do
+	assert(type(multilua.version_string) == 'function')
+end
+
+-- TODO: Test: version_string meta
+do
+	assert(type(multilua.version_string) == 'function')
+end
+
+-- TODO: Test: release_string
+do
+	assert(type(multilua.release_string) == 'function')
+end
+
+-- TODO: Test: release_string meta
+do
+	assert(type(multilua.release_string) == 'function')
+end
+
+-- TODO: Test: luacopyright
+do
+	assert(type(multilua.luacopyright) == 'function')
+end
+
+-- TODO: Test: luacopyright meta
+do
+	assert(type(multilua.luacopyright) == 'function')
+end
+
+-- TODO: Test: luaauthors
+do
+	assert(type(multilua.luaauthors) == 'function')
+end
+
+-- TODO: Test: luaauthors meta
+do
+	assert(type(multilua.luaauthors) == 'function')
+end
+
+-- TODO: Test: signature
+do
+	assert(type(multilua.signature) == 'function')
+end
+
+-- TODO: Test: signature meta
+do
+	assert(type(multilua.signature) == 'function')
+end
+
+-- TODO: Test: multret
+do
+	assert(type(multilua.multret) == 'function')
+end
+
+-- TODO: Test: multret meta
+do
+	assert(type(multilua.multret) == 'function')
+end
+
+-- TODO: Test: minstack
+do
+	assert(type(multilua.minstack) == 'function')
+end
+
+-- TODO: Test: minstack meta
+do
+	assert(type(multilua.minstack) == 'function')
+end
+
+-- TODO: Test: ridx_last
+do
+	assert(type(multilua.ridx_last) == 'function')
+end
+
+-- TODO: Test: ridx_last meta
+do
+	assert(type(multilua.ridx_last) == 'function')
+end
+
+-- TODO: Test: user_header
+do
+	assert(type(multilua.user_header) == 'function')
+end
+
+-- TODO: Test: user_header meta
+do
+	assert(type(multilua.user_header) == 'function')
+end

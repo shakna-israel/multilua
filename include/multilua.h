@@ -187,6 +187,18 @@ static int multilua_openutf8(lua_State* L);
 static int multilua_opendebug(lua_State* L);
 static int multilua_openbit32(lua_State* L);
 static int multilua_bitlib(lua_State* L);
+static int multilua_version_major(lua_State* L);
+static int multilua_version_minor(lua_State* L);
+static int multilua_version_release(lua_State* L);
+static int multilua_lua_version_string(lua_State* L);
+static int multilua_release_string(lua_State* L);
+static int multilua_luacopyright(lua_State* L);
+static int multilua_luaauthors(lua_State* L);
+static int multilua_signature(lua_State* L);
+static int multilua_multret(lua_State* L);
+static int multilua_minstack(lua_State* L);
+static int multilua_ridx_last(lua_State* L);
+static int multilua_user_header(lua_State* L);
 
 #include <multilua_registry.h>
 
