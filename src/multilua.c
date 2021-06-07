@@ -1922,10 +1922,15 @@ static int multilua_pcall(lua_State* L) {
 	}
 
 	int nresults_bool = false;
-	int nresults = lua_tointegerx(L, 3, &nresults_bool);
-	if(!nresults_bool) {
-		lua_pushnil(L);
-		return 1;
+	int nresults;
+
+	if(lua_isnoneornil(L, 3)) {
+		nresults = LUA_MULTRET;
+	} else {
+		nresults = lua_tointegerx(L, 3, &nresults_bool);
+		if(!nresults_bool) {
+			nresults = LUA_MULTRET;
+		}
 	}
 
 	int bool_msgh = false;
