@@ -208,6 +208,8 @@ static const struct luaL_Reg multilua [] = {
 	{"pushunsigned", multilua_pushunsigned},
 	{"tounsignedx", multilua_tounsignedx},
 	{"tounsigned", multilua_tounsigned},
+	{"getlocal", multilua_getlocal},
+	{"setlocal", multilua_setlocal},
 	{NULL, NULL},
 };
 

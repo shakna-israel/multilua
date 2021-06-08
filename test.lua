@@ -4467,3 +4467,23 @@ end
 do
 	assert(type(multilua.tounsigned) == 'function')
 end
+
+-- TODO: Test: getlocal
+do
+	assert(type(multilua.getlocal) == 'function')
+end
+
+-- TODO: Test: getlocal meta
+do
+	assert(type(multilua.getlocal) == 'function')
+end
+
+-- TODO: Test: setlocal
+do
+	assert(type(multilua.setlocal) == 'function')
+end
+
+-- TODO: Test: setlocal meta
+do
+	assert(type(multilua.setlocal) == 'function')
+end

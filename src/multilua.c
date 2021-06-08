@@ -6138,15 +6138,105 @@ static int multilua_tounsigned(lua_State* L) {
 	return 1;
 }
 
-// TODO: Stuff from lua.h that may be helpful:
+static int multilua_getlocal(lua_State* L) {
+	// 1 - multilua state
+	// 3 - n
 
-// TODO: Harder than usual to wrap:
-// TODO: struct lua_Debug -> table
-// TODO: struct lua_Debug <- table
-// TODO: lua_getlocal
-// TODO: lua_setlocal
-// TODO: lua_getstack
-// TODO: lua_getinfo
+	int bool_n = false;
+	int n = lua_tointegerx(L, 3, &bool_n);
+	if(!bool_n) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int t = lua_type(L, 2);
+	if(t == LUA_TFUNCTION) {
+		lua_getfield(L, 1, "self");
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* current_state = lua_touserdata(L, -1);
+
+			int t = lua_type(current_state, -1);
+			if(t == LUA_TFUNCTION) {
+				const char* result = lua_getlocal(current_state, NULL, n);
+				if(!result) {
+					lua_pushstring(L, result);
+					return 1;
+				} else {
+					lua_pushnil(L);
+					return 1;
+				}	
+			} else {
+				lua_Debug ar;
+				lua_getstack(current_state, 1, &ar);
+
+				const char* result = lua_getlocal(current_state, &ar, n);
+				if(!result) {
+					lua_pushstring(L, result);
+					return 1;
+				} else {
+					lua_pushnil(L);
+					return 1;
+				}
+			}
+
+			
+		}
+
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_setlocal(lua_State* L) {
+	// 1 - multilua state
+	// 3 - n
+
+	int bool_n = false;
+	int n = lua_tointegerx(L, 3, &bool_n);
+	if(!bool_n) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int t = lua_type(L, 2);
+	if(t == LUA_TFUNCTION) {
+		lua_getfield(L, 1, "self");
+		if(lua_islightuserdata(L, -1)) {
+			lua_State* current_state = lua_touserdata(L, -1);
+
+			int t = lua_type(current_state, -1);
+			if(t == LUA_TFUNCTION) {
+				const char* result = lua_setlocal(current_state, NULL, n);
+				if(!result) {
+					lua_pushstring(L, result);
+					return 1;
+				} else {
+					lua_pushnil(L);
+					return 1;
+				}	
+			} else {
+				lua_Debug ar;
+				lua_getstack(current_state, 1, &ar);
+
+				const char* result = lua_setlocal(current_state, &ar, n);
+				if(!result) {
+					lua_pushstring(L, result);
+					return 1;
+				} else {
+					lua_pushnil(L);
+					return 1;
+				}
+			}
+
+			
+		}
+
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
 
 // TODO: Should we expose sizeof values for all the Lua types?
 
