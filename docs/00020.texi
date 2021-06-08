@@ -429,6 +429,20 @@ If the @code{operator} is:
 @comment TODO: multilua.multret
 @comment TODO: multilua.minstack
 @comment TODO: multilua.user_header
+@comment TODO: multilua.upvalueindex
+@comment TODO: multilua.hookcall
+@comment TODO: multilua.hookreturn
+@comment TODO: multilua.hookline
+@comment TODO: multilua.hookcount
+@comment TODO: multilua.hooktailcall
+@comment TODO: multilua.maskcall
+@comment TODO: multilua.maskreturn
+@comment TODO: multilua.maskline
+@comment TODO: multilua.maskcount
+@comment TODO: multilua.pushunsigned
+@comment TODO: multilua.pushuinteger
+@comment TODO: multilua.tounsignedx
+@comment TODO: multilua.tounsigned
 
 @funcsection{multilua.fetchable}
 

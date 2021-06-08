@@ -199,6 +199,19 @@ static int multilua_multret(lua_State* L);
 static int multilua_minstack(lua_State* L);
 static int multilua_ridx_last(lua_State* L);
 static int multilua_user_header(lua_State* L);
+static int multilua_upvalueindex(lua_State* L);
+static int multilua_hookcall(lua_State* L);
+static int multilua_hookreturn(lua_State* L);
+static int multilua_hookline(lua_State* L);
+static int multilua_hookcount(lua_State* L);
+static int multilua_hooktailcall(lua_State* L);
+static int multilua_maskcall(lua_State* L);
+static int multilua_maskreturn(lua_State* L);
+static int multilua_maskline(lua_State* L);
+static int multilua_maskcount(lua_State* L);
+static int multilua_pushunsigned(lua_State* L);
+static int multilua_tounsignedx(lua_State* L);
+static int multilua_tounsigned(lua_State* L);
 
 #include <multilua_registry.h>
 

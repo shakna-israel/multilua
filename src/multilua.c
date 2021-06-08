@@ -5953,22 +5953,192 @@ static int multilua_user_header(lua_State* L) {
 	return 1;
 }
 
-// TODO: Stuff from lua.h that may be helpful:
-// TODO: lua_upvalueindex
-// TODO: LUA_HOOKCALL
-// TODO: LUA_HOOKRET
-// TODO: LUA_HOOKLINE
-// TODO: LUA_HOOKCOUNT
-// TODO: LUA_HOOKTAILCALL
-// TODO: LUA_MASKCALL
-// TODO: LUA_MASKRET
-// TODO: LUA_MASKLINE
-// TODO: LUA_MASKCOUNT
+static int multilua_upvalueindex(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
 
-// TODO: if LUA_COMPAT_APIINTCASTS defined:
-// TODO: lua_pushunsigned(L,n)
-// TODO: lua_tounsignedx(L,i,is)
-// TODO: lua_tounsigned(L,i)
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 3);
+
+		size_t r = lua_upvalueindex(index);
+		lua_pushinteger(current_state, r);
+
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_hookcall(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_HOOKCALL);
+	return 1;
+}
+
+static int multilua_hookreturn(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_HOOKRET);
+	return 1;
+}
+
+static int multilua_hookline(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_HOOKLINE);
+	return 1;
+}
+
+static int multilua_hookcount(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_HOOKCOUNT);
+	return 1;
+}
+
+static int multilua_hooktailcall(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_HOOKTAILCALL);
+	return 1;
+}
+
+static int multilua_maskcall(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MASKCALL);
+	return 1;
+}
+
+static int multilua_maskreturn(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MASKRET);
+	return 1;
+}
+
+static int multilua_maskline(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MASKLINE);
+	return 1;
+}
+
+static int multilua_maskcount(lua_State* L) {
+	lua_checkstack(L, 3);
+
+	lua_pushinteger(L, LUA_MASKCOUNT);
+	return 1;
+}
+
+// Lua 5.2 API compat...
+#ifndef LUA_COMPAT_APIINTCASTS
+#define lua_pushunsigned(L,n)   lua_pushinteger(L, (lua_Integer)(n))
+#define lua_tounsignedx(L,i,is) ((lua_Unsigned)lua_tointegerx(L,i,is))
+#define lua_tounsigned(L,i)     lua_tounsignedx(L,(i),NULL)
+#endif
+
+static int multilua_pushunsigned(lua_State* L) {
+	// 1 - multilua state
+	// 2 - integer
+
+	lua_checkstack(L, lua_gettop(L) + 2);
+
+	int n_bool = false;
+	lua_Integer n = lua_tointegerx(L, 2, &n_bool);
+	if(!n_bool) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 5);
+
+		lua_pushunsigned(current_state, n);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_tounsignedx(lua_State* L) {
+	// 1 - multilua state
+	// 2 - integer
+
+	lua_checkstack(L, lua_gettop(L) + 2);
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 5);
+
+		int success = false;
+		lua_Integer r = lua_tounsignedx(current_state, index, &success);
+
+		if(!success) {
+			lua_pushnil(L);
+			return 1;
+		} else {
+			lua_pushinteger(L, r);
+			return 1;
+		}
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+static int multilua_tounsigned(lua_State* L) {
+	// 1 - multilua state
+	// 2 - index
+	lua_checkstack(L, lua_gettop(L) + 2);
+
+	int bool_index = false;
+	int index = lua_tointegerx(L, 2, &bool_index);
+	if(!bool_index) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_getfield(L, 1, "self");
+	if(lua_islightuserdata(L, -1)) {
+		lua_State* current_state = lua_touserdata(L, -1);
+		lua_checkstack(current_state, 5);
+
+		lua_Integer r = lua_tounsigned(current_state, index);
+		lua_pushinteger(L, r);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+// TODO: Stuff from lua.h that may be helpful:
 
 // TODO: Harder than usual to wrap:
 // TODO: struct lua_Debug -> table
@@ -5977,6 +6147,8 @@ static int multilua_user_header(lua_State* L) {
 // TODO: lua_setlocal
 // TODO: lua_getstack
 // TODO: lua_getinfo
+
+// TODO: Should we expose sizeof values for all the Lua types?
 
 LUAMOD_API int luaopen_multilua(lua_State* L) {
 	luaL_newlib(L, multilua);

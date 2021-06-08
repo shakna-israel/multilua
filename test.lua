@@ -4327,3 +4327,143 @@ end
 do
 	assert(type(multilua.user_header) == 'function')
 end
+
+-- TODO: Test: upvalueindex
+do
+	assert(type(multilua.upvalueindex) == 'function')
+end
+
+-- TODO: Test: upvalueindex meta
+do
+	assert(type(multilua.upvalueindex) == 'function')
+end
+
+-- TODO: Test: hookcall
+do
+	assert(type(multilua.hookcall) == 'function')
+end
+
+-- TODO: Test: hookcall meta
+do
+	assert(type(multilua.hookcall) == 'function')
+end
+
+-- TODO: Test: hookreturn
+do
+	assert(type(multilua.hookreturn) == 'function')
+end
+
+-- TODO: Test: hookreturn meta
+do
+	assert(type(multilua.hookreturn) == 'function')
+end
+
+-- TODO: Test: hookline
+do
+	assert(type(multilua.hookline) == 'function')
+end
+
+-- TODO: Test: hookline meta
+do
+	assert(type(multilua.hookline) == 'function')
+end
+
+-- TODO: Test: hookcount
+do
+	assert(type(multilua.hookcount) == 'function')
+end
+
+-- TODO: Test: hookcount meta
+do
+	assert(type(multilua.hookcount) == 'function')
+end
+
+-- TODO: Test: hooktailcall
+do
+	assert(type(multilua.hooktailcall) == 'function')
+end
+
+-- TODO: Test: hooktailcall meta
+do
+	assert(type(multilua.hooktailcall) == 'function')
+end
+
+-- TODO: Test: maskcall
+do
+	assert(type(multilua.maskcall) == 'function')
+end
+
+-- TODO: Test: maskcall meta
+do
+	assert(type(multilua.maskcall) == 'function')
+end
+
+-- TODO: Test: maskreturn
+do
+	assert(type(multilua.maskreturn) == 'function')
+end
+
+-- TODO: Test: maskreturn meta
+do
+	assert(type(multilua.maskreturn) == 'function')
+end
+
+-- TODO: Test: maskline
+do
+	assert(type(multilua.maskline) == 'function')
+end
+
+-- TODO: Test: maskline meta
+do
+	assert(type(multilua.maskline) == 'function')
+end
+
+-- TODO: Test: maskcount
+do
+	assert(type(multilua.maskcount) == 'function')
+end
+
+-- TODO: Test: maskcount meta
+do
+	assert(type(multilua.maskcount) == 'function')
+end
+
+-- TODO: Test: pushunsigned
+do
+	assert(type(multilua.pushunsigned) == 'function')
+end
+
+-- TODO: Test: pushunsigned meta
+do
+	assert(type(multilua.pushunsigned) == 'function')
+end
+
+-- TODO: Test: pushuinteger
+do
+	assert(type(multilua.pushuinteger) == 'function')
+end
+
+-- TODO: Test: pushuinteger meta
+do
+	assert(type(multilua.pushuinteger) == 'function')
+end
+
+-- TODO: Test: tounsignedx
+do
+	assert(type(multilua.tounsignedx) == 'function')
+end
+
+-- TODO: Test: tounsignedx meta
+do
+	assert(type(multilua.tounsignedx) == 'function')
+end
+
+-- TODO: Test: tounsigned
+do
+	assert(type(multilua.tounsigned) == 'function')
+end
+
+-- TODO: Test: tounsigned meta
+do
+	assert(type(multilua.tounsigned) == 'function')
+end
