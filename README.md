@@ -47,6 +47,8 @@ It doesn't quite obey all the conventions of the C-API, because it isn't sensibl
 
 The documentation is currently under significant development and _incomplete_.
 
+As of writing, there are around 210 functions in the library.
+
 You can find a rendered form at [`book.txt`](https://git.sr.ht/~shakna/multilua/blob/master/book.txt).
 
 You can also generate pdf, epub, and html forms using [`bookwriter`](https://git.sr.ht/~shakna/bookwriter).

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
 #define LUA_TYPE_HERE(_L) lua_typename(_L, lua_type(_L, -1))
 
 void util_installfuncs(lua_State* L) {
@@ -145,8 +146,6 @@ static int multilua_new(lua_State* L) {
 	lua_pushcfunction(L, multilua_metameth_call);
 	lua_rawset(L, -3);
 
-	// TODO: __eq
-
 	// Create the self object...
 	lua_State* new_state = luaL_newstate();
 
@@ -232,8 +231,6 @@ static int multilua_metameth_call(lua_State* L) {
 	// 1 - multilua state
 	// 2 - index
 	lua_checkstack(L, lua_gettop(L) + 3);
-
-	// TODO: If index is a string, should we try and getglobal it?
 
 	int bool_key = false;
 	lua_Integer key = lua_tointegerx(L, 2, &bool_key);
