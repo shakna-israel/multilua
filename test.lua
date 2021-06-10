@@ -433,114 +433,247 @@ do
 	
 end
 
--- TODO: Test: openbase
+-- Test: openbase
 do
 	assert(type(multilua.openbase) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openbase(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openbase meta
+-- Test: openbase meta
 do
 	assert(type(multilua.openbase) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openbase) == 'function')
+
+	assert(obj:openbase())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openpackage
+-- Test: openpackage
 do
 	assert(type(multilua.openpackage) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openpackage(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openpackage meta
+-- Test: openpackage meta
 do
 	assert(type(multilua.openpackage) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openpackage) == 'function')
+
+	assert(obj:openpackage())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: opencoroutine
+-- Test: opencoroutine
 do
 	assert(type(multilua.opencoroutine) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.opencoroutine(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: opencoroutine meta
+-- Test: opencoroutine meta
 do
 	assert(type(multilua.opencoroutine) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.opencoroutine) == 'function')
+
+	assert(obj:opencoroutine())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openio
+-- Test: openio
 do
 	assert(type(multilua.openio) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openio(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openio meta
+-- Test: openio meta
 do
 	assert(type(multilua.openio) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openio) == 'function')
+
+	assert(obj:openio())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openos
+-- Test: openos
 do
 	assert(type(multilua.openos) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openos(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openos meta
+-- Test: openos meta
 do
 	assert(type(multilua.openos) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openos) == 'function')
+
+	assert(obj:openos())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openstring
+-- Test: openstring
 do
 	assert(type(multilua.openstring) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openstring(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openstring meta
+-- Test: openstring meta
 do
 	assert(type(multilua.openstring) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openstring) == 'function')
+
+	assert(obj:openstring())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openmath
+-- Test: openmath
 do
 	assert(type(multilua.openmath) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openmath(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openmath meta
+-- Test: openmath meta
 do
 	assert(type(multilua.openmath) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openmath) == 'function')
+
+	assert(obj:openmath())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openutf8
+-- Test: openutf8
 do
 	assert(type(multilua.openutf8) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.openutf8(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: openutf8 meta
+-- Test: openutf8 meta
 do
 	assert(type(multilua.openutf8) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openutf8) == 'function')
+
+	assert(obj:openutf8())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: opendebug
+-- Test: opendebug
 do
 	assert(type(multilua.opendebug) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.opendebug(obj))
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: opendebug meta
+-- Test: opendebug meta
 do
 	assert(type(multilua.opendebug) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.opendebug) == 'function')
+
+	assert(obj:opendebug())
+	assert(obj[-1] == 'function')
 end
 
--- TODO: Test: bitlib
+-- Test: bitlib
 do
 	assert(type(multilua.bitlib) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.bitlib(obj)) == 'boolean')
 end
 
--- TODO: Test: bitlib meta
+-- Test: bitlib meta
 do
 	assert(type(multilua.bitlib) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.bitlib) == 'function')
+
+	assert(type(obj:bitlib()) == 'boolean')
 end
 
--- TODO: Test: openbit32
+-- Test: openbit32
 do
 	assert(type(multilua.openbit32) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.openbit32(obj))
+
+	-- bit32 is conditional:
+	if multilua.bitlib(obj) then
+		assert(obj[-1] == 'function')
+	else
+		assert(obj[-1] == 'nil')
+	end
 end
 
--- TODO: Test: openbit32 meta
+-- Test: openbit32 meta
 do
 	assert(type(multilua.openbit32) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.openbit32) == 'function')
+
+	assert(obj:openbit32())
+
+	-- bit32 is conditional:
+	if multilua.bitlib(obj) then
+		assert(obj[-1] == 'function')
+	else
+		assert(obj[-1] == 'nil')
+	end
 end
 
 -- Test openlibs
@@ -1787,14 +1920,94 @@ do
 	
 end
 
--- TODO: Test: next
+-- Test: next
 do
 	assert(type(multilua.next) == 'function')
+
+	local obj = assert(multilua.new())
+
+	-- Empty table
+	multilua.newtable(obj)
+	multilua.pushnil(obj)
+	assert(multilua.next(obj, -2) == 0)
+	assert(obj[-1] == 'table')
+	assert(obj[-2] == 'nil')
+	assert(obj[-3] == 'boolean')
+
+	-- array
+	multilua.dostring(obj, "return {'a', 'b', 'c'}")
+	multilua.pushnil(obj)
+	assert(multilua.next(obj, -2) == 1)
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'table')
+
+	-- table
+	multilua.dostring(obj, "return {hello = function() end}")
+	multilua.pushnil(obj)
+	assert(multilua.next(obj, -2) == 1)
+	assert(obj[-1] == 'function')
+	assert(obj[-2] == 'string')
+	assert(obj[-3] == 'table')
+
+	-- Demonstration
+	multilua.dostring(obj, "return {hello = function() end}")
+	multilua.pushnil(obj)
+	while multilua.next(obj, -2) ~= 0 do
+		-- The value is now at -1
+		assert(obj[-1] == 'function')
+		-- The key is now at -2
+		assert(obj(-2) == 'hello')
+
+		-- Remove the value, keep the key, so iteration continues.
+		multilua.pop(obj, 1)
+	end
 end
 
 -- TODO: Test: next meta
 do
 	assert(type(multilua.next) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.next) == 'function')
+
+	-- Empty table
+	obj:newtable()
+	obj:pushnil()
+	assert(obj:next(-2) == 0)
+	assert(obj[-1] == 'table')
+	assert(obj[-2] == 'nil')
+	assert(obj[-3] == 'boolean')
+
+	-- array
+	obj:dostring("return {'a', 'b', 'c'}")
+	obj:pushnil()
+	assert(obj:next(-2) == 1)
+	assert(obj[-1] == 'string')
+	assert(obj[-2] == 'number')
+	assert(obj[-3] == 'table')
+
+	-- table
+	obj:dostring("return {hello = function() end}")
+	obj:pushnil()
+	assert(obj:next(-2) == 1)
+	assert(obj[-1] == 'function')
+	assert(obj[-2] == 'string')
+	assert(obj[-3] == 'table')
+
+	-- Demonstration
+	obj:dostring("return {hello = function() end}")
+	obj:pushnil()
+	while obj:next(-2) ~= 0 do
+		-- The value is now at -1
+		assert(obj[-1] == 'function')
+		-- The key is now at -2
+		assert(obj(-2) == 'hello')
+
+		-- Remove the value, keep the key, so iteration continues.
+		obj:pop(1)
+	end
 end
 
 -- Test: pcall
