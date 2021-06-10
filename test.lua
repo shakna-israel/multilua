@@ -2834,14 +2834,42 @@ do
 	assert(obj(-1) == 'metatable')
 end
 
--- TODO: Test: settable
+-- Test: settable
 do
 	assert(type(multilua.settable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	-- Assign to the table:
+	assert(multilua.newtable(obj))
+	assert(multilua.pushstring(obj, "key"))
+	assert(multilua.pushstring(obj, "value"))
+	assert(multilua.settable(obj, -3))
+
+	-- Test it worked:
+	assert(multilua.pushstring(obj, "key"))
+	assert(multilua.gettable(obj, -2))
+	assert(obj(-1) == 'value')
 end
 
--- TODO: Test: settable meta
+-- Test: settable meta
 do
 	assert(type(multilua.settable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.settable) == 'function')
+
+	-- Assign to the table:
+	assert(obj:newtable())
+	assert(obj:pushstring("key"))
+	assert(obj:pushstring("value"))
+	assert(obj:settable(-3))
+
+	-- Test it worked:
+	assert(obj:pushstring("key"))
+	assert(obj:gettable(-2))
+	assert(obj(-1) == 'value')
 end
 
 -- Test: settop
@@ -3182,14 +3210,28 @@ do
 	assert(obj:tofloatx(-1) == nil)
 end
 
--- TODO: Test: topointer
+-- Test: topointer
 do
 	assert(type(multilua.topointer) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newtable(obj))
+	assert(multilua.topointer(obj, -1))
+	assert(type(multilua.topointer(obj, -1)) == 'userdata')
 end
 
--- TODO: Test: topointer meta
+-- Test: topointer meta
 do
 	assert(type(multilua.topointer) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.topointer) == 'function')
+
+	assert(obj:newtable())
+	assert(obj:topointer(-1))
+	assert(type(obj:topointer(-1)) == 'userdata')
 end
 
 -- TODO: Test: tothread
@@ -3202,14 +3244,26 @@ do
 	assert(type(multilua.tothread) == 'function')
 end
 
--- TODO: Test: touserdata
+-- Test: touserdata
 do
 	assert(type(multilua.touserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.newuserdata(obj, 1)
+	assert(type(multilua.touserdata(obj, -1)) == 'userdata')
 end
 
--- TODO: Test: touserdata meta
+-- Test: touserdata meta
 do
 	assert(type(multilua.touserdata) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.touserdata) == 'function')
+
+	obj:newuserdata(1)
+	assert(type(obj:touserdata(-1)) == 'userdata')
 end
 
 -- Test: type
@@ -3298,64 +3352,328 @@ do
 	assert(obj:type(-1) == 'table')
 end
 
--- TODO: Test: gethookcount
+-- Test: gethookcount
 do
 	assert(type(multilua.gethookcount) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(multilua.gethookcount(obj)) == 'number')
 end
 
--- TODO: Test: gethookcount meta
+-- Test: gethookcount meta
 do
 	assert(type(multilua.gethookcount) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.gethookcount) == 'function')
+
+	assert(type(obj:gethookcount()) == 'number')
 end
 
--- TODO: Test: gethookmask
+-- Test: gethookmask
 do
 	assert(type(multilua.gethookmask) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(type(multilua.gethookmask(obj)) == 'number')
 end
 
--- TODO: Test: gethookmask meta
+-- Test: gethookmask meta
 do
 	assert(type(multilua.gethookmask) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.gethookmask) == 'function')
+
+	assert(type(obj:gethookmask()) == 'number')
 end
 
--- TODO: Test: getupvalue
+-- Test: getupvalue
 do
 	assert(type(multilua.getupvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, "do local x = 12 return function() return x end end"))
+	
+	assert(multilua.getupvalue(obj, -1, 1) == 'x')
+	assert(obj(-1) == 12)
 end
 
--- TODO: Test: getupvalue meta
+-- Test: getupvalue meta
 do
 	assert(type(multilua.getupvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.getupvalue) == 'function')
+
+	assert(obj:dostring("do local x = 12 return function() return x end end"))
+	
+	assert(obj:getupvalue(-1, 1) == 'x')
+	assert(obj(-1) == 12)
 end
 
--- TODO: Test: setupvalue
+-- Test: setupvalue
 do
 	assert(type(multilua.setupvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, "do local x = 12 return function() return x end end"))
+
+	-- Change x from 12 to 4
+	assert(multilua.pushinteger(obj, 4))
+	assert(multilua.setupvalue(obj, -2, 1))
+
+	-- Call the function to run it...
+	assert(multilua.call(obj, 0))
+	assert(obj(-1) == 4)
 end
 
--- TODO: Test: setupvalue meta
+-- Test: setupvalue meta
 do
 	assert(type(multilua.setupvalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.setupvalue) == 'function')
+
+	assert(obj:dostring("do local x = 12 return function() return x end end"))
+
+	-- Change x from 12 to 4
+	assert(obj:pushinteger(4))
+	assert(obj:setupvalue(-2, 1))
+
+	-- Call the function to run it...
+	assert(obj:call(0))
+	assert(obj(-1) == 4)
 end
 
--- TODO: Test: upvalueid
+-- Test: upvalue manipulation/fetching demonstration:
+do
+	local obj = assert(multilua.new())
+
+	obj:dostring([[do
+		local x = 12
+		return function()
+			return x
+		end
+	end]])
+
+	-- Get all the upvalues:
+	local upvalue_table = {}
+	local i = 1
+	while true do
+		local x = obj:getupvalue(-1, i)
+
+		if x == nil then
+			break
+		end
+
+		upvalue_table[x] = {value = obj(-1), index = i}
+		obj:pop(1)
+
+		i = i + 1
+	end
+
+	-- Increment x by 2:
+	obj:pushinteger(upvalue_table['x'].value + 2)
+	obj:setupvalue(-2, upvalue_table['x'].index)
+
+	-- Call the function to run it...
+	assert(obj:call(0))
+	assert(obj(-1) == 14) -- We changed x!
+end
+
+-- Test: upvalueid
 do
 	assert(type(multilua.upvalueid) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, [[
+	do
+		local x = 12
+
+		function a()
+			return x
+		end
+
+		function b()
+			return x
+		end
+
+		function c()
+			local x = 3
+			return x
+		end
+	end
+	]]))
+
+	-- Get the unique ID of x from function a
+	assert(multilua.getglobal(obj, 'a'))
+	local a_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(multilua.getglobal(obj, 'b'))
+	local b_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Both should point to the same upvalue:
+	assert(a_x == b_x)
+
+	-- Function c has a different upvalue:
+	assert(multilua.getglobal(obj, 'c'))
+	local c_x = assert(multilua.upvalueid(obj, -1, 1))
+	assert(a_x ~= c_x)
 end
 
 -- TODO: Test: upvalueid meta
 do
 	assert(type(multilua.upvalueid) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.upvalueid) == 'function')
+
+	assert(obj:dostring([[
+	do
+		local x = 12
+
+		function a()
+			return x
+		end
+
+		function b()
+			return x
+		end
+
+		function c()
+			local x = 3
+			return x
+		end
+	end
+	]]))
+
+	-- Get the unique ID of x from function a
+	assert(obj:getglobal('a'))
+	local a_x = assert(obj:upvalueid(-1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(obj:getglobal('b'))
+	local b_x = assert(obj:upvalueid(-1, 1))
+
+	-- Both should point to the same upvalue:
+	assert(a_x == b_x)
+
+	-- Function c has a different upvalue:
+	assert(obj:getglobal('c'))
+	local c_x = assert(obj:upvalueid(-1, 1))
+	assert(a_x ~= c_x)
 end
 
--- TODO: Test: upvaluejoin
+-- Test: upvaluejoin
 do
 	assert(type(multilua.upvaluejoin) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, [[
+	do
+		local x = 12
+		function a()
+			return x
+		end
+	end
+
+	do
+		local x = false
+		function b()
+			return x
+		end
+	end
+	]]))
+
+	-- Get the unique ID of x from function a
+	assert(multilua.getglobal(obj, 'a'))
+	local a_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(multilua.getglobal(obj, 'b'))
+	local b_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Both should not point to the same upvalue:
+	assert(a_x ~= b_x)
+
+	-- Set b's x to a's x:
+	assert(multilua.getglobal(obj, 'a'))
+	assert(multilua.getglobal(obj, 'b'))
+	assert(multilua.upvaluejoin(obj, -1, 1, -2, 1))
+
+	-- Get the unique ID of x from function a
+	assert(multilua.getglobal(obj, 'a'))
+	a_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(multilua.getglobal(obj, 'b'))
+	b_x = assert(multilua.upvalueid(obj, -1, 1))
+
+	-- Both should now point to the same upvalue:
+	assert(a_x == b_x)
 end
 
--- TODO: Test: upvaluejoin meta
+-- Test: upvaluejoin meta
 do
 	assert(type(multilua.upvaluejoin) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.upvaluejoin) == 'function')
+
+	assert(multilua.dostring(obj, [[
+	do
+		local x = 12
+		function a()
+			return x
+		end
+	end
+
+	do
+		local x = false
+		function b()
+			return x
+		end
+	end
+	]]))
+
+	-- Get the unique ID of x from function a
+	assert(obj:getglobal('a'))
+	local a_x = assert(obj:upvalueid(-1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(obj:getglobal('b'))
+	local b_x = assert(obj:upvalueid(-1, 1))
+
+	-- Both should not point to the same upvalue:
+	assert(a_x ~= b_x)
+
+	-- Set b's x to a's x:
+	assert(obj:getglobal('a'))
+	assert(obj:getglobal('b'))
+	assert(obj:upvaluejoin(-1, 1, -2, 1))
+
+	-- Get the unique ID of x from function a
+	assert(obj:getglobal('a'))
+	a_x = assert(obj:upvalueid(-1, 1))
+
+	-- Get the unique ID of x from function b
+	assert(obj:getglobal('b'))
+	b_x = assert(obj:upvalueid(-1, 1))
+
+	-- Both should now point to the same upvalue:
+	assert(a_x == b_x)
 end
 
 -- Test: argcheck
@@ -3941,24 +4259,44 @@ do
 	assert(type(obj:registryindex()) == 'number')
 end
 
--- TODO: Test: ridx_mainthread
+-- Test: ridx_mainthread
 do
 	assert(type(multilua.ridx_mainthread) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.ridx_mainthread(obj)) == 'number')
 end
 
--- TODO: Test: ridx_mainthread meta
+-- Test: ridx_mainthread meta
 do
 	assert(type(multilua.ridx_mainthread) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.ridx_mainthread) == 'function')
+
+	assert(type(obj:ridx_mainthread()) == 'number')
 end
 
--- TODO: Test: ridx_globals
+-- Test: ridx_globals
 do
 	assert(type(multilua.ridx_globals) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.ridx_globals(obj)) == 'number')
 end
 
--- TODO: Test: ridx_globals meta
+-- Test: ridx_globals meta
 do
 	assert(type(multilua.ridx_globals) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.ridx_globals) == 'function')
+
+	assert(type(obj:ridx_globals()) == 'number')
 end
 
 -- Test: ref
@@ -4132,14 +4470,30 @@ do
 	assert(type(multilua.pushthread) == 'function')
 end
 
--- TODO: Test: tocfunction
+-- Test: tocfunction
 do
 	assert(type(multilua.tocfunction) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushcfunction(obj, multilua.new))
+
+	assert(type(multilua.iscfunction(obj, -1)))
+	assert(type(multilua.tocfunction(obj, -1)) == 'function')
 end
 
--- TODO: Test: tocfunction meta
+-- Test: tocfunction meta
 do
 	assert(type(multilua.tocfunction) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tocfunction) == 'function')
+
+	assert(obj:pushcfunction(multilua.new))
+
+	assert(type(obj:iscfunction(-1)))
+	assert(type(obj:tocfunction(-1)) == 'function')
 end
 
 -- TODO: Test: pushcclosure

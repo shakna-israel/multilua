@@ -291,7 +291,7 @@ static int multilua_metameth_call(lua_State* L) {
 				return 1;
 			case LUA_TFUNCTION:
 				if(lua_iscfunction(current_state, key)) {
-					func = lua_touserdata(current_state, key);
+					func = lua_tocfunction(current_state, key);
 					lua_pushcfunction(L, func);
 					return 1;
 				} else {
@@ -4647,7 +4647,7 @@ static int multilua_tocfunction(lua_State* L) {
 		if(r == NULL) {
 			lua_pushnil(L);
 		} else {
-			lua_pushlightuserdata(L, r);
+			lua_pushcfunction(L, r);
 		}
 		return 1;
 	}
@@ -4698,7 +4698,7 @@ static int multilua_pushcfunction(lua_State* L) {
 
 	lua_CFunction func = NULL;
 	if(lua_iscfunction(L, 2)) {
-		func = lua_touserdata(L, 2);
+		func = lua_tocfunction(L, 2);
 	} else {
 		lua_pushnil(L);
 		return 1;
