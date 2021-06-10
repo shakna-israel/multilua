@@ -2786,14 +2786,52 @@ do
 	
 end
 
--- TODO: Test: setmetatable
+-- Test: setmetatable
 do
 	assert(type(multilua.setmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, "return {'table'}"))
+	assert(multilua.dostring(obj, "return {'metatable'}"))
+	assert(multilua.setmetatable(obj, -2))
+
+	-- Confirm we have the table, now...
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.gettable(obj, -2))
+	assert(obj(-1) == 'table')
+	assert(multilua.pop(obj, 1)) -- Clean up
+
+	-- Confirm we can get from the metatable
+	assert(multilua.getmetatable(obj, -1))
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.gettable(obj, -2))
+	assert(obj(-1) == 'metatable')
 end
 
--- TODO: Test: setmetatable meta
+-- Test: setmetatable meta
 do
 	assert(type(multilua.setmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.setmetatable) == 'function')
+
+	assert(obj:dostring("return {'table'}"))
+	assert(obj:dostring("return {'metatable'}"))
+	assert(obj:setmetatable(-2))
+
+	-- Confirm we have the table, now...
+	assert(obj:pushinteger(1))
+	assert(obj:gettable(-2))
+	assert(obj(-1) == 'table')
+	assert(obj:pop(1)) -- Clean up
+
+	-- Confirm we can get from the metatable
+	assert(obj:getmetatable(-1))
+	assert(obj:pushinteger(1))
+	assert(obj:gettable(-2))
+	assert(obj(-1) == 'metatable')
 end
 
 -- TODO: Test: settable
