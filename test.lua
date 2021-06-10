@@ -3530,7 +3530,7 @@ do
 	assert(a_x ~= c_x)
 end
 
--- TODO: Test: upvalueid meta
+-- Test: upvalueid meta
 do
 	assert(type(multilua.upvalueid) == 'function')
 
@@ -4813,224 +4813,472 @@ do
 	assert(type(multilua.mininteger()) == 'number')
 end
 
--- TODO: Test: version_major
+-- Test: version_major
 do
 	assert(type(multilua.version_major) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.version_major(obj) == '5')
 end
 
--- TODO: Test: version_major meta
+-- Test: version_major meta
 do
 	assert(type(multilua.version_major) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.version_major) == 'function')
+
+	assert(obj:version_major() == '5')
 end
 
--- TODO: Test: version_minor
+-- Test: version_minor
 do
 	assert(type(multilua.version_minor) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.version_minor(obj) == '3')
 end
 
--- TODO: Test: version_minor meta
+-- Test: version_minor meta
 do
 	assert(type(multilua.version_minor) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.version_minor) == 'function')
+
+	assert(obj:version_minor() == '3')
 end
 
--- TODO: Test: version_release
+-- Test: version_release
 do
 	assert(type(multilua.version_release) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.version_release(obj)) == 'string')
 end
 
--- TODO: Test: version_release meta
+-- Test: version_release meta
 do
 	assert(type(multilua.version_release) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.version_release) == 'function')
+
+	assert(type(obj:version_release()) == 'string')
 end
 
--- TODO: Test: version_string
+-- Test: version_string
 do
 	assert(type(multilua.version_string) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.version_string(obj)) == 'string')
+	assert(multilua.version_string(obj) == 'Lua 5.3')
 end
 
--- TODO: Test: version_string meta
+-- Test: version_string meta
 do
 	assert(type(multilua.version_string) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.version_string) == 'function')
+
+	assert(type(multilua.version_string(obj)) == 'string')
+	assert(multilua.version_string(obj) == 'Lua 5.3')
 end
 
--- TODO: Test: release_string
+-- Test: release_string
 do
 	assert(type(multilua.release_string) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.release_string(obj)) == 'string')
 end
 
--- TODO: Test: release_string meta
+-- Test: release_string meta
 do
 	assert(type(multilua.release_string) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.release_string) == 'function')
+
+	assert(type(obj:release_string()) == 'string')
 end
 
--- TODO: Test: luacopyright
+-- Test: luacopyright
 do
 	assert(type(multilua.luacopyright) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.luacopyright(obj)) == 'string')
 end
 
--- TODO: Test: luacopyright meta
+-- Test: luacopyright meta
 do
 	assert(type(multilua.luacopyright) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.luacopyright) == 'function')
+
+	assert(type(obj:luacopyright()) == 'string')
 end
 
--- TODO: Test: luaauthors
+-- Test: luaauthors
 do
 	assert(type(multilua.luaauthors) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.luaauthors(obj)) == 'string')
 end
 
--- TODO: Test: luaauthors meta
+-- Test: luaauthors meta
 do
 	assert(type(multilua.luaauthors) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.luaauthors) == 'function')
+
+	assert(type(obj:luaauthors()) == 'string')
 end
 
--- TODO: Test: signature
+-- Test: signature
 do
 	assert(type(multilua.signature) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.signature(obj)) == 'string')
 end
 
--- TODO: Test: signature meta
+-- Test: signature meta
 do
 	assert(type(multilua.signature) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.signature) == 'function')
+
+	assert(type(obj:signature()) == 'string')
 end
 
--- TODO: Test: multret
+-- Test: multret
 do
 	assert(type(multilua.multret) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.multret(obj)) == 'number')
+	assert(math.type(multilua.multret(obj)) == 'integer')
 end
 
--- TODO: Test: multret meta
+-- Test: multret meta
 do
 	assert(type(multilua.multret) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.multret) == 'function')
+
+	assert(type(obj:multret()) == 'number')
+	assert(math.type(obj:multret()) == 'integer')
 end
 
--- TODO: Test: minstack
+-- Test: minstack
 do
 	assert(type(multilua.minstack) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.minstack(obj)) == 'number')
+	assert(math.type(multilua.minstack(obj)) == 'integer')
 end
 
--- TODO: Test: minstack meta
+-- Test: minstack meta
 do
 	assert(type(multilua.minstack) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.minstack) == 'function')
+
+	assert(type(obj:minstack()) == 'number')
+	assert(math.type(obj:minstack()) == 'integer')
 end
 
--- TODO: Test: ridx_last
+-- Test: ridx_last
 do
 	assert(type(multilua.ridx_last) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.ridx_last(obj)) == 'number')
+	assert(math.type(multilua.ridx_last(obj)) == 'integer')
 end
 
--- TODO: Test: ridx_last meta
+-- Test: ridx_last meta
 do
 	assert(type(multilua.ridx_last) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.ridx_last) == 'function')
+
+	assert(type(obj:ridx_last()) == 'number')
+	assert(math.type(obj:ridx_last()) == 'integer')
 end
 
--- TODO: Test: user_header
+-- Test: user_header
 do
 	assert(type(multilua.user_header) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.user_header(obj)) == 'string' or 'nil')
 end
 
--- TODO: Test: user_header meta
+-- Test: user_header meta
 do
 	assert(type(multilua.user_header) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.user_header) == 'function')
+
+	assert(type(obj:user_header()) == 'string' or 'nil')
 end
 
--- TODO: Test: upvalueindex
+-- Test: upvalueindex
 do
 	assert(type(multilua.upvalueindex) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.upvalueindex(obj, 1))
+	assert(obj[-1] == 'number')
 end
 
--- TODO: Test: upvalueindex meta
+-- Test: upvalueindex meta
 do
 	assert(type(multilua.upvalueindex) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.upvalueindex) == 'function')
+
+	assert(obj:upvalueindex(1))
+	assert(obj[-1] == 'number')
 end
 
--- TODO: Test: hookcall
+-- Test: hookcall
 do
 	assert(type(multilua.hookcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.hookcall(obj)) == 'number')
+	assert(math.type(multilua.hookcall(obj)) == 'integer')
 end
 
--- TODO: Test: hookcall meta
+-- Test: hookcall meta
 do
 	assert(type(multilua.hookcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.hookcall) == 'function')
+
+	assert(type(obj:hookcall()) == 'number')
+	assert(math.type(obj:hookcall()) == 'integer')
 end
 
--- TODO: Test: hookreturn
+-- Test: hookreturn
 do
 	assert(type(multilua.hookreturn) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.hookreturn(obj)) == 'number')
+	assert(math.type(multilua.hookreturn(obj)) == 'integer')
 end
 
--- TODO: Test: hookreturn meta
+-- Test: hookreturn meta
 do
 	assert(type(multilua.hookreturn) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.hookreturn) == 'function')
+
+	assert(type(obj:hookreturn()) == 'number')
+	assert(math.type(obj:hookreturn()) == 'integer')
 end
 
--- TODO: Test: hookline
+-- Test: hookline
 do
 	assert(type(multilua.hookline) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.hookline(obj)) == 'number')
+	assert(math.type(multilua.hookline(obj)) == 'integer')
 end
 
--- TODO: Test: hookline meta
+-- Test: hookline meta
 do
 	assert(type(multilua.hookline) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.hookline) == 'function')
+
+	assert(type(obj:hookline()) == 'number')
+	assert(math.type(obj:hookline()) == 'integer')
 end
 
--- TODO: Test: hookcount
+-- Test: hookcount
 do
 	assert(type(multilua.hookcount) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.hookcount(obj)) == 'number')
+	assert(math.type(multilua.hookcount(obj)) == 'integer')
 end
 
--- TODO: Test: hookcount meta
+-- Test: hookcount meta
 do
 	assert(type(multilua.hookcount) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.hookcount) == 'function')
+
+	assert(type(obj:hookcount()) == 'number')
+	assert(math.type(obj:hookcount()) == 'integer')
 end
 
--- TODO: Test: hooktailcall
+-- Test: hooktailcall
 do
 	assert(type(multilua.hooktailcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.hooktailcall(obj)) == 'number')
+	assert(math.type(multilua.hooktailcall(obj)) == 'integer')
 end
 
--- TODO: Test: hooktailcall meta
+-- Test: hooktailcall meta
 do
 	assert(type(multilua.hooktailcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.hooktailcall) == 'function')
+
+	assert(type(obj:hooktailcall()) == 'number')
+	assert(math.type(obj:hooktailcall()) == 'integer')
 end
 
--- TODO: Test: maskcall
+-- Test: maskcall
 do
 	assert(type(multilua.maskcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.maskcall(obj)) == 'number')
+	assert(math.type(multilua.maskcall(obj)) == 'integer')
 end
 
--- TODO: Test: maskcall meta
+-- Test: maskcall meta
 do
 	assert(type(multilua.maskcall) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.maskcall) == 'function')
+
+	assert(type(obj:maskcall()) == 'number')
+	assert(math.type(obj:maskcall()) == 'integer')
 end
 
--- TODO: Test: maskreturn
+-- Test: maskreturn
 do
 	assert(type(multilua.maskreturn) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.maskreturn(obj)) == 'number')
+	assert(math.type(multilua.maskreturn(obj)) == 'integer')
 end
 
--- TODO: Test: maskreturn meta
+-- Test: maskreturn meta
 do
 	assert(type(multilua.maskreturn) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.maskreturn) == 'function')
+
+	assert(type(obj:maskreturn()) == 'number')
+	assert(math.type(obj:maskreturn()) == 'integer')
 end
 
--- TODO: Test: maskline
+-- Test: maskline
 do
 	assert(type(multilua.maskline) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.maskline(obj)) == 'number')
+	assert(math.type(multilua.maskline(obj)) == 'integer')
 end
 
--- TODO: Test: maskline meta
+-- Test: maskline meta
 do
 	assert(type(multilua.maskline) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.maskline) == 'function')
+
+	assert(type(obj:maskline()) == 'number')
+	assert(math.type(obj:maskline()) == 'integer')
 end
 
--- TODO: Test: maskcount
+-- Test: maskcount
 do
 	assert(type(multilua.maskcount) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(multilua.maskcount(obj)) == 'number')
+	assert(math.type(multilua.maskcount(obj)) == 'integer')
 end
 
--- TODO: Test: maskcount meta
+-- Test: maskcount meta
 do
 	assert(type(multilua.maskcount) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.maskcount) == 'function')
+
+	assert(type(obj:maskcount()) == 'number')
+	assert(math.type(obj:maskcount()) == 'integer')
 end
 
 -- TODO: Test: pushunsigned
