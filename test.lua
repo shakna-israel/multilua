@@ -5281,44 +5281,120 @@ do
 	assert(math.type(obj:maskcount()) == 'integer')
 end
 
--- TODO: Test: pushunsigned
+-- Test: pushunsigned
 do
 	assert(type(multilua.pushunsigned) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushunsigned(obj, 10))
+	assert(obj[-1] == 'number')
+	assert(multilua.isinteger(obj, -1))
+
+	assert(multilua.pushunsigned(obj, "Nope") == nil)
 end
 
--- TODO: Test: pushunsigned meta
+-- Test: pushunsigned meta
 do
 	assert(type(multilua.pushunsigned) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushunsigned) == 'function')
+
+	assert(obj:pushunsigned(10))
+	assert(obj[-1] == 'number')
+	assert(obj:isinteger(-1))
+
+	assert(obj:pushunsigned("Nope") == nil)
 end
 
--- TODO: Test: pushuinteger
+-- Test: pushuinteger
 do
 	assert(type(multilua.pushuinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushuinteger(obj, 10))
+	assert(obj[-1] == 'number')
+	assert(multilua.isinteger(obj, -1))
+
+	assert(multilua.pushuinteger(obj, "Nope") == nil)
 end
 
--- TODO: Test: pushuinteger meta
+-- Test: pushuinteger meta
 do
 	assert(type(multilua.pushuinteger) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.pushuinteger) == 'function')
+
+	assert(obj:pushuinteger(10))
+	assert(obj[-1] == 'number')
+	assert(obj:isinteger(-1))
+
+	assert(obj:pushuinteger("Nope") == nil)
 end
 
--- TODO: Test: tounsignedx
+-- Test: tounsignedx
 do
 	assert(type(multilua.tounsignedx) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.pushinteger(obj, 10))
+
+	assert(multilua.tounsignedx(obj, -1) == 10)
+
+	assert(math.type(multilua.tounsignedx(obj, -1)) == 'integer')
+
+	multilua.pushstring(obj, "This")
+	assert(multilua.tounsignedx(obj, -1) == nil)
 end
 
--- TODO: Test: tounsignedx meta
+-- Test: tounsignedx meta
 do
 	assert(type(multilua.tounsignedx) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tounsignedx) == 'function')
+
+	assert(obj:pushinteger(10))
+
+	assert(obj:tounsignedx(-1) == 10)
+
+	assert(math.type(obj:tounsignedx(-1)) == 'integer')
+
+	obj:pushstring("This")
+	assert(obj:tounsignedx(-1) == nil)
 end
 
--- TODO: Test: tounsigned
+-- Test: tounsigned
 do
 	assert(type(multilua.tounsigned) == 'function')
+
+	local obj = assert(multilua.new())
+	assert(multilua.pushinteger(obj, 10))
+
+	assert(multilua.tounsigned(obj, -1) == 10)
+
+	assert(math.type(multilua.tounsigned(obj, -1)) == 'integer')
 end
 
--- TODO: Test: tounsigned meta
+-- Test: tounsigned meta
 do
 	assert(type(multilua.tounsigned) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.tounsigned) == 'function')
+
+	assert(obj:pushinteger(10))
+
+	assert(obj:tounsigned(-1) == 10)
+
+	assert(math.type(obj:tounsigned(-1)) == 'integer')
 end
 
 -- TODO: Test: getlocal
