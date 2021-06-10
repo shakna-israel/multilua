@@ -1932,7 +1932,7 @@ do
 	assert(multilua.next(obj, -2) == 0)
 	assert(obj[-1] == 'table')
 	assert(obj[-2] == 'nil')
-	assert(obj[-3] == 'boolean')
+	assert(obj[-3] == 'boolean' or 'restart')
 
 	-- array
 	multilua.dostring(obj, "return {'a', 'b', 'c'}")
@@ -1978,7 +1978,7 @@ do
 	assert(obj:next(-2) == 0)
 	assert(obj[-1] == 'table')
 	assert(obj[-2] == 'nil')
-	assert(obj[-3] == 'boolean')
+	assert(obj[-3] == 'boolean' or 'restart')
 
 	-- array
 	obj:dostring("return {'a', 'b', 'c'}")
