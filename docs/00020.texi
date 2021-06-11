@@ -443,8 +443,6 @@ If the @code{operator} is:
 @comment TODO: multilua.pushuinteger
 @comment TODO: multilua.tounsignedx
 @comment TODO: multilua.tounsigned
-@comment TODO: multilua.getlocal
-@comment TODO: multilua.setlocal
 
 @funcsection{multilua.fetchable}
 

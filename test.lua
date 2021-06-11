@@ -1391,14 +1391,52 @@ do
 	
 end
 
--- TODO: Test: getmetatable
+-- Test: getmetatable
 do
 	assert(type(multilua.getmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.dostring(obj, "return {'table'}"))
+	assert(multilua.dostring(obj, "return {'metatable'}"))
+	assert(multilua.setmetatable(obj, -2))
+
+	-- Confirm we have the table, now...
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.gettable(obj, -2))
+	assert(obj(-1) == 'table')
+	assert(multilua.pop(obj, 1)) -- Clean up
+
+	-- Confirm we can get from the metatable
+	assert(multilua.getmetatable(obj, -1))
+	assert(multilua.pushinteger(obj, 1))
+	assert(multilua.gettable(obj, -2))
+	assert(obj(-1) == 'metatable')
 end
 
--- TODO: Test: getmetatable meta
+-- Test: getmetatable meta
 do
 	assert(type(multilua.getmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.getmetatable) == 'function')
+
+	assert(obj:dostring("return {'table'}"))
+	assert(obj:dostring("return {'metatable'}"))
+	assert(obj:setmetatable(-2))
+
+	-- Confirm we have the table, now...
+	assert(obj:pushinteger(1))
+	assert(obj:gettable(-2))
+	assert(obj(-1) == 'table')
+	assert(obj:pop(1)) -- Clean up
+
+	-- Confirm we can get from the metatable
+	assert(obj:getmetatable(-1))
+	assert(obj:pushinteger(1))
+	assert(obj:gettable(-2))
+	assert(obj(-1) == 'metatable')
 end
 
 -- Test: gettable
@@ -1434,14 +1472,44 @@ do
 	
 end
 
--- TODO: Test: getuservalue
+-- Test: getuservalue
 do
 	assert(type(multilua.getuservalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newuserdata(obj, 10))
+	multilua.dostring(obj, "return {hello='world'}")
+	assert(multilua.setuservalue(obj, -2))
+	assert(obj[-1] == 'userdata')
+
+	assert(multilua.getuservalue(obj, -1) == 'table')
+	assert(obj[-1] == 'table')
+
+	multilua.getfield(obj, -1, "hello")
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
--- TODO: Test: getuservalue meta
+-- Test: getuservalue meta
 do
 	assert(type(multilua.getuservalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.getuservalue) == 'function')
+
+	assert(obj:newuserdata(10))
+	obj:dostring("return {hello='world'}")
+	assert(obj:setuservalue(-2))
+	assert(obj[-1] == 'userdata')
+
+	assert(obj:getuservalue(-1) == 'table')
+	assert(obj[-1] == 'table')
+
+	obj:getfield(-1, "hello")
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
 -- Test: insert
@@ -1886,14 +1954,26 @@ do
 	
 end
 
--- TODO: Test: newthread
+-- Test: newthread
 do
 	assert(type(multilua.newthread) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newthread(obj))
+	assert(obj[-1] == 'userdata')
 end
 
--- TODO: Test: newthread meta
+-- Test: newthread meta
 do
 	assert(type(multilua.newthread) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.newthread) == 'function')
+
+	assert(obj:newthread())
+	assert(obj[-1] == 'userdata')
 end
 
 -- Test: newuserdata
@@ -1964,7 +2044,7 @@ do
 	end
 end
 
--- TODO: Test: next meta
+-- Test: next meta
 do
 	assert(type(multilua.next) == 'function')
 
@@ -2908,24 +2988,68 @@ do
 	
 end
 
--- TODO: Test: setuservalue
+-- Test: setuservalue
 do
 	assert(type(multilua.setuservalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newuserdata(obj, 10))
+	multilua.dostring(obj, "return {hello='world'}")
+	assert(multilua.setuservalue(obj, -2))
+	assert(obj[-1] == 'userdata')
+
+	assert(multilua.getuservalue(obj, -1) == 'table')
+	assert(obj[-1] == 'table')
+
+	multilua.getfield(obj, -1, "hello")
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
--- TODO: Test: setuservalue meta
+-- Test: setuservalue meta
 do
 	assert(type(multilua.setuservalue) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.setuservalue) == 'function')
+
+	assert(obj:newuserdata(10))
+	obj:dostring("return {hello='world'}")
+	assert(obj:setuservalue(-2))
+	assert(obj[-1] == 'userdata')
+
+	assert(obj:getuservalue(-1) == 'table')
+	assert(obj[-1] == 'table')
+
+	obj:getfield(-1, "hello")
+	assert(obj[-1] == 'string')
+	assert(obj(-1) == 'world')
 end
 
--- TODO: Test: status
+-- Test: status
 do
 	assert(type(multilua.status) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.status(obj) == 'ok')
+
+	-- TODO: Call with another state...
 end
 
--- TODO: Test: status meta
+-- Test: status meta
 do
 	assert(type(multilua.status) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.status) == 'function')
+
+	assert(obj:status() == 'ok')
+
+	-- TODO: Call with another state...
 end
 
 -- Test: toboolean
@@ -3732,14 +3856,70 @@ do
 	]]--
 end
 
--- TODO: Test: callmeta
+-- Test: callmeta
 do
 	assert(type(multilua.callmeta) == 'function')
+
+	do
+		local obj = assert(multilua.new())
+
+		-- Calling a non-existent metatable
+		assert(multilua.newtable(obj))
+		assert(multilua.callmeta(obj, -1, "hi") == false)
+	end
+
+	do
+		local obj = assert(multilua.new())
+
+		-- Calling a metatable function
+		assert(multilua.newtable(obj))
+
+		-- Create the metatable
+		assert(multilua.newtable(obj))
+		assert(multilua.dostring(obj, "return function(self) return 'Hi!' end"))
+		assert(multilua.setfield(obj, -2, "hi"))
+		assert(multilua.setmetatable(obj, -2))
+
+		-- Call the metamethod
+		assert(multilua.callmeta(obj, -1, "hi") == true)
+		assert(obj[-1] == 'string')
+		assert(obj(-1) == 'Hi!')
+	end
 end
 
--- TODO: Test: callmeta meta
+-- Test: callmeta meta
 do
 	assert(type(multilua.callmeta) == 'function')
+
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.callmeta) == 'function')
+
+		-- Calling a non-existent metatable
+		assert(obj:newtable())
+		assert(obj:callmeta(-1, "hi") == false)
+	end
+
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.callmeta) == 'function')
+
+		-- Calling a metatable function
+		assert(obj:newtable())
+
+		-- Create the metatable
+		assert(obj:newtable())
+		assert(obj:dostring("return function(self) return 'Hi!' end"))
+		assert(obj:setfield(-2, "hi"))
+		assert(obj:setmetatable(-2))
+
+		-- Call the metamethod
+		assert(obj:callmeta(-1, "hi") == true)
+		assert(obj[-1] == 'string')
+		assert(obj(-1) == 'Hi!')
+	end
 end
 
 -- Test: checkany

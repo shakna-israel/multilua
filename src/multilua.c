@@ -2725,12 +2725,17 @@ static int multilua_setuservalue(lua_State* L) {
 
 static int multilua_status(lua_State* L) {
 	// 1 - multilua state
+	// 2 - optional other state...
 	lua_checkstack(L, lua_gettop(L) + 2);
 
 	lua_getfield(L, 1, "self");
 	if(lua_islightuserdata(L, -1)) {
 		lua_State* current_state = lua_touserdata(L, -1);
 		lua_checkstack(current_state, 3);
+
+		if(lua_islightuserdata(L, 2)) {
+			lua_State* current_state = lua_touserdata(L, 2);
+		}
 
 		int r = lua_status(current_state);
 		switch(r) {
