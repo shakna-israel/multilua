@@ -4432,14 +4432,26 @@ do
 	assert(obj:gsub("hello", "hello", "world") == 'world')
 end
 
--- TODO: Test: llen
+-- Test: llen
 do
 	assert(type(multilua.llen) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.pushstring(obj, "hello"))
+	assert(multilua.llen(obj, -1) == 5)
 end
 
--- TODO: Test: llen meta
+-- Test: llen meta
 do
 	assert(type(multilua.llen) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.llen) == 'function')
+
+	assert(obj:pushstring("hello"))
+	assert(obj:llen(-1) == 5)
 end
 
 -- TODO: Test: loadbuffer
@@ -4492,14 +4504,34 @@ do
 	assert(type(multilua.loadstring) == 'function')
 end
 
--- TODO: Test: newmetatable
+-- Test: newmetatable
 do
 	assert(type(multilua.newmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.lgetmetatable(obj, "named") == nil)
+	assert(multilua.newmetatable(obj, "named") == false)
+	assert(obj[-1] == 'table')
+	assert(multilua.newmetatable(obj, "named") == true)
+	assert(obj[-1] == 'table')
+	assert(multilua.lgetmetatable(obj, "named") == 'table')
 end
 
--- TODO: Test: newmetatable meta
+-- Test: newmetatable meta
 do
 	assert(type(multilua.newmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.newmetatable) == 'function')
+
+	assert(obj:lgetmetatable("named") == nil)
+	assert(obj:newmetatable("named") == false)
+	assert(obj[-1] == 'table')
+	assert(obj:newmetatable("named") == true)
+	assert(obj[-1] == 'table')
+	assert(obj:lgetmetatable("named") == 'table')
 end
 
 -- TODO: Test: optinteger
@@ -4672,14 +4704,36 @@ do
 	assert(type(obj:noref()) == 'number')
 end
 
--- TODO: Test: lsetmetatable
+-- Test: lsetmetatable
 do
 	assert(type(multilua.lsetmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.newtable(obj))
+	assert(multilua.newtable(obj))
+	assert(multilua.pushstring(obj, "Greetings"))
+	assert(multilua.setfield(obj, -2, "hello"))
+	assert(multilua.setmetatable(obj, -2))
+
+	assert(multilua.lsetmetatable(obj, "named"))
 end
 
--- TODO: Test: lsetmetatable meta
+-- Test: lsetmetatable meta
 do
 	assert(type(multilua.lsetmetatable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.lsetmetatable) == 'function')
+
+	assert(obj:newtable())
+	assert(obj:newtable())
+	assert(obj:pushstring("Greetings"))
+	assert(obj:setfield(-2, "hello"))
+	assert(obj:setmetatable(-2))
+
+	assert(obj:lsetmetatable("named"))
 end
 
 -- TODO: Test: testudata
