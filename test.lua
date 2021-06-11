@@ -4412,14 +4412,24 @@ do
 	assert(obj:getsubtable(-1, "hello") == true)
 end
 
--- TODO: Test: gsub
+-- Test: gsub
 do
 	assert(type(multilua.gsub) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(multilua.gsub(obj, "hello", "hello", "world") == 'world')
 end
 
--- TODO: Test: gsub meta
+-- Test: gsub meta
 do
 	assert(type(multilua.gsub) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.gsub) == 'function')
+
+	assert(obj:gsub("hello", "hello", "world") == 'world')
 end
 
 -- TODO: Test: llen
