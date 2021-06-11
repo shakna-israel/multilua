@@ -212,8 +212,6 @@ static int multilua_maskcount(lua_State* L);
 static int multilua_pushunsigned(lua_State* L);
 static int multilua_tounsignedx(lua_State* L);
 static int multilua_tounsigned(lua_State* L);
-static int multilua_getlocal(lua_State* L);
-static int multilua_setlocal(lua_State* L);
 
 #include <multilua_registry.h>
 
