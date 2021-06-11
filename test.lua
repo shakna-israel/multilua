@@ -4280,14 +4280,62 @@ do
 	]]
 end
 
--- TODO: Test: getmetafield
+-- Test: getmetafield
 do
 	assert(type(multilua.getmetafield) == 'function')
+
+	-- With a metafield:
+	do
+		local obj = assert(multilua.new())
+
+		assert(multilua.newtable(obj))
+		assert(multilua.newtable(obj))
+		assert(multilua.pushstring(obj, "Greetings"))
+		assert(multilua.setfield(obj, -2, "hi"))
+		assert(multilua.setmetatable(obj, -2))
+
+		assert(multilua.getmetafield(obj, -1, "hi") == 'string')
+		assert(obj(-1) == "Greetings")
+	end
+
+	-- Without a metafield:
+	do
+		local obj = assert(multilua.new())
+
+		assert(multilua.newtable(obj))
+		assert(multilua.getmetafield(obj, -1, "hi") == nil)
+	end
 end
 
 -- TODO: Test: getmetafield meta
 do
 	assert(type(multilua.getmetafield) == 'function')
+
+	-- With a metafield:
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.getmetafield) == 'function')
+
+		assert(obj:newtable())
+		assert(obj:newtable())
+		assert(obj:pushstring("Greetings"))
+		assert(obj:setfield(-2, "hi"))
+		assert(obj:setmetatable(-2))
+
+		assert(obj:getmetafield(-1, "hi") == 'string')
+		assert(obj(-1) == "Greetings")
+	end
+
+	-- Without a metafield:
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.getmetafield) == 'function')
+
+		assert(obj:newtable())
+		assert(obj:getmetafield(-1, "hi") == nil)
+	end
 end
 
 -- TODO: Test: lgetmetatable

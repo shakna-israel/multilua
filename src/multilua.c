@@ -3764,7 +3764,12 @@ static int multilua_getmetafield(lua_State* L) {
 		lua_checkstack(current_state, 5);
 
 		int type = luaL_getmetafield(current_state, index, field);
-		lua_pushstring(L, lua_typename(L, type));
+
+		if(type == LUA_TNIL) {
+			lua_pushnil(L);
+		} else {
+			lua_pushstring(L, lua_typename(L, type));
+		}
 		return 1;
 	}
 
