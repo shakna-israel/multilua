@@ -4307,7 +4307,7 @@ do
 	end
 end
 
--- TODO: Test: getmetafield meta
+-- Test: getmetafield meta
 do
 	assert(type(multilua.getmetafield) == 'function')
 
@@ -4338,14 +4338,50 @@ do
 	end
 end
 
--- TODO: Test: lgetmetatable
+-- Test: lgetmetatable
 do
 	assert(type(multilua.lgetmetatable) == 'function')
+
+	-- No named metatable
+	do
+		local obj = assert(multilua.new())
+
+		assert(multilua.newtable(obj))
+		assert(multilua.lgetmetatable(obj, "named") == nil)
+	end
+
+	-- named metatable
+	do
+		local obj = assert(multilua.new())
+
+		assert(multilua.newmetatable(obj, "named") == false)
+		assert(multilua.lgetmetatable(obj, "named") == 'table')
+	end
 end
 
--- TODO: Test: lgetmetatable meta
+-- Test: lgetmetatable meta
 do
 	assert(type(multilua.lgetmetatable) == 'function')
+
+	-- No named metatable
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.lgetmetatable) == 'function')
+
+		assert(obj:newtable())
+		assert(obj:lgetmetatable("named") == nil)
+	end
+
+	-- named metatable
+	do
+		local obj = assert(multilua.new())
+
+		assert(type(obj.lgetmetatable) == 'function')
+
+		assert(obj:newmetatable("named") == false)
+		assert(obj:lgetmetatable("named") == 'table')
+	end
 end
 
 -- TODO: Test: getsubtable
