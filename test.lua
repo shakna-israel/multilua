@@ -4384,14 +4384,32 @@ do
 	end
 end
 
--- TODO: Test: getsubtable
+-- Test: getsubtable
 do
 	assert(type(multilua.getsubtable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	multilua.newtable(obj)
+	assert(multilua.getsubtable(obj, -1, "hello") == false)
+	multilua.pop(obj, 1)
+
+	assert(multilua.getsubtable(obj, -1, "hello") == true)
 end
 
--- TODO: Test: getsubtable meta
+-- Test: getsubtable meta
 do
 	assert(type(multilua.getsubtable) == 'function')
+
+	local obj = assert(multilua.new())
+
+	assert(type(obj.getsubtable) == 'function')
+
+	obj:newtable()
+	assert(obj:getsubtable(-1, "hello") == false)
+	obj:pop(1)
+
+	assert(obj:getsubtable(-1, "hello") == true)
 end
 
 -- TODO: Test: gsub
